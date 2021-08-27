@@ -9,7 +9,14 @@ errores = []
 
 reservedWords = {
     'true': 'TRUE',
-    'false': 'FALSE'
+    'false': 'FALSE',
+    'int64': 'INT64',
+    'float64': 'FLOAT64',
+    'bool': 'BOOL',
+    'char': 'CHAR',
+    'string': 'STRING',
+    'print': 'PRINT',
+    'println': 'PRINTLN'
 }
 
 #DECLARACION DE TOKENS
@@ -66,11 +73,11 @@ t_LLAVESA = r'\{'
 t_LLAVESC = r'\}'
 
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]'
-    t_type = reservedWords.get(t.value.lower(),'ID')
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t_type = reservedWords.get(t.value.lower(),'ID') #Cecha las palbras reservadas
     return t
 
-def t_DECIMAL(t):
+def t_DOUBLE(t):
     r'\d+\.\d+'
     try:
         t.value = float(t.value)
@@ -79,7 +86,7 @@ def t_DECIMAL(t):
         t.value = 0
     return t
 
-def t_ENTERO(t):
+def t_INTEGER(t):
     r'\d+'
     try: 
         t.value = int(t.value)
@@ -88,13 +95,108 @@ def t_ENTERO(t):
         t.value = 0
     return t
 
-def t_CADENA(t):
+def t_STRING(t):
     r'\"((\\\")|[^\n\"])*\"'
     t.value = t.value[1:-1]
     return t
 
 def t_CHAR(t):
-    r"""\'(\\'|\\\\|\\n|\\t|\\r|\\"|.)?\'""" #creo que hay que mejorarla pq no reconoce dos caracteres como \n \t
+    r"""\'(\\'|\\\\|\\n|\\t|\\r|\\"|.)?\'"""
     t.value = t.value[1:-1]
     return t
+
+'''Se pone ignore para obligar al analizador a ignorarlo y 
+ademas no se retorna nada para que no lo tome en cuenta'''
+
+def t_ignore_COMENTARIOMULTILINEA(t):
+    r'\#=(.|\n*|)*?=#'
+    t.lexer.lineno += t.value.count('\n')
+
+def t_ignore_COMENTARIOUNILINEA(t):
+    r'\#.*\n'
+    t.lexer.lineno +=1
+
+#Define a rule so we can track line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += t.value.count('\n')
+
+#Error handling rule
+#Almacenamiento de errores lexicos
+'''def t_errors(t):
+    errores'''
+
+#Compute column.
+#     input is the input text string
+#     token is a token instance
+
+def find_column(inp, token):
+    line_start = inp.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
+#Caracteres ignorados
+t_ignore = "\t"
+
+#Construyendo un analizador
+import ply.lex as lex
+lexer = lex.lex()
+
+from Abstract.Instruccion import Instruccion
+from Instrucciones.Funciones.Imprimir import Imprimir
+from Expresiones.Primitivos import Primitivos
+
+
+
+#Definir precedencia
+precedence = ()
+
+#Definir la gramatica
+start = 'inicio'
+
+def p_inicio(p):
+    'inicio : instrucciones'
+    p[0] = p[1]
+
+#//////////////////////////////////////////////////FINAL INSTRUCCION
+def p_fininstr(p):
+    'fininstr : PUNTOCOMA'
+
+
+#//////////////////////////////////////////////////INSTRUCCIONES
+def p_instrucciones_instrucciones_instruccion(p):
+    'instrucciones : instrucciones instruccion'
+    if p[2] != "":
+        p[1].append(p[2])
+    p[0] = p[1]
+
+def p_instrucciones_instruccion(p):
+    'instrucciones : instruccion'
+    if p[1] == "":
+        p[0] = ""
+    else:
+        p[0] = [p[1]]
+
+#//////////////////////////////////////////////////INSTRUCCION
+def p_instruccion(p):
+    '''instruccion : imprimir_instr fininstr'''
+    p[0] = p[1]
+
+
+#//////////////////////////////////////////////////IMPRIMIR
+def p_imprimir(p):
+    'imprimir_instr : PRINT PARENTESISA expresion PARENTESISC'
+
+
+#//////////////////////////////////////////////////Expresion
+def p_expresion_cadena(p):
+    'expresion : STRING'
+
+
+
+
+
+
+
+    
+
 
