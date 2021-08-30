@@ -32,4 +32,3 @@ class OperadorLogico(Enum):
     AND = 2
     OR = 3
 
-    

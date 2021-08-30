@@ -1,0 +1,852 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    BOOL
+    CHAR
+    DIAGONAL
+    DIFERENTE
+    FLOAT64
+    ID
+    IGUAL
+    IGUALIGUAL
+    INT64
+    LLAVESA
+    LLAVESC
+    MAYOR
+    MAYORIGUAL
+    MENOR
+    MENORIGUAL
+    NOT
+    OR
+    STRING
+    STRUCT
+    ignore_COMENTARIOMULTILINEA
+    ignore_COMENTARIOUNILINEA
+
+Grammar
+
+Rule 0     S' -> inicio
+Rule 1     inicio -> instrucciones
+Rule 2     fininstr -> PUNTOCOMA
+Rule 3     instrucciones -> instrucciones instruccion
+Rule 4     instrucciones -> instruccion
+Rule 5     instruccion -> imprimir_instr fininstr
+Rule 6     instruccion -> error fininstr
+Rule 7     imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC
+Rule 8     imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC
+Rule 9     expresion -> CADENA
+Rule 10    expresion -> CARACTER
+Rule 11    expresion -> ENTERO
+Rule 12    expresion -> DOBLE
+Rule 13    expresion -> NOTHING
+Rule 14    expresion -> bandera
+Rule 15    expresion -> expresion MAS expresion
+Rule 16    expresion -> expresion MENOS expresion
+Rule 17    expresion -> expresion ASTERISCO expresion
+Rule 18    expresion -> expresion DIVISION expresion
+Rule 19    expresion -> expresion POTENCIA expresion
+Rule 20    expresion -> expresion PORCENTAJE expresion
+Rule 21    bandera -> TRUE
+Rule 22    bandera -> FALSE
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASTERISCO            : 17
+BOOL                 : 
+CADENA               : 9
+CARACTER             : 10
+CHAR                 : 
+DIAGONAL             : 
+DIFERENTE            : 
+DIVISION             : 18
+DOBLE                : 12
+ENTERO               : 11
+FALSE                : 22
+FLOAT64              : 
+ID                   : 
+IGUAL                : 
+IGUALIGUAL           : 
+INT64                : 
+LLAVESA              : 
+LLAVESC              : 
+MAS                  : 15
+MAYOR                : 
+MAYORIGUAL           : 
+MENOR                : 
+MENORIGUAL           : 
+MENOS                : 16
+NOT                  : 
+NOTHING              : 13
+OR                   : 
+PARENTESISA          : 7 8
+PARENTESISC          : 7 8
+PORCENTAJE           : 20
+POTENCIA             : 19
+PRINT                : 7
+PRINTLN              : 8
+PUNTOCOMA            : 2
+STRING               : 
+STRUCT               : 
+TRUE                 : 21
+error                : 6
+ignore_COMENTARIOMULTILINEA : 
+ignore_COMENTARIOUNILINEA : 
+
+Nonterminals, with rules where they appear
+
+bandera              : 14
+expresion            : 7 8 15 15 16 16 17 17 18 18 19 19 20 20
+fininstr             : 5 6
+imprimir_instr       : 5
+inicio               : 0
+instruccion          : 3 4
+instrucciones        : 1 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . inicio
+    (1) inicio -> . instrucciones
+    (3) instrucciones -> . instrucciones instruccion
+    (4) instrucciones -> . instruccion
+    (5) instruccion -> . imprimir_instr fininstr
+    (6) instruccion -> . error fininstr
+    (7) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (8) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+
+    error           shift and go to state 5
+    PRINT           shift and go to state 6
+    PRINTLN         shift and go to state 7
+
+    inicio                         shift and go to state 1
+    instrucciones                  shift and go to state 2
+    instruccion                    shift and go to state 3
+    imprimir_instr                 shift and go to state 4
+
+state 1
+
+    (0) S' -> inicio .
+
+
+
+state 2
+
+    (1) inicio -> instrucciones .
+    (3) instrucciones -> instrucciones . instruccion
+    (5) instruccion -> . imprimir_instr fininstr
+    (6) instruccion -> . error fininstr
+    (7) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (8) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+
+    $end            reduce using rule 1 (inicio -> instrucciones .)
+    error           shift and go to state 5
+    PRINT           shift and go to state 6
+    PRINTLN         shift and go to state 7
+
+    instruccion                    shift and go to state 8
+    imprimir_instr                 shift and go to state 4
+
+state 3
+
+    (4) instrucciones -> instruccion .
+
+    error           reduce using rule 4 (instrucciones -> instruccion .)
+    PRINT           reduce using rule 4 (instrucciones -> instruccion .)
+    PRINTLN         reduce using rule 4 (instrucciones -> instruccion .)
+    $end            reduce using rule 4 (instrucciones -> instruccion .)
+
+
+state 4
+
+    (5) instruccion -> imprimir_instr . fininstr
+    (2) fininstr -> . PUNTOCOMA
+
+    PUNTOCOMA       shift and go to state 10
+
+    fininstr                       shift and go to state 9
+
+state 5
+
+    (6) instruccion -> error . fininstr
+    (2) fininstr -> . PUNTOCOMA
+
+    PUNTOCOMA       shift and go to state 10
+
+    fininstr                       shift and go to state 11
+
+state 6
+
+    (7) imprimir_instr -> PRINT . PARENTESISA expresion PARENTESISC
+
+    PARENTESISA     shift and go to state 12
+
+
+state 7
+
+    (8) imprimir_instr -> PRINTLN . PARENTESISA expresion PARENTESISC
+
+    PARENTESISA     shift and go to state 13
+
+
+state 8
+
+    (3) instrucciones -> instrucciones instruccion .
+
+    error           reduce using rule 3 (instrucciones -> instrucciones instruccion .)
+    PRINT           reduce using rule 3 (instrucciones -> instrucciones instruccion .)
+    PRINTLN         reduce using rule 3 (instrucciones -> instrucciones instruccion .)
+    $end            reduce using rule 3 (instrucciones -> instrucciones instruccion .)
+
+
+state 9
+
+    (5) instruccion -> imprimir_instr fininstr .
+
+    error           reduce using rule 5 (instruccion -> imprimir_instr fininstr .)
+    PRINT           reduce using rule 5 (instruccion -> imprimir_instr fininstr .)
+    PRINTLN         reduce using rule 5 (instruccion -> imprimir_instr fininstr .)
+    $end            reduce using rule 5 (instruccion -> imprimir_instr fininstr .)
+
+
+state 10
+
+    (2) fininstr -> PUNTOCOMA .
+
+    error           reduce using rule 2 (fininstr -> PUNTOCOMA .)
+    PRINT           reduce using rule 2 (fininstr -> PUNTOCOMA .)
+    PRINTLN         reduce using rule 2 (fininstr -> PUNTOCOMA .)
+    $end            reduce using rule 2 (fininstr -> PUNTOCOMA .)
+
+
+state 11
+
+    (6) instruccion -> error fininstr .
+
+    error           reduce using rule 6 (instruccion -> error fininstr .)
+    PRINT           reduce using rule 6 (instruccion -> error fininstr .)
+    PRINTLN         reduce using rule 6 (instruccion -> error fininstr .)
+    $end            reduce using rule 6 (instruccion -> error fininstr .)
+
+
+state 12
+
+    (7) imprimir_instr -> PRINT PARENTESISA . expresion PARENTESISC
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 14
+    bandera                        shift and go to state 20
+
+state 13
+
+    (8) imprimir_instr -> PRINTLN PARENTESISA . expresion PARENTESISC
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 23
+    bandera                        shift and go to state 20
+
+state 14
+
+    (7) imprimir_instr -> PRINT PARENTESISA expresion . PARENTESISC
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+    PARENTESISC     shift and go to state 24
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+
+state 15
+
+    (9) expresion -> CADENA .
+
+    PARENTESISC     reduce using rule 9 (expresion -> CADENA .)
+    MAS             reduce using rule 9 (expresion -> CADENA .)
+    MENOS           reduce using rule 9 (expresion -> CADENA .)
+    ASTERISCO       reduce using rule 9 (expresion -> CADENA .)
+    DIVISION        reduce using rule 9 (expresion -> CADENA .)
+    POTENCIA        reduce using rule 9 (expresion -> CADENA .)
+    PORCENTAJE      reduce using rule 9 (expresion -> CADENA .)
+
+
+state 16
+
+    (10) expresion -> CARACTER .
+
+    PARENTESISC     reduce using rule 10 (expresion -> CARACTER .)
+    MAS             reduce using rule 10 (expresion -> CARACTER .)
+    MENOS           reduce using rule 10 (expresion -> CARACTER .)
+    ASTERISCO       reduce using rule 10 (expresion -> CARACTER .)
+    DIVISION        reduce using rule 10 (expresion -> CARACTER .)
+    POTENCIA        reduce using rule 10 (expresion -> CARACTER .)
+    PORCENTAJE      reduce using rule 10 (expresion -> CARACTER .)
+
+
+state 17
+
+    (11) expresion -> ENTERO .
+
+    PARENTESISC     reduce using rule 11 (expresion -> ENTERO .)
+    MAS             reduce using rule 11 (expresion -> ENTERO .)
+    MENOS           reduce using rule 11 (expresion -> ENTERO .)
+    ASTERISCO       reduce using rule 11 (expresion -> ENTERO .)
+    DIVISION        reduce using rule 11 (expresion -> ENTERO .)
+    POTENCIA        reduce using rule 11 (expresion -> ENTERO .)
+    PORCENTAJE      reduce using rule 11 (expresion -> ENTERO .)
+
+
+state 18
+
+    (12) expresion -> DOBLE .
+
+    PARENTESISC     reduce using rule 12 (expresion -> DOBLE .)
+    MAS             reduce using rule 12 (expresion -> DOBLE .)
+    MENOS           reduce using rule 12 (expresion -> DOBLE .)
+    ASTERISCO       reduce using rule 12 (expresion -> DOBLE .)
+    DIVISION        reduce using rule 12 (expresion -> DOBLE .)
+    POTENCIA        reduce using rule 12 (expresion -> DOBLE .)
+    PORCENTAJE      reduce using rule 12 (expresion -> DOBLE .)
+
+
+state 19
+
+    (13) expresion -> NOTHING .
+
+    PARENTESISC     reduce using rule 13 (expresion -> NOTHING .)
+    MAS             reduce using rule 13 (expresion -> NOTHING .)
+    MENOS           reduce using rule 13 (expresion -> NOTHING .)
+    ASTERISCO       reduce using rule 13 (expresion -> NOTHING .)
+    DIVISION        reduce using rule 13 (expresion -> NOTHING .)
+    POTENCIA        reduce using rule 13 (expresion -> NOTHING .)
+    PORCENTAJE      reduce using rule 13 (expresion -> NOTHING .)
+
+
+state 20
+
+    (14) expresion -> bandera .
+
+    PARENTESISC     reduce using rule 14 (expresion -> bandera .)
+    MAS             reduce using rule 14 (expresion -> bandera .)
+    MENOS           reduce using rule 14 (expresion -> bandera .)
+    ASTERISCO       reduce using rule 14 (expresion -> bandera .)
+    DIVISION        reduce using rule 14 (expresion -> bandera .)
+    POTENCIA        reduce using rule 14 (expresion -> bandera .)
+    PORCENTAJE      reduce using rule 14 (expresion -> bandera .)
+
+
+state 21
+
+    (21) bandera -> TRUE .
+
+    PARENTESISC     reduce using rule 21 (bandera -> TRUE .)
+    MAS             reduce using rule 21 (bandera -> TRUE .)
+    MENOS           reduce using rule 21 (bandera -> TRUE .)
+    ASTERISCO       reduce using rule 21 (bandera -> TRUE .)
+    DIVISION        reduce using rule 21 (bandera -> TRUE .)
+    POTENCIA        reduce using rule 21 (bandera -> TRUE .)
+    PORCENTAJE      reduce using rule 21 (bandera -> TRUE .)
+
+
+state 22
+
+    (22) bandera -> FALSE .
+
+    PARENTESISC     reduce using rule 22 (bandera -> FALSE .)
+    MAS             reduce using rule 22 (bandera -> FALSE .)
+    MENOS           reduce using rule 22 (bandera -> FALSE .)
+    ASTERISCO       reduce using rule 22 (bandera -> FALSE .)
+    DIVISION        reduce using rule 22 (bandera -> FALSE .)
+    POTENCIA        reduce using rule 22 (bandera -> FALSE .)
+    PORCENTAJE      reduce using rule 22 (bandera -> FALSE .)
+
+
+state 23
+
+    (8) imprimir_instr -> PRINTLN PARENTESISA expresion . PARENTESISC
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+    PARENTESISC     shift and go to state 31
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+
+state 24
+
+    (7) imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .
+
+    PUNTOCOMA       reduce using rule 7 (imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .)
+
+
+state 25
+
+    (15) expresion -> expresion MAS . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 32
+    bandera                        shift and go to state 20
+
+state 26
+
+    (16) expresion -> expresion MENOS . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 33
+    bandera                        shift and go to state 20
+
+state 27
+
+    (17) expresion -> expresion ASTERISCO . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 34
+    bandera                        shift and go to state 20
+
+state 28
+
+    (18) expresion -> expresion DIVISION . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 35
+    bandera                        shift and go to state 20
+
+state 29
+
+    (19) expresion -> expresion POTENCIA . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 36
+    bandera                        shift and go to state 20
+
+state 30
+
+    (20) expresion -> expresion PORCENTAJE . expresion
+    (9) expresion -> . CADENA
+    (10) expresion -> . CARACTER
+    (11) expresion -> . ENTERO
+    (12) expresion -> . DOBLE
+    (13) expresion -> . NOTHING
+    (14) expresion -> . bandera
+    (15) expresion -> . expresion MAS expresion
+    (16) expresion -> . expresion MENOS expresion
+    (17) expresion -> . expresion ASTERISCO expresion
+    (18) expresion -> . expresion DIVISION expresion
+    (19) expresion -> . expresion POTENCIA expresion
+    (20) expresion -> . expresion PORCENTAJE expresion
+    (21) bandera -> . TRUE
+    (22) bandera -> . FALSE
+
+    CADENA          shift and go to state 15
+    CARACTER        shift and go to state 16
+    ENTERO          shift and go to state 17
+    DOBLE           shift and go to state 18
+    NOTHING         shift and go to state 19
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expresion                      shift and go to state 37
+    bandera                        shift and go to state 20
+
+state 31
+
+    (8) imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .
+
+    PUNTOCOMA       reduce using rule 8 (imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .)
+
+
+state 32
+
+    (15) expresion -> expresion MAS expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 15 (expresion -> expresion MAS expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+  ! MENOS           [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+  ! ASTERISCO       [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+  ! DIVISION        [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+  ! POTENCIA        [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 15 (expresion -> expresion MAS expresion .) ]
+
+
+state 33
+
+    (16) expresion -> expresion MENOS expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 16 (expresion -> expresion MENOS expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+  ! MENOS           [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+  ! ASTERISCO       [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+  ! DIVISION        [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+  ! POTENCIA        [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 16 (expresion -> expresion MENOS expresion .) ]
+
+
+state 34
+
+    (17) expresion -> expresion ASTERISCO expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 17 (expresion -> expresion ASTERISCO expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+  ! MENOS           [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+  ! ASTERISCO       [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+  ! DIVISION        [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+  ! POTENCIA        [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 17 (expresion -> expresion ASTERISCO expresion .) ]
+
+
+state 35
+
+    (18) expresion -> expresion DIVISION expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 18 (expresion -> expresion DIVISION expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+  ! MENOS           [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+  ! ASTERISCO       [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+  ! DIVISION        [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+  ! POTENCIA        [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 18 (expresion -> expresion DIVISION expresion .) ]
+
+
+state 36
+
+    (19) expresion -> expresion POTENCIA expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 19 (expresion -> expresion POTENCIA expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+  ! MENOS           [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+  ! ASTERISCO       [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+  ! DIVISION        [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+  ! POTENCIA        [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 19 (expresion -> expresion POTENCIA expresion .) ]
+
+
+state 37
+
+    (20) expresion -> expresion PORCENTAJE expresion .
+    (15) expresion -> expresion . MAS expresion
+    (16) expresion -> expresion . MENOS expresion
+    (17) expresion -> expresion . ASTERISCO expresion
+    (18) expresion -> expresion . DIVISION expresion
+    (19) expresion -> expresion . POTENCIA expresion
+    (20) expresion -> expresion . PORCENTAJE expresion
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for ASTERISCO resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for POTENCIA resolved as shift
+  ! shift/reduce conflict for PORCENTAJE resolved as shift
+    PARENTESISC     reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .)
+    MAS             shift and go to state 25
+    MENOS           shift and go to state 26
+    ASTERISCO       shift and go to state 27
+    DIVISION        shift and go to state 28
+    POTENCIA        shift and go to state 29
+    PORCENTAJE      shift and go to state 30
+
+  ! MAS             [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+  ! MENOS           [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+  ! ASTERISCO       [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+  ! DIVISION        [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+  ! POTENCIA        [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+  ! PORCENTAJE      [ reduce using rule 20 (expresion -> expresion PORCENTAJE expresion .) ]
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for MAS in state 32 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 32 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 32 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 32 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 32 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 32 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 33 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 33 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 33 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 33 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 33 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 33 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 34 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 34 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 34 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 34 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 34 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 34 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 35 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 35 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 35 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 35 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 35 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 35 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 36 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 36 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 36 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 36 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 36 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 36 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 37 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 37 resolved as shift
+WARNING: shift/reduce conflict for ASTERISCO in state 37 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 37 resolved as shift
+WARNING: shift/reduce conflict for POTENCIA in state 37 resolved as shift
+WARNING: shift/reduce conflict for PORCENTAJE in state 37 resolved as shift
