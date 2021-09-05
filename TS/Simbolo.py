@@ -1,17 +1,18 @@
 from TS.Tipo import Tipo
 
 class Simbolo:
-    def __init__(self, identificador, tipo, valor, fila, columna):
+    def __init__(self, identificador, tipo, valor, local, globall, fila, columna):
         self.identificador = identificador
         self.tipo = tipo
         self.valor = valor
+        self.local = local
+        self.globall = globall
         self.fila = fila
         self.columna = columna
 
 
     def getID(self):
         return self.identificador
-
 
     def setID(self, id):
         self.identificador = id

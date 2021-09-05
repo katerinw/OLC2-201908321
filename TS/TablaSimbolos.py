@@ -4,11 +4,11 @@ class TablaSimbolos:
     def __init__(self, anterior = None):
         self.tabla = {} #Da un diccionario vacio
         self.anterior = anterior
-        self.funciones = []
 
     def setTabla(self, simbolo): #Agrega una variable al entorno
-        if simbolo.id in self.tabla:
-            return Excepcion("Semántico", "Variable \"" + simbolo.identificador + "\" ya existe", simbolo.fila, simbolo.columna)
+        if simbolo.identificador in self.tabla:
+            return True
+            #return Excepcion("Semántico", "Variable \"" + simbolo.identificador + "\" ya existe", simbolo.fila, simbolo.columna)
         else: 
             self.tabla[simbolo.identificador] = simbolo
             return None

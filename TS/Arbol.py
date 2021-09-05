@@ -36,4 +36,16 @@ class Arbol:
     def setTSGlobal(self, TSGlobal):
         self.TSGlobal = TSGlobal
 
+    def getFunciones(self):
+        return self.funciones
+
+    def getFuncion(self, identificador):
+        for funcion in self.funciones:
+            if funcion.identificador == identificador:
+                return funcion
+        return None
+
+    def addFuncion(self, funcion):
+        self.funciones.append(funcion)
+
     
