@@ -1,12 +1,30 @@
-
-h = 9+9;
-function hola()
-    local j;
-    h = "HEY";
-    println(h);
-    print("ahuevo ");
-    println("funciono");
+x = (3*5)::Int64;
+str = "Saludos";
+function ejemplo()
+    local str; 
+    str = "Ejemplo";
+    x = 0;
+    i = 1;
+    while i < 5
+        local x = 0;
+        local str = "HEY";
+        x = i *2;
+        println(x);
+        i = i + 1;
+    end;
+    println(x);
+    println(str);
 end;
 
-hola();
-    
+function ejemplo2()
+    println(str);
+end;
+
+ejemplo();
+ejemplo2();
+
+println(x);
+println(str);
+
+
+#HAY PROBLEMA PORQUE AGARRA LA X LOCAL COMO GLOBAL Y MODIFICA LA GLOBAL

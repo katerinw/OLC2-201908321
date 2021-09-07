@@ -65,16 +65,20 @@ Rule 43    asignacion_instr -> ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
 Rule 44    asignacion_instr -> ID IGUAL expresion
 Rule 45    declaracion_var_instr -> LOCAL ID
 Rule 46    declaracion_var_instr -> GLOBAL ID
-Rule 47    imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC
-Rule 48    imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC
-Rule 49    funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-Rule 50    funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-Rule 51    parametros -> parametros COMA parametro
-Rule 52    parametros -> parametro
-Rule 53    parametro -> ID DOSPUNTOS DOSPUNTOS tipo
-Rule 54    parametro -> ID
-Rule 55    llamada_funcion_instr -> ID PARENTESISA PARENTESISC
-Rule 56    while_instr -> WHILE expresion instrucciones END
+Rule 47    declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+Rule 48    declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+Rule 49    declaracion_var_instr -> GLOBAL ID IGUAL expresion
+Rule 50    declaracion_var_instr -> LOCAL ID IGUAL expresion
+Rule 51    imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC
+Rule 52    imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC
+Rule 53    funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+Rule 54    funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+Rule 55    parametros -> parametros COMA parametro
+Rule 56    parametros -> parametro
+Rule 57    parametro -> ID DOSPUNTOS DOSPUNTOS tipo
+Rule 58    parametro -> ID
+Rule 59    llamada_funcion_instr -> ID PARENTESISA PARENTESISC
+Rule 60    while_instr -> WHILE expresion instrucciones END
 
 Terminals, with rules where they appear
 
@@ -84,27 +88,27 @@ BOOL                 : 42
 CADENA               : 13
 CARACTER             : 14
 CHAR                 : 41
-COMA                 : 51
+COMA                 : 55
 COS                  : 
 DIAGONAL             : 
 DIFERENTE            : 27
 DIVISION             : 23
 DOBLE                : 16
-DOSPUNTOS            : 43 43 53 53
-END                  : 49 50 56
+DOSPUNTOS            : 43 43 47 47 48 48 57 57
+END                  : 53 54 60
 ENTERO               : 15
 FALSE                : 37
 FLOAT64              : 39
 FOR                  : 
-FUNCTION             : 49 50
-GLOBAL               : 46
-ID                   : 18 43 44 45 46 49 50 53 54 55
-IGUAL                : 43 44
+FUNCTION             : 53 54
+GLOBAL               : 46 47 49
+ID                   : 18 43 44 45 46 47 48 49 50 53 54 57 58 59
+IGUAL                : 43 44 47 48 49 50
 IGUALIGUAL           : 26
 INT64                : 38
 LLAVESA              : 
 LLAVESC              : 
-LOCAL                : 45
+LOCAL                : 45 48 50
 LOG                  : 
 LOG10                : 
 MAS                  : 20
@@ -116,12 +120,12 @@ MENOS                : 21 35
 NOT                  : 34
 NOTHING              : 17
 OR                   : 33
-PARENTESISA          : 12 47 48 49 50 55
-PARENTESISC          : 12 47 48 49 50 55
+PARENTESISA          : 12 51 52 53 54 59
+PARENTESISC          : 12 51 52 53 54 59
 PORCENTAJE           : 25
 POTENCIA             : 24
-PRINT                : 47
-PRINTLN              : 48
+PRINT                : 51
+PRINTLN              : 52
 PUNTOCOMA            : 2
 SIN                  : 
 SQRT                 : 
@@ -129,7 +133,7 @@ STRING               : 40
 STRUCT               : 
 TAN                  : 
 TRUE                 : 36
-WHILE                : 56
+WHILE                : 60
 error                : 11
 ignore_COMENTARIOMULTILINEA : 
 ignore_COMENTARIOUNILINEA : 
@@ -139,17 +143,17 @@ Nonterminals, with rules where they appear
 asignacion_instr     : 6
 bandera              : 19
 declaracion_var_instr : 7
-expresion            : 12 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 33 34 35 43 44 47 48 56
+expresion            : 12 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 33 34 35 43 44 47 48 49 50 51 52 60
 fininstr             : 5 6 7 8 9 10 11
 funciones_instr      : 8
 imprimir_instr       : 5
 inicio               : 0
 instruccion          : 3 4
-instrucciones        : 1 3 49 50 56
+instrucciones        : 1 3 53 54 60
 llamada_funcion_instr : 10
-parametro            : 51 52
-parametros           : 50 51
-tipo                 : 43 53
+parametro            : 55 56
+parametros           : 54 55
+tipo                 : 43 47 48 57
 while_instr          : 9
 
 Parsing method: LALR
@@ -167,16 +171,20 @@ state 0
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
     error           shift and go to state 10
     PRINT           shift and go to state 11
@@ -214,16 +222,20 @@ state 2
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
     $end            reduce using rule 1 (inicio -> instrucciones .)
     error           shift and go to state 10
@@ -324,14 +336,14 @@ state 10
 
 state 11
 
-    (47) imprimir_instr -> PRINT . PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> PRINT . PARENTESISA expresion PARENTESISC
 
     PARENTESISA     shift and go to state 27
 
 
 state 12
 
-    (48) imprimir_instr -> PRINTLN . PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> PRINTLN . PARENTESISA expresion PARENTESISC
 
     PARENTESISA     shift and go to state 28
 
@@ -340,7 +352,7 @@ state 13
 
     (43) asignacion_instr -> ID . IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> ID . IGUAL expresion
-    (55) llamada_funcion_instr -> ID . PARENTESISA PARENTESISC
+    (59) llamada_funcion_instr -> ID . PARENTESISA PARENTESISC
 
     IGUAL           shift and go to state 29
     PARENTESISA     shift and go to state 30
@@ -349,6 +361,8 @@ state 13
 state 14
 
     (45) declaracion_var_instr -> LOCAL . ID
+    (48) declaracion_var_instr -> LOCAL . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (50) declaracion_var_instr -> LOCAL . ID IGUAL expresion
 
     ID              shift and go to state 31
 
@@ -356,21 +370,23 @@ state 14
 state 15
 
     (46) declaracion_var_instr -> GLOBAL . ID
+    (47) declaracion_var_instr -> GLOBAL . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> GLOBAL . ID IGUAL expresion
 
     ID              shift and go to state 32
 
 
 state 16
 
-    (49) funciones_instr -> FUNCTION . ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> FUNCTION . ID PARENTESISA parametros PARENTESISC instrucciones END
+    (53) funciones_instr -> FUNCTION . ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> FUNCTION . ID PARENTESISA parametros PARENTESISC instrucciones END
 
     ID              shift and go to state 33
 
 
 state 17
 
-    (56) while_instr -> WHILE . expresion instrucciones END
+    (60) while_instr -> WHILE . expresion instrucciones END
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -559,7 +575,7 @@ state 26
 
 state 27
 
-    (47) imprimir_instr -> PRINT PARENTESISA . expresion PARENTESISC
+    (51) imprimir_instr -> PRINT PARENTESISA . expresion PARENTESISC
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -604,7 +620,7 @@ state 27
 
 state 28
 
-    (48) imprimir_instr -> PRINTLN PARENTESISA . expresion PARENTESISC
+    (52) imprimir_instr -> PRINTLN PARENTESISA . expresion PARENTESISC
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -695,7 +711,7 @@ state 29
 
 state 30
 
-    (55) llamada_funcion_instr -> ID PARENTESISA . PARENTESISC
+    (59) llamada_funcion_instr -> ID PARENTESISA . PARENTESISC
 
     PARENTESISC     shift and go to state 50
 
@@ -703,28 +719,34 @@ state 30
 state 31
 
     (45) declaracion_var_instr -> LOCAL ID .
+    (48) declaracion_var_instr -> LOCAL ID . IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (50) declaracion_var_instr -> LOCAL ID . IGUAL expresion
 
     PUNTOCOMA       reduce using rule 45 (declaracion_var_instr -> LOCAL ID .)
+    IGUAL           shift and go to state 51
 
 
 state 32
 
     (46) declaracion_var_instr -> GLOBAL ID .
+    (47) declaracion_var_instr -> GLOBAL ID . IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> GLOBAL ID . IGUAL expresion
 
     PUNTOCOMA       reduce using rule 46 (declaracion_var_instr -> GLOBAL ID .)
+    IGUAL           shift and go to state 52
 
 
 state 33
 
-    (49) funciones_instr -> FUNCTION ID . PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> FUNCTION ID . PARENTESISA parametros PARENTESISC instrucciones END
+    (53) funciones_instr -> FUNCTION ID . PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> FUNCTION ID . PARENTESISA parametros PARENTESISC instrucciones END
 
-    PARENTESISA     shift and go to state 51
+    PARENTESISA     shift and go to state 53
 
 
 state 34
 
-    (56) while_instr -> WHILE expresion . instrucciones END
+    (60) while_instr -> WHILE expresion . instrucciones END
     (20) expresion -> expresion . MAS expresion
     (21) expresion -> expresion . MENOS expresion
     (22) expresion -> expresion . ASTERISCO expresion
@@ -748,31 +770,35 @@ state 34
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
-    OR              shift and go to state 66
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
     error           shift and go to state 10
     PRINT           shift and go to state 11
     PRINTLN         shift and go to state 12
@@ -782,7 +808,7 @@ state 34
     FUNCTION        shift and go to state 16
     WHILE           shift and go to state 17
 
-    instrucciones                  shift and go to state 52
+    instrucciones                  shift and go to state 54
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     asignacion_instr               shift and go to state 5
@@ -833,7 +859,7 @@ state 35
     TRUE            shift and go to state 45
     FALSE           shift and go to state 46
 
-    expresion                      shift and go to state 67
+    expresion                      shift and go to state 69
     bandera                        shift and go to state 42
 
 state 36
@@ -1095,7 +1121,7 @@ state 43
     TRUE            shift and go to state 45
     FALSE           shift and go to state 46
 
-    expresion                      shift and go to state 68
+    expresion                      shift and go to state 70
     bandera                        shift and go to state 42
 
 state 44
@@ -1140,7 +1166,7 @@ state 44
     TRUE            shift and go to state 45
     FALSE           shift and go to state 46
 
-    expresion                      shift and go to state 69
+    expresion                      shift and go to state 71
     bandera                        shift and go to state 42
 
 state 45
@@ -1207,7 +1233,7 @@ state 46
 
 state 47
 
-    (47) imprimir_instr -> PRINT PARENTESISA expresion . PARENTESISC
+    (51) imprimir_instr -> PRINT PARENTESISA expresion . PARENTESISC
     (20) expresion -> expresion . MAS expresion
     (21) expresion -> expresion . MENOS expresion
     (22) expresion -> expresion . ASTERISCO expresion
@@ -1223,26 +1249,26 @@ state 47
     (32) expresion -> expresion . AND expresion
     (33) expresion -> expresion . OR expresion
 
-    PARENTESISC     shift and go to state 70
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
-    OR              shift and go to state 66
+    PARENTESISC     shift and go to state 72
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
 
 
 state 48
 
-    (48) imprimir_instr -> PRINTLN PARENTESISA expresion . PARENTESISC
+    (52) imprimir_instr -> PRINTLN PARENTESISA expresion . PARENTESISC
     (20) expresion -> expresion . MAS expresion
     (21) expresion -> expresion . MENOS expresion
     (22) expresion -> expresion . ASTERISCO expresion
@@ -1258,21 +1284,21 @@ state 48
     (32) expresion -> expresion . AND expresion
     (33) expresion -> expresion . OR expresion
 
-    PARENTESISC     shift and go to state 71
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
-    OR              shift and go to state 66
+    PARENTESISC     shift and go to state 73
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
 
 
 state 49
@@ -1294,49 +1320,141 @@ state 49
     (32) expresion -> expresion . AND expresion
     (33) expresion -> expresion . OR expresion
 
-    DOSPUNTOS       shift and go to state 72
+    DOSPUNTOS       shift and go to state 74
     PUNTOCOMA       reduce using rule 44 (asignacion_instr -> ID IGUAL expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
-    OR              shift and go to state 66
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
 
 
 state 50
 
-    (55) llamada_funcion_instr -> ID PARENTESISA PARENTESISC .
+    (59) llamada_funcion_instr -> ID PARENTESISA PARENTESISC .
 
-    PUNTOCOMA       reduce using rule 55 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
+    PUNTOCOMA       reduce using rule 59 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
 
 
 state 51
 
-    (49) funciones_instr -> FUNCTION ID PARENTESISA . PARENTESISC instrucciones END
-    (50) funciones_instr -> FUNCTION ID PARENTESISA . parametros PARENTESISC instrucciones END
-    (51) parametros -> . parametros COMA parametro
-    (52) parametros -> . parametro
-    (53) parametro -> . ID DOSPUNTOS DOSPUNTOS tipo
-    (54) parametro -> . ID
+    (48) declaracion_var_instr -> LOCAL ID IGUAL . expresion DOSPUNTOS DOSPUNTOS tipo
+    (50) declaracion_var_instr -> LOCAL ID IGUAL . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
 
-    PARENTESISC     shift and go to state 74
-    ID              shift and go to state 73
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
 
-    parametros                     shift and go to state 75
-    parametro                      shift and go to state 76
+    expresion                      shift and go to state 75
+    bandera                        shift and go to state 42
 
 state 52
 
-    (56) while_instr -> WHILE expresion instrucciones . END
+    (47) declaracion_var_instr -> GLOBAL ID IGUAL . expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> GLOBAL ID IGUAL . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
+
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
+
+    expresion                      shift and go to state 76
+    bandera                        shift and go to state 42
+
+state 53
+
+    (53) funciones_instr -> FUNCTION ID PARENTESISA . PARENTESISC instrucciones END
+    (54) funciones_instr -> FUNCTION ID PARENTESISA . parametros PARENTESISC instrucciones END
+    (55) parametros -> . parametros COMA parametro
+    (56) parametros -> . parametro
+    (57) parametro -> . ID DOSPUNTOS DOSPUNTOS tipo
+    (58) parametro -> . ID
+
+    PARENTESISC     shift and go to state 78
+    ID              shift and go to state 77
+
+    parametros                     shift and go to state 79
+    parametro                      shift and go to state 80
+
+state 54
+
+    (60) while_instr -> WHILE expresion instrucciones . END
     (3) instrucciones -> instrucciones . instruccion
     (5) instruccion -> . imprimir_instr fininstr
     (6) instruccion -> . asignacion_instr fininstr
@@ -1345,18 +1463,22 @@ state 52
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
-    END             shift and go to state 77
+    END             shift and go to state 81
     error           shift and go to state 10
     PRINT           shift and go to state 11
     PRINTLN         shift and go to state 12
@@ -1374,189 +1496,9 @@ state 52
     while_instr                    shift and go to state 8
     llamada_funcion_instr          shift and go to state 9
 
-state 53
-
-    (20) expresion -> expresion MAS . expresion
-    (12) expresion -> . PARENTESISA expresion PARENTESISC
-    (13) expresion -> . CADENA
-    (14) expresion -> . CARACTER
-    (15) expresion -> . ENTERO
-    (16) expresion -> . DOBLE
-    (17) expresion -> . NOTHING
-    (18) expresion -> . ID
-    (19) expresion -> . bandera
-    (20) expresion -> . expresion MAS expresion
-    (21) expresion -> . expresion MENOS expresion
-    (22) expresion -> . expresion ASTERISCO expresion
-    (23) expresion -> . expresion DIVISION expresion
-    (24) expresion -> . expresion POTENCIA expresion
-    (25) expresion -> . expresion PORCENTAJE expresion
-    (26) expresion -> . expresion IGUALIGUAL expresion
-    (27) expresion -> . expresion DIFERENTE expresion
-    (28) expresion -> . expresion MENOR expresion
-    (29) expresion -> . expresion MAYOR expresion
-    (30) expresion -> . expresion MENORIGUAL expresion
-    (31) expresion -> . expresion MAYORIGUAL expresion
-    (32) expresion -> . expresion AND expresion
-    (33) expresion -> . expresion OR expresion
-    (34) expresion -> . NOT expresion
-    (35) expresion -> . MENOS expresion
-    (36) bandera -> . TRUE
-    (37) bandera -> . FALSE
-
-    PARENTESISA     shift and go to state 35
-    CADENA          shift and go to state 36
-    CARACTER        shift and go to state 37
-    ENTERO          shift and go to state 38
-    DOBLE           shift and go to state 39
-    NOTHING         shift and go to state 40
-    ID              shift and go to state 41
-    NOT             shift and go to state 44
-    MENOS           shift and go to state 43
-    TRUE            shift and go to state 45
-    FALSE           shift and go to state 46
-
-    expresion                      shift and go to state 78
-    bandera                        shift and go to state 42
-
-state 54
-
-    (21) expresion -> expresion MENOS . expresion
-    (12) expresion -> . PARENTESISA expresion PARENTESISC
-    (13) expresion -> . CADENA
-    (14) expresion -> . CARACTER
-    (15) expresion -> . ENTERO
-    (16) expresion -> . DOBLE
-    (17) expresion -> . NOTHING
-    (18) expresion -> . ID
-    (19) expresion -> . bandera
-    (20) expresion -> . expresion MAS expresion
-    (21) expresion -> . expresion MENOS expresion
-    (22) expresion -> . expresion ASTERISCO expresion
-    (23) expresion -> . expresion DIVISION expresion
-    (24) expresion -> . expresion POTENCIA expresion
-    (25) expresion -> . expresion PORCENTAJE expresion
-    (26) expresion -> . expresion IGUALIGUAL expresion
-    (27) expresion -> . expresion DIFERENTE expresion
-    (28) expresion -> . expresion MENOR expresion
-    (29) expresion -> . expresion MAYOR expresion
-    (30) expresion -> . expresion MENORIGUAL expresion
-    (31) expresion -> . expresion MAYORIGUAL expresion
-    (32) expresion -> . expresion AND expresion
-    (33) expresion -> . expresion OR expresion
-    (34) expresion -> . NOT expresion
-    (35) expresion -> . MENOS expresion
-    (36) bandera -> . TRUE
-    (37) bandera -> . FALSE
-
-    PARENTESISA     shift and go to state 35
-    CADENA          shift and go to state 36
-    CARACTER        shift and go to state 37
-    ENTERO          shift and go to state 38
-    DOBLE           shift and go to state 39
-    NOTHING         shift and go to state 40
-    ID              shift and go to state 41
-    NOT             shift and go to state 44
-    MENOS           shift and go to state 43
-    TRUE            shift and go to state 45
-    FALSE           shift and go to state 46
-
-    expresion                      shift and go to state 79
-    bandera                        shift and go to state 42
-
 state 55
 
-    (22) expresion -> expresion ASTERISCO . expresion
-    (12) expresion -> . PARENTESISA expresion PARENTESISC
-    (13) expresion -> . CADENA
-    (14) expresion -> . CARACTER
-    (15) expresion -> . ENTERO
-    (16) expresion -> . DOBLE
-    (17) expresion -> . NOTHING
-    (18) expresion -> . ID
-    (19) expresion -> . bandera
-    (20) expresion -> . expresion MAS expresion
-    (21) expresion -> . expresion MENOS expresion
-    (22) expresion -> . expresion ASTERISCO expresion
-    (23) expresion -> . expresion DIVISION expresion
-    (24) expresion -> . expresion POTENCIA expresion
-    (25) expresion -> . expresion PORCENTAJE expresion
-    (26) expresion -> . expresion IGUALIGUAL expresion
-    (27) expresion -> . expresion DIFERENTE expresion
-    (28) expresion -> . expresion MENOR expresion
-    (29) expresion -> . expresion MAYOR expresion
-    (30) expresion -> . expresion MENORIGUAL expresion
-    (31) expresion -> . expresion MAYORIGUAL expresion
-    (32) expresion -> . expresion AND expresion
-    (33) expresion -> . expresion OR expresion
-    (34) expresion -> . NOT expresion
-    (35) expresion -> . MENOS expresion
-    (36) bandera -> . TRUE
-    (37) bandera -> . FALSE
-
-    PARENTESISA     shift and go to state 35
-    CADENA          shift and go to state 36
-    CARACTER        shift and go to state 37
-    ENTERO          shift and go to state 38
-    DOBLE           shift and go to state 39
-    NOTHING         shift and go to state 40
-    ID              shift and go to state 41
-    NOT             shift and go to state 44
-    MENOS           shift and go to state 43
-    TRUE            shift and go to state 45
-    FALSE           shift and go to state 46
-
-    expresion                      shift and go to state 80
-    bandera                        shift and go to state 42
-
-state 56
-
-    (23) expresion -> expresion DIVISION . expresion
-    (12) expresion -> . PARENTESISA expresion PARENTESISC
-    (13) expresion -> . CADENA
-    (14) expresion -> . CARACTER
-    (15) expresion -> . ENTERO
-    (16) expresion -> . DOBLE
-    (17) expresion -> . NOTHING
-    (18) expresion -> . ID
-    (19) expresion -> . bandera
-    (20) expresion -> . expresion MAS expresion
-    (21) expresion -> . expresion MENOS expresion
-    (22) expresion -> . expresion ASTERISCO expresion
-    (23) expresion -> . expresion DIVISION expresion
-    (24) expresion -> . expresion POTENCIA expresion
-    (25) expresion -> . expresion PORCENTAJE expresion
-    (26) expresion -> . expresion IGUALIGUAL expresion
-    (27) expresion -> . expresion DIFERENTE expresion
-    (28) expresion -> . expresion MENOR expresion
-    (29) expresion -> . expresion MAYOR expresion
-    (30) expresion -> . expresion MENORIGUAL expresion
-    (31) expresion -> . expresion MAYORIGUAL expresion
-    (32) expresion -> . expresion AND expresion
-    (33) expresion -> . expresion OR expresion
-    (34) expresion -> . NOT expresion
-    (35) expresion -> . MENOS expresion
-    (36) bandera -> . TRUE
-    (37) bandera -> . FALSE
-
-    PARENTESISA     shift and go to state 35
-    CADENA          shift and go to state 36
-    CARACTER        shift and go to state 37
-    ENTERO          shift and go to state 38
-    DOBLE           shift and go to state 39
-    NOTHING         shift and go to state 40
-    ID              shift and go to state 41
-    NOT             shift and go to state 44
-    MENOS           shift and go to state 43
-    TRUE            shift and go to state 45
-    FALSE           shift and go to state 46
-
-    expresion                      shift and go to state 81
-    bandera                        shift and go to state 42
-
-state 57
-
-    (24) expresion -> expresion POTENCIA . expresion
+    (20) expresion -> expresion MAS . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1599,9 +1541,9 @@ state 57
     expresion                      shift and go to state 82
     bandera                        shift and go to state 42
 
-state 58
+state 56
 
-    (25) expresion -> expresion PORCENTAJE . expresion
+    (21) expresion -> expresion MENOS . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1644,9 +1586,9 @@ state 58
     expresion                      shift and go to state 83
     bandera                        shift and go to state 42
 
-state 59
+state 57
 
-    (26) expresion -> expresion IGUALIGUAL . expresion
+    (22) expresion -> expresion ASTERISCO . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1689,9 +1631,9 @@ state 59
     expresion                      shift and go to state 84
     bandera                        shift and go to state 42
 
-state 60
+state 58
 
-    (27) expresion -> expresion DIFERENTE . expresion
+    (23) expresion -> expresion DIVISION . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1734,9 +1676,9 @@ state 60
     expresion                      shift and go to state 85
     bandera                        shift and go to state 42
 
-state 61
+state 59
 
-    (28) expresion -> expresion MENOR . expresion
+    (24) expresion -> expresion POTENCIA . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1779,9 +1721,9 @@ state 61
     expresion                      shift and go to state 86
     bandera                        shift and go to state 42
 
-state 62
+state 60
 
-    (29) expresion -> expresion MAYOR . expresion
+    (25) expresion -> expresion PORCENTAJE . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1824,9 +1766,9 @@ state 62
     expresion                      shift and go to state 87
     bandera                        shift and go to state 42
 
-state 63
+state 61
 
-    (30) expresion -> expresion MENORIGUAL . expresion
+    (26) expresion -> expresion IGUALIGUAL . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1869,9 +1811,9 @@ state 63
     expresion                      shift and go to state 88
     bandera                        shift and go to state 42
 
-state 64
+state 62
 
-    (31) expresion -> expresion MAYORIGUAL . expresion
+    (27) expresion -> expresion DIFERENTE . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1914,9 +1856,9 @@ state 64
     expresion                      shift and go to state 89
     bandera                        shift and go to state 42
 
-state 65
+state 63
 
-    (32) expresion -> expresion AND . expresion
+    (28) expresion -> expresion MENOR . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -1959,9 +1901,9 @@ state 65
     expresion                      shift and go to state 90
     bandera                        shift and go to state 42
 
-state 66
+state 64
 
-    (33) expresion -> expresion OR . expresion
+    (29) expresion -> expresion MAYOR . expresion
     (12) expresion -> . PARENTESISA expresion PARENTESISC
     (13) expresion -> . CADENA
     (14) expresion -> . CARACTER
@@ -2004,7 +1946,187 @@ state 66
     expresion                      shift and go to state 91
     bandera                        shift and go to state 42
 
+state 65
+
+    (30) expresion -> expresion MENORIGUAL . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
+
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
+
+    expresion                      shift and go to state 92
+    bandera                        shift and go to state 42
+
+state 66
+
+    (31) expresion -> expresion MAYORIGUAL . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
+
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
+
+    expresion                      shift and go to state 93
+    bandera                        shift and go to state 42
+
 state 67
+
+    (32) expresion -> expresion AND . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
+
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
+
+    expresion                      shift and go to state 94
+    bandera                        shift and go to state 42
+
+state 68
+
+    (33) expresion -> expresion OR . expresion
+    (12) expresion -> . PARENTESISA expresion PARENTESISC
+    (13) expresion -> . CADENA
+    (14) expresion -> . CARACTER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DOBLE
+    (17) expresion -> . NOTHING
+    (18) expresion -> . ID
+    (19) expresion -> . bandera
+    (20) expresion -> . expresion MAS expresion
+    (21) expresion -> . expresion MENOS expresion
+    (22) expresion -> . expresion ASTERISCO expresion
+    (23) expresion -> . expresion DIVISION expresion
+    (24) expresion -> . expresion POTENCIA expresion
+    (25) expresion -> . expresion PORCENTAJE expresion
+    (26) expresion -> . expresion IGUALIGUAL expresion
+    (27) expresion -> . expresion DIFERENTE expresion
+    (28) expresion -> . expresion MENOR expresion
+    (29) expresion -> . expresion MAYOR expresion
+    (30) expresion -> . expresion MENORIGUAL expresion
+    (31) expresion -> . expresion MAYORIGUAL expresion
+    (32) expresion -> . expresion AND expresion
+    (33) expresion -> . expresion OR expresion
+    (34) expresion -> . NOT expresion
+    (35) expresion -> . MENOS expresion
+    (36) bandera -> . TRUE
+    (37) bandera -> . FALSE
+
+    PARENTESISA     shift and go to state 35
+    CADENA          shift and go to state 36
+    CARACTER        shift and go to state 37
+    ENTERO          shift and go to state 38
+    DOBLE           shift and go to state 39
+    NOTHING         shift and go to state 40
+    ID              shift and go to state 41
+    NOT             shift and go to state 44
+    MENOS           shift and go to state 43
+    TRUE            shift and go to state 45
+    FALSE           shift and go to state 46
+
+    expresion                      shift and go to state 95
+    bandera                        shift and go to state 42
+
+state 69
 
     (12) expresion -> PARENTESISA expresion . PARENTESISC
     (20) expresion -> expresion . MAS expresion
@@ -2022,24 +2144,24 @@ state 67
     (32) expresion -> expresion . AND expresion
     (33) expresion -> expresion . OR expresion
 
-    PARENTESISC     shift and go to state 92
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
-    OR              shift and go to state 66
+    PARENTESISC     shift and go to state 96
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
 
 
-state 68
+state 70
 
     (35) expresion -> MENOS expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2083,23 +2205,23 @@ state 68
     DOSPUNTOS       reduce using rule 35 (expresion -> MENOS expresion .)
     PUNTOCOMA       reduce using rule 35 (expresion -> MENOS expresion .)
 
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! ASTERISCO       [ shift and go to state 55 ]
-  ! DIVISION        [ shift and go to state 56 ]
-  ! POTENCIA        [ shift and go to state 57 ]
-  ! PORCENTAJE      [ shift and go to state 58 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! ASTERISCO       [ shift and go to state 57 ]
+  ! DIVISION        [ shift and go to state 58 ]
+  ! POTENCIA        [ shift and go to state 59 ]
+  ! PORCENTAJE      [ shift and go to state 60 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 69
+state 71
 
     (34) expresion -> NOT expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2130,18 +2252,18 @@ state 69
     PARENTESISC     reduce using rule 34 (expresion -> NOT expresion .)
     DOSPUNTOS       reduce using rule 34 (expresion -> NOT expresion .)
     PUNTOCOMA       reduce using rule 34 (expresion -> NOT expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
 
   ! MAS             [ reduce using rule 34 (expresion -> NOT expresion .) ]
   ! MENOS           [ reduce using rule 34 (expresion -> NOT expresion .) ]
@@ -2155,44 +2277,118 @@ state 69
   ! MAYOR           [ reduce using rule 34 (expresion -> NOT expresion .) ]
   ! MENORIGUAL      [ reduce using rule 34 (expresion -> NOT expresion .) ]
   ! MAYORIGUAL      [ reduce using rule 34 (expresion -> NOT expresion .) ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
-
-
-state 70
-
-    (47) imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .
-
-    PUNTOCOMA       reduce using rule 47 (imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .)
-
-
-state 71
-
-    (48) imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .
-
-    PUNTOCOMA       reduce using rule 48 (imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .)
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
 state 72
 
-    (43) asignacion_instr -> ID IGUAL expresion DOSPUNTOS . DOSPUNTOS tipo
+    (51) imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .
 
-    DOSPUNTOS       shift and go to state 93
+    PUNTOCOMA       reduce using rule 51 (imprimir_instr -> PRINT PARENTESISA expresion PARENTESISC .)
 
 
 state 73
 
-    (53) parametro -> ID . DOSPUNTOS DOSPUNTOS tipo
-    (54) parametro -> ID .
+    (52) imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .
 
-    DOSPUNTOS       shift and go to state 94
-    PARENTESISC     reduce using rule 54 (parametro -> ID .)
-    COMA            reduce using rule 54 (parametro -> ID .)
+    PUNTOCOMA       reduce using rule 52 (imprimir_instr -> PRINTLN PARENTESISA expresion PARENTESISC .)
 
 
 state 74
 
-    (49) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC . instrucciones END
+    (43) asignacion_instr -> ID IGUAL expresion DOSPUNTOS . DOSPUNTOS tipo
+
+    DOSPUNTOS       shift and go to state 97
+
+
+state 75
+
+    (48) declaracion_var_instr -> LOCAL ID IGUAL expresion . DOSPUNTOS DOSPUNTOS tipo
+    (50) declaracion_var_instr -> LOCAL ID IGUAL expresion .
+    (20) expresion -> expresion . MAS expresion
+    (21) expresion -> expresion . MENOS expresion
+    (22) expresion -> expresion . ASTERISCO expresion
+    (23) expresion -> expresion . DIVISION expresion
+    (24) expresion -> expresion . POTENCIA expresion
+    (25) expresion -> expresion . PORCENTAJE expresion
+    (26) expresion -> expresion . IGUALIGUAL expresion
+    (27) expresion -> expresion . DIFERENTE expresion
+    (28) expresion -> expresion . MENOR expresion
+    (29) expresion -> expresion . MAYOR expresion
+    (30) expresion -> expresion . MENORIGUAL expresion
+    (31) expresion -> expresion . MAYORIGUAL expresion
+    (32) expresion -> expresion . AND expresion
+    (33) expresion -> expresion . OR expresion
+
+    DOSPUNTOS       shift and go to state 98
+    PUNTOCOMA       reduce using rule 50 (declaracion_var_instr -> LOCAL ID IGUAL expresion .)
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+
+state 76
+
+    (47) declaracion_var_instr -> GLOBAL ID IGUAL expresion . DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> GLOBAL ID IGUAL expresion .
+    (20) expresion -> expresion . MAS expresion
+    (21) expresion -> expresion . MENOS expresion
+    (22) expresion -> expresion . ASTERISCO expresion
+    (23) expresion -> expresion . DIVISION expresion
+    (24) expresion -> expresion . POTENCIA expresion
+    (25) expresion -> expresion . PORCENTAJE expresion
+    (26) expresion -> expresion . IGUALIGUAL expresion
+    (27) expresion -> expresion . DIFERENTE expresion
+    (28) expresion -> expresion . MENOR expresion
+    (29) expresion -> expresion . MAYOR expresion
+    (30) expresion -> expresion . MENORIGUAL expresion
+    (31) expresion -> expresion . MAYORIGUAL expresion
+    (32) expresion -> expresion . AND expresion
+    (33) expresion -> expresion . OR expresion
+
+    DOSPUNTOS       shift and go to state 99
+    PUNTOCOMA       reduce using rule 49 (declaracion_var_instr -> GLOBAL ID IGUAL expresion .)
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
+    OR              shift and go to state 68
+
+
+state 77
+
+    (57) parametro -> ID . DOSPUNTOS DOSPUNTOS tipo
+    (58) parametro -> ID .
+
+    DOSPUNTOS       shift and go to state 100
+    PARENTESISC     reduce using rule 58 (parametro -> ID .)
+    COMA            reduce using rule 58 (parametro -> ID .)
+
+
+state 78
+
+    (53) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC . instrucciones END
     (3) instrucciones -> . instrucciones instruccion
     (4) instrucciones -> . instruccion
     (5) instruccion -> . imprimir_instr fininstr
@@ -2202,16 +2398,20 @@ state 74
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
     error           shift and go to state 10
     PRINT           shift and go to state 11
@@ -2222,7 +2422,7 @@ state 74
     FUNCTION        shift and go to state 16
     WHILE           shift and go to state 17
 
-    instrucciones                  shift and go to state 95
+    instrucciones                  shift and go to state 101
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     asignacion_instr               shift and go to state 5
@@ -2231,31 +2431,31 @@ state 74
     while_instr                    shift and go to state 8
     llamada_funcion_instr          shift and go to state 9
 
-state 75
+state 79
 
-    (50) funciones_instr -> FUNCTION ID PARENTESISA parametros . PARENTESISC instrucciones END
-    (51) parametros -> parametros . COMA parametro
+    (54) funciones_instr -> FUNCTION ID PARENTESISA parametros . PARENTESISC instrucciones END
+    (55) parametros -> parametros . COMA parametro
 
-    PARENTESISC     shift and go to state 96
-    COMA            shift and go to state 97
-
-
-state 76
-
-    (52) parametros -> parametro .
-
-    PARENTESISC     reduce using rule 52 (parametros -> parametro .)
-    COMA            reduce using rule 52 (parametros -> parametro .)
+    PARENTESISC     shift and go to state 102
+    COMA            shift and go to state 103
 
 
-state 77
+state 80
 
-    (56) while_instr -> WHILE expresion instrucciones END .
+    (56) parametros -> parametro .
 
-    PUNTOCOMA       reduce using rule 56 (while_instr -> WHILE expresion instrucciones END .)
+    PARENTESISC     reduce using rule 56 (parametros -> parametro .)
+    COMA            reduce using rule 56 (parametros -> parametro .)
 
 
-state 78
+state 81
+
+    (60) while_instr -> WHILE expresion instrucciones END .
+
+    PUNTOCOMA       reduce using rule 60 (while_instr -> WHILE expresion instrucciones END .)
+
+
+state 82
 
     (20) expresion -> expresion MAS expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2294,28 +2494,28 @@ state 78
     PARENTESISC     reduce using rule 20 (expresion -> expresion MAS expresion .)
     DOSPUNTOS       reduce using rule 20 (expresion -> expresion MAS expresion .)
     PUNTOCOMA       reduce using rule 20 (expresion -> expresion MAS expresion .)
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! ASTERISCO       [ reduce using rule 20 (expresion -> expresion MAS expresion .) ]
   ! DIVISION        [ reduce using rule 20 (expresion -> expresion MAS expresion .) ]
   ! POTENCIA        [ reduce using rule 20 (expresion -> expresion MAS expresion .) ]
   ! PORCENTAJE      [ reduce using rule 20 (expresion -> expresion MAS expresion .) ]
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 79
+state 83
 
     (21) expresion -> expresion MENOS expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2354,28 +2554,28 @@ state 79
     PARENTESISC     reduce using rule 21 (expresion -> expresion MENOS expresion .)
     DOSPUNTOS       reduce using rule 21 (expresion -> expresion MENOS expresion .)
     PUNTOCOMA       reduce using rule 21 (expresion -> expresion MENOS expresion .)
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! ASTERISCO       [ reduce using rule 21 (expresion -> expresion MENOS expresion .) ]
   ! DIVISION        [ reduce using rule 21 (expresion -> expresion MENOS expresion .) ]
   ! POTENCIA        [ reduce using rule 21 (expresion -> expresion MENOS expresion .) ]
   ! PORCENTAJE      [ reduce using rule 21 (expresion -> expresion MENOS expresion .) ]
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 80
+state 84
 
     (22) expresion -> expresion ASTERISCO expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2417,25 +2617,25 @@ state 80
     PARENTESISC     reduce using rule 22 (expresion -> expresion ASTERISCO expresion .)
     DOSPUNTOS       reduce using rule 22 (expresion -> expresion ASTERISCO expresion .)
     PUNTOCOMA       reduce using rule 22 (expresion -> expresion ASTERISCO expresion .)
-    POTENCIA        shift and go to state 57
+    POTENCIA        shift and go to state 59
 
   ! POTENCIA        [ reduce using rule 22 (expresion -> expresion ASTERISCO expresion .) ]
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! ASTERISCO       [ shift and go to state 55 ]
-  ! DIVISION        [ shift and go to state 56 ]
-  ! PORCENTAJE      [ shift and go to state 58 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! ASTERISCO       [ shift and go to state 57 ]
+  ! DIVISION        [ shift and go to state 58 ]
+  ! PORCENTAJE      [ shift and go to state 60 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 81
+state 85
 
     (23) expresion -> expresion DIVISION expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2477,25 +2677,25 @@ state 81
     PARENTESISC     reduce using rule 23 (expresion -> expresion DIVISION expresion .)
     DOSPUNTOS       reduce using rule 23 (expresion -> expresion DIVISION expresion .)
     PUNTOCOMA       reduce using rule 23 (expresion -> expresion DIVISION expresion .)
-    POTENCIA        shift and go to state 57
+    POTENCIA        shift and go to state 59
 
   ! POTENCIA        [ reduce using rule 23 (expresion -> expresion DIVISION expresion .) ]
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! ASTERISCO       [ shift and go to state 55 ]
-  ! DIVISION        [ shift and go to state 56 ]
-  ! PORCENTAJE      [ shift and go to state 58 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! ASTERISCO       [ shift and go to state 57 ]
+  ! DIVISION        [ shift and go to state 58 ]
+  ! PORCENTAJE      [ shift and go to state 60 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 82
+state 86
 
     (24) expresion -> expresion POTENCIA expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2539,23 +2739,23 @@ state 82
     DOSPUNTOS       reduce using rule 24 (expresion -> expresion POTENCIA expresion .)
     PUNTOCOMA       reduce using rule 24 (expresion -> expresion POTENCIA expresion .)
 
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! ASTERISCO       [ shift and go to state 55 ]
-  ! DIVISION        [ shift and go to state 56 ]
-  ! POTENCIA        [ shift and go to state 57 ]
-  ! PORCENTAJE      [ shift and go to state 58 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! ASTERISCO       [ shift and go to state 57 ]
+  ! DIVISION        [ shift and go to state 58 ]
+  ! POTENCIA        [ shift and go to state 59 ]
+  ! PORCENTAJE      [ shift and go to state 60 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 83
+state 87
 
     (25) expresion -> expresion PORCENTAJE expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2597,25 +2797,25 @@ state 83
     PARENTESISC     reduce using rule 25 (expresion -> expresion PORCENTAJE expresion .)
     DOSPUNTOS       reduce using rule 25 (expresion -> expresion PORCENTAJE expresion .)
     PUNTOCOMA       reduce using rule 25 (expresion -> expresion PORCENTAJE expresion .)
-    POTENCIA        shift and go to state 57
+    POTENCIA        shift and go to state 59
 
   ! POTENCIA        [ reduce using rule 25 (expresion -> expresion PORCENTAJE expresion .) ]
-  ! MAS             [ shift and go to state 53 ]
-  ! MENOS           [ shift and go to state 54 ]
-  ! ASTERISCO       [ shift and go to state 55 ]
-  ! DIVISION        [ shift and go to state 56 ]
-  ! PORCENTAJE      [ shift and go to state 58 ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! MAS             [ shift and go to state 55 ]
+  ! MENOS           [ shift and go to state 56 ]
+  ! ASTERISCO       [ shift and go to state 57 ]
+  ! DIVISION        [ shift and go to state 58 ]
+  ! PORCENTAJE      [ shift and go to state 60 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 84
+state 88
 
     (26) expresion -> expresion IGUALIGUAL expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2652,12 +2852,12 @@ state 84
     PARENTESISC     reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .)
     DOSPUNTOS       reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .)
     PUNTOCOMA       reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .) ]
@@ -2665,17 +2865,17 @@ state 84
   ! DIVISION        [ reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! POTENCIA        [ reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! PORCENTAJE      [ reduce using rule 26 (expresion -> expresion IGUALIGUAL expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 85
+state 89
 
     (27) expresion -> expresion DIFERENTE expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2712,12 +2912,12 @@ state 85
     PARENTESISC     reduce using rule 27 (expresion -> expresion DIFERENTE expresion .)
     DOSPUNTOS       reduce using rule 27 (expresion -> expresion DIFERENTE expresion .)
     PUNTOCOMA       reduce using rule 27 (expresion -> expresion DIFERENTE expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 27 (expresion -> expresion DIFERENTE expresion .) ]
   ! MENOS           [ reduce using rule 27 (expresion -> expresion DIFERENTE expresion .) ]
@@ -2725,17 +2925,17 @@ state 85
   ! DIVISION        [ reduce using rule 27 (expresion -> expresion DIFERENTE expresion .) ]
   ! POTENCIA        [ reduce using rule 27 (expresion -> expresion DIFERENTE expresion .) ]
   ! PORCENTAJE      [ reduce using rule 27 (expresion -> expresion DIFERENTE expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 86
+state 90
 
     (28) expresion -> expresion MENOR expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2772,12 +2972,12 @@ state 86
     PARENTESISC     reduce using rule 28 (expresion -> expresion MENOR expresion .)
     DOSPUNTOS       reduce using rule 28 (expresion -> expresion MENOR expresion .)
     PUNTOCOMA       reduce using rule 28 (expresion -> expresion MENOR expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 28 (expresion -> expresion MENOR expresion .) ]
   ! MENOS           [ reduce using rule 28 (expresion -> expresion MENOR expresion .) ]
@@ -2785,17 +2985,17 @@ state 86
   ! DIVISION        [ reduce using rule 28 (expresion -> expresion MENOR expresion .) ]
   ! POTENCIA        [ reduce using rule 28 (expresion -> expresion MENOR expresion .) ]
   ! PORCENTAJE      [ reduce using rule 28 (expresion -> expresion MENOR expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 87
+state 91
 
     (29) expresion -> expresion MAYOR expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2832,12 +3032,12 @@ state 87
     PARENTESISC     reduce using rule 29 (expresion -> expresion MAYOR expresion .)
     DOSPUNTOS       reduce using rule 29 (expresion -> expresion MAYOR expresion .)
     PUNTOCOMA       reduce using rule 29 (expresion -> expresion MAYOR expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 29 (expresion -> expresion MAYOR expresion .) ]
   ! MENOS           [ reduce using rule 29 (expresion -> expresion MAYOR expresion .) ]
@@ -2845,17 +3045,17 @@ state 87
   ! DIVISION        [ reduce using rule 29 (expresion -> expresion MAYOR expresion .) ]
   ! POTENCIA        [ reduce using rule 29 (expresion -> expresion MAYOR expresion .) ]
   ! PORCENTAJE      [ reduce using rule 29 (expresion -> expresion MAYOR expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 88
+state 92
 
     (30) expresion -> expresion MENORIGUAL expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2892,12 +3092,12 @@ state 88
     PARENTESISC     reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .)
     PUNTOCOMA       reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .) ]
@@ -2905,17 +3105,17 @@ state 88
   ! DIVISION        [ reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .) ]
   ! POTENCIA        [ reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .) ]
   ! PORCENTAJE      [ reduce using rule 30 (expresion -> expresion MENORIGUAL expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 89
+state 93
 
     (31) expresion -> expresion MAYORIGUAL expresion .
     (20) expresion -> expresion . MAS expresion
@@ -2952,12 +3152,12 @@ state 89
     PARENTESISC     reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .)
     PUNTOCOMA       reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
 
   ! MAS             [ reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .) ]
@@ -2965,17 +3165,17 @@ state 89
   ! DIVISION        [ reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! POTENCIA        [ reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! PORCENTAJE      [ reduce using rule 31 (expresion -> expresion MAYORIGUAL expresion .) ]
-  ! IGUALIGUAL      [ shift and go to state 59 ]
-  ! DIFERENTE       [ shift and go to state 60 ]
-  ! MENOR           [ shift and go to state 61 ]
-  ! MAYOR           [ shift and go to state 62 ]
-  ! MENORIGUAL      [ shift and go to state 63 ]
-  ! MAYORIGUAL      [ shift and go to state 64 ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! IGUALIGUAL      [ shift and go to state 61 ]
+  ! DIFERENTE       [ shift and go to state 62 ]
+  ! MENOR           [ shift and go to state 63 ]
+  ! MAYOR           [ shift and go to state 64 ]
+  ! MENORIGUAL      [ shift and go to state 65 ]
+  ! MAYORIGUAL      [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 90
+state 94
 
     (32) expresion -> expresion AND expresion .
     (20) expresion -> expresion . MAS expresion
@@ -3006,18 +3206,18 @@ state 90
     PARENTESISC     reduce using rule 32 (expresion -> expresion AND expresion .)
     DOSPUNTOS       reduce using rule 32 (expresion -> expresion AND expresion .)
     PUNTOCOMA       reduce using rule 32 (expresion -> expresion AND expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
 
   ! MAS             [ reduce using rule 32 (expresion -> expresion AND expresion .) ]
   ! MENOS           [ reduce using rule 32 (expresion -> expresion AND expresion .) ]
@@ -3031,11 +3231,11 @@ state 90
   ! MAYOR           [ reduce using rule 32 (expresion -> expresion AND expresion .) ]
   ! MENORIGUAL      [ reduce using rule 32 (expresion -> expresion AND expresion .) ]
   ! MAYORIGUAL      [ reduce using rule 32 (expresion -> expresion AND expresion .) ]
-  ! AND             [ shift and go to state 65 ]
-  ! OR              [ shift and go to state 66 ]
+  ! AND             [ shift and go to state 67 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 91
+state 95
 
     (33) expresion -> expresion OR expresion .
     (20) expresion -> expresion . MAS expresion
@@ -3065,19 +3265,19 @@ state 91
     PARENTESISC     reduce using rule 33 (expresion -> expresion OR expresion .)
     DOSPUNTOS       reduce using rule 33 (expresion -> expresion OR expresion .)
     PUNTOCOMA       reduce using rule 33 (expresion -> expresion OR expresion .)
-    MAS             shift and go to state 53
-    MENOS           shift and go to state 54
-    ASTERISCO       shift and go to state 55
-    DIVISION        shift and go to state 56
-    POTENCIA        shift and go to state 57
-    PORCENTAJE      shift and go to state 58
-    IGUALIGUAL      shift and go to state 59
-    DIFERENTE       shift and go to state 60
-    MENOR           shift and go to state 61
-    MAYOR           shift and go to state 62
-    MENORIGUAL      shift and go to state 63
-    MAYORIGUAL      shift and go to state 64
-    AND             shift and go to state 65
+    MAS             shift and go to state 55
+    MENOS           shift and go to state 56
+    ASTERISCO       shift and go to state 57
+    DIVISION        shift and go to state 58
+    POTENCIA        shift and go to state 59
+    PORCENTAJE      shift and go to state 60
+    IGUALIGUAL      shift and go to state 61
+    DIFERENTE       shift and go to state 62
+    MENOR           shift and go to state 63
+    MAYOR           shift and go to state 64
+    MENORIGUAL      shift and go to state 65
+    MAYORIGUAL      shift and go to state 66
+    AND             shift and go to state 67
 
   ! MAS             [ reduce using rule 33 (expresion -> expresion OR expresion .) ]
   ! MENOS           [ reduce using rule 33 (expresion -> expresion OR expresion .) ]
@@ -3092,10 +3292,10 @@ state 91
   ! MENORIGUAL      [ reduce using rule 33 (expresion -> expresion OR expresion .) ]
   ! MAYORIGUAL      [ reduce using rule 33 (expresion -> expresion OR expresion .) ]
   ! AND             [ reduce using rule 33 (expresion -> expresion OR expresion .) ]
-  ! OR              [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 68 ]
 
 
-state 92
+state 96
 
     (12) expresion -> PARENTESISA expresion PARENTESISC .
 
@@ -3126,7 +3326,7 @@ state 92
     PUNTOCOMA       reduce using rule 12 (expresion -> PARENTESISA expresion PARENTESISC .)
 
 
-state 93
+state 97
 
     (43) asignacion_instr -> ID IGUAL expresion DOSPUNTOS DOSPUNTOS . tipo
     (38) tipo -> . INT64
@@ -3135,24 +3335,38 @@ state 93
     (41) tipo -> . CHAR
     (42) tipo -> . BOOL
 
-    INT64           shift and go to state 99
-    FLOAT64         shift and go to state 100
-    STRING          shift and go to state 101
-    CHAR            shift and go to state 102
-    BOOL            shift and go to state 103
+    INT64           shift and go to state 105
+    FLOAT64         shift and go to state 106
+    STRING          shift and go to state 107
+    CHAR            shift and go to state 108
+    BOOL            shift and go to state 109
 
-    tipo                           shift and go to state 98
+    tipo                           shift and go to state 104
 
-state 94
+state 98
 
-    (53) parametro -> ID DOSPUNTOS . DOSPUNTOS tipo
+    (48) declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS . DOSPUNTOS tipo
 
-    DOSPUNTOS       shift and go to state 104
+    DOSPUNTOS       shift and go to state 110
 
 
-state 95
+state 99
 
-    (49) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones . END
+    (47) declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS . DOSPUNTOS tipo
+
+    DOSPUNTOS       shift and go to state 111
+
+
+state 100
+
+    (57) parametro -> ID DOSPUNTOS . DOSPUNTOS tipo
+
+    DOSPUNTOS       shift and go to state 112
+
+
+state 101
+
+    (53) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones . END
     (3) instrucciones -> instrucciones . instruccion
     (5) instruccion -> . imprimir_instr fininstr
     (6) instruccion -> . asignacion_instr fininstr
@@ -3161,18 +3375,22 @@ state 95
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
-    END             shift and go to state 105
+    END             shift and go to state 113
     error           shift and go to state 10
     PRINT           shift and go to state 11
     PRINTLN         shift and go to state 12
@@ -3190,9 +3408,9 @@ state 95
     while_instr                    shift and go to state 8
     llamada_funcion_instr          shift and go to state 9
 
-state 96
+state 102
 
-    (50) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC . instrucciones END
+    (54) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC . instrucciones END
     (3) instrucciones -> . instrucciones instruccion
     (4) instrucciones -> . instruccion
     (5) instruccion -> . imprimir_instr fininstr
@@ -3202,16 +3420,20 @@ state 96
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
     error           shift and go to state 10
     PRINT           shift and go to state 11
@@ -3222,7 +3444,7 @@ state 96
     FUNCTION        shift and go to state 16
     WHILE           shift and go to state 17
 
-    instrucciones                  shift and go to state 106
+    instrucciones                  shift and go to state 114
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     asignacion_instr               shift and go to state 5
@@ -3231,24 +3453,24 @@ state 96
     while_instr                    shift and go to state 8
     llamada_funcion_instr          shift and go to state 9
 
-state 97
+state 103
 
-    (51) parametros -> parametros COMA . parametro
-    (53) parametro -> . ID DOSPUNTOS DOSPUNTOS tipo
-    (54) parametro -> . ID
+    (55) parametros -> parametros COMA . parametro
+    (57) parametro -> . ID DOSPUNTOS DOSPUNTOS tipo
+    (58) parametro -> . ID
 
-    ID              shift and go to state 73
+    ID              shift and go to state 77
 
-    parametro                      shift and go to state 107
+    parametro                      shift and go to state 115
 
-state 98
+state 104
 
     (43) asignacion_instr -> ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .
 
     PUNTOCOMA       reduce using rule 43 (asignacion_instr -> ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
 
 
-state 99
+state 105
 
     (38) tipo -> INT64 .
 
@@ -3257,7 +3479,7 @@ state 99
     COMA            reduce using rule 38 (tipo -> INT64 .)
 
 
-state 100
+state 106
 
     (39) tipo -> FLOAT64 .
 
@@ -3266,7 +3488,7 @@ state 100
     COMA            reduce using rule 39 (tipo -> FLOAT64 .)
 
 
-state 101
+state 107
 
     (40) tipo -> STRING .
 
@@ -3275,7 +3497,7 @@ state 101
     COMA            reduce using rule 40 (tipo -> STRING .)
 
 
-state 102
+state 108
 
     (41) tipo -> CHAR .
 
@@ -3284,7 +3506,7 @@ state 102
     COMA            reduce using rule 41 (tipo -> CHAR .)
 
 
-state 103
+state 109
 
     (42) tipo -> BOOL .
 
@@ -3293,33 +3515,67 @@ state 103
     COMA            reduce using rule 42 (tipo -> BOOL .)
 
 
-state 104
+state 110
 
-    (53) parametro -> ID DOSPUNTOS DOSPUNTOS . tipo
+    (48) declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS . tipo
     (38) tipo -> . INT64
     (39) tipo -> . FLOAT64
     (40) tipo -> . STRING
     (41) tipo -> . CHAR
     (42) tipo -> . BOOL
 
-    INT64           shift and go to state 99
-    FLOAT64         shift and go to state 100
-    STRING          shift and go to state 101
-    CHAR            shift and go to state 102
-    BOOL            shift and go to state 103
+    INT64           shift and go to state 105
+    FLOAT64         shift and go to state 106
+    STRING          shift and go to state 107
+    CHAR            shift and go to state 108
+    BOOL            shift and go to state 109
 
-    tipo                           shift and go to state 108
+    tipo                           shift and go to state 116
 
-state 105
+state 111
 
-    (49) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END .
+    (47) declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS . tipo
+    (38) tipo -> . INT64
+    (39) tipo -> . FLOAT64
+    (40) tipo -> . STRING
+    (41) tipo -> . CHAR
+    (42) tipo -> . BOOL
 
-    PUNTOCOMA       reduce using rule 49 (funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END .)
+    INT64           shift and go to state 105
+    FLOAT64         shift and go to state 106
+    STRING          shift and go to state 107
+    CHAR            shift and go to state 108
+    BOOL            shift and go to state 109
+
+    tipo                           shift and go to state 117
+
+state 112
+
+    (57) parametro -> ID DOSPUNTOS DOSPUNTOS . tipo
+    (38) tipo -> . INT64
+    (39) tipo -> . FLOAT64
+    (40) tipo -> . STRING
+    (41) tipo -> . CHAR
+    (42) tipo -> . BOOL
+
+    INT64           shift and go to state 105
+    FLOAT64         shift and go to state 106
+    STRING          shift and go to state 107
+    CHAR            shift and go to state 108
+    BOOL            shift and go to state 109
+
+    tipo                           shift and go to state 118
+
+state 113
+
+    (53) funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END .
+
+    PUNTOCOMA       reduce using rule 53 (funciones_instr -> FUNCTION ID PARENTESISA PARENTESISC instrucciones END .)
 
 
-state 106
+state 114
 
-    (50) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones . END
+    (54) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones . END
     (3) instrucciones -> instrucciones . instruccion
     (5) instruccion -> . imprimir_instr fininstr
     (6) instruccion -> . asignacion_instr fininstr
@@ -3328,18 +3584,22 @@ state 106
     (9) instruccion -> . while_instr fininstr
     (10) instruccion -> . llamada_funcion_instr fininstr
     (11) instruccion -> . error fininstr
-    (47) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
-    (48) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
+    (51) imprimir_instr -> . PRINT PARENTESISA expresion PARENTESISC
+    (52) imprimir_instr -> . PRINTLN PARENTESISA expresion PARENTESISC
     (43) asignacion_instr -> . ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
     (44) asignacion_instr -> . ID IGUAL expresion
     (45) declaracion_var_instr -> . LOCAL ID
     (46) declaracion_var_instr -> . GLOBAL ID
-    (49) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
-    (50) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
-    (56) while_instr -> . WHILE expresion instrucciones END
-    (55) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
+    (47) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (48) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
+    (49) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
+    (50) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (53) funciones_instr -> . FUNCTION ID PARENTESISA PARENTESISC instrucciones END
+    (54) funciones_instr -> . FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END
+    (60) while_instr -> . WHILE expresion instrucciones END
+    (59) llamada_funcion_instr -> . ID PARENTESISA PARENTESISC
 
-    END             shift and go to state 109
+    END             shift and go to state 119
     error           shift and go to state 10
     PRINT           shift and go to state 11
     PRINTLN         shift and go to state 12
@@ -3357,25 +3617,39 @@ state 106
     while_instr                    shift and go to state 8
     llamada_funcion_instr          shift and go to state 9
 
-state 107
+state 115
 
-    (51) parametros -> parametros COMA parametro .
+    (55) parametros -> parametros COMA parametro .
 
-    PARENTESISC     reduce using rule 51 (parametros -> parametros COMA parametro .)
-    COMA            reduce using rule 51 (parametros -> parametros COMA parametro .)
-
-
-state 108
-
-    (53) parametro -> ID DOSPUNTOS DOSPUNTOS tipo .
-
-    PARENTESISC     reduce using rule 53 (parametro -> ID DOSPUNTOS DOSPUNTOS tipo .)
-    COMA            reduce using rule 53 (parametro -> ID DOSPUNTOS DOSPUNTOS tipo .)
+    PARENTESISC     reduce using rule 55 (parametros -> parametros COMA parametro .)
+    COMA            reduce using rule 55 (parametros -> parametros COMA parametro .)
 
 
-state 109
+state 116
 
-    (50) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END .
+    (48) declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .
 
-    PUNTOCOMA       reduce using rule 50 (funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END .)
+    PUNTOCOMA       reduce using rule 48 (declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
+
+
+state 117
+
+    (47) declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .
+
+    PUNTOCOMA       reduce using rule 47 (declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
+
+
+state 118
+
+    (57) parametro -> ID DOSPUNTOS DOSPUNTOS tipo .
+
+    PARENTESISC     reduce using rule 57 (parametro -> ID DOSPUNTOS DOSPUNTOS tipo .)
+    COMA            reduce using rule 57 (parametro -> ID DOSPUNTOS DOSPUNTOS tipo .)
+
+
+state 119
+
+    (54) funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END .
+
+    PUNTOCOMA       reduce using rule 54 (funciones_instr -> FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END .)
 

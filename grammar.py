@@ -137,7 +137,7 @@ def t_ignore_COMENTARIOMULTILINEA(t):
     t.lexer.lineno += t.value.count('\n')
 
 def t_ignore_COMENTARIOUNILINEA(t):
-    r'\#.*\n'
+    r'\#.*\n?'
     t.lexer.lineno +=1
 
 #Define a rule so we can track line numbers
@@ -357,20 +357,37 @@ def p_tipo_datos(p):
 #///////////////////////////////////////////////////////////ASIGNACION DE VARIABLES
 def p_asignacion_var_tipo(p):
     'asignacion_instr : ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = AsignacionVar(p[1], p[3], p[6],  p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = AsignacionVar(p[1], p[3], p[6], p.lineno(1), find_column(input, p.slice[1]))
 
-#///////////////////////////////////////////////////////////DECLARACION DE VARIABLES
 def p_asignacion_var(p):
     'asignacion_instr : ID IGUAL expresion'
-    p[0] = AsignacionVar(p[1], p[3], None,  p.lineno(1), find_column(input, p.slice[1]))    
+    p[0] = AsignacionVar(p[1], p[3], None, p.lineno(1), find_column(input, p.slice[1]))    
 
+#///////////////////////////////////////////////////////////DECLARACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_local(p):
     'declaracion_var_instr : LOCAL ID'
-    p[0] = DeclaracionVar(True, False, p[2], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = DeclaracionVar(p[2], None, None, True, False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_declaracion_global(p):
     'declaracion_var_instr : GLOBAL ID'
-    p[0] = DeclaracionVar(False, True, p[2], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = DeclaracionVar(p[2], None, None, False, True, p.lineno(1), find_column(input, p.slice[1]))
+
+#///////////////////////////////////////////////////////////DECLARACION Y ASIGNACION DE VARIABLES LOCALES Y GLOBALES
+def p_declaracion_global_asignacion_var_tipo(p):
+    'declaracion_var_instr : GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
+    p[0] = DeclaracionVar(p[2], p[4], p[7], False, True, p.lineno(1), find_column(input, p.slice[1]))    
+
+def p_declaracion_local_asignacion_var_tipo(p):
+    'declaracion_var_instr : LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
+    p[0] = DeclaracionVar(p[2], p[4], p[7], True, False, p.lineno(1), find_column(input, p.slice[1]))    
+
+def p_declaracion_global_asignacion_var(p):
+    'declaracion_var_instr : GLOBAL ID IGUAL expresion'
+    p[0] = DeclaracionVar(p[2], p[4], None, False, True, p.lineno(1), find_column(input, p.slice[1]))    
+
+def p_declaracion_local_asignacion_var(p):
+    'declaracion_var_instr : LOCAL ID IGUAL expresion'
+    p[0] = DeclaracionVar(p[2], p[4], None, True, False, p.lineno(1), find_column(input, p.slice[1]))    
 
 #//////////////////////////////////////////////////IMPRIMIR
 def p_imprimir(p):
@@ -475,6 +492,27 @@ while i <= 10
 end;
     '''
 
+'''x = (3*5)::Int64;
+str = "Saludo";
+
+function ejemplo()
+    global str = "Ejemplo";
+    x = 0;
+    i = 1;
+    while i < 5
+        local x = 0::Int64;
+        x = i *2;
+        println(x);
+        i = i + 1;
+    end;
+    println(x);
+end;
+
+ejemplo();
+
+println(x);
+println(str);
+    '''
 
     
 

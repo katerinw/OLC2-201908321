@@ -9,7 +9,7 @@ class TablaSimbolos:
         if simbolo.identificador in self.tabla:
             return True
             #return Excepcion("Semántico", "Variable \"" + simbolo.identificador + "\" ya existe", simbolo.fila, simbolo.columna)
-        else: 
+        else:  
             self.tabla[simbolo.identificador] = simbolo
             return None
 

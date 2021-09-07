@@ -19,19 +19,45 @@ class AsignacionVar(Instruccion):
         if self.tipo == None:
             self.tipo = self.valor.tipo
 
-        if self.tipo != self.valor.tipo:
-            return Excepcion("Semántico", "El tipo de dato en la variable \""+self.identificador+"\" es diferente", self.fila, self.columna)
+            if self.tipo != self.valor.tipo:
+                return Excepcion("Semántico", "El tipo de dato en la variable \""+self.identificador+"\" es diferente", self.fila, self.columna)
 
-        simbolo = Simbolo(str(self.identificador), self.valor.tipo, value, None, None, self.fila, self.columna)
+        simboloVar = table.getTabla(str(self.identificador))
 
-        result = table.setTabla(simbolo)
-        if isinstance(result, Excepcion):
-            return result
+        if simboloVar != None: #Reasignar variable
+            if simboloVar.globall: #Si la variable es global jsjs
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, False, True, self.fila, self.columna)
 
-        if result == True:
-            result = table.actualizarTabla(simbolo)
-        
+                result = table.actualizarTabla(simbolo)  #Actualiza la variable que esta dentro del entorno
+                if isinstance(result, Excepcion):
+                    return result
+
+                resultGlobal = tree.getTSGlobal().actualizarTabla(simbolo) #Actualiza la variable global
+                if isinstance(resultGlobal, Excepcion):
+                    return resultGlobal
+
+            elif simboloVar.local: #Si la variable es local jsjs
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, True, False, self.fila, self.columna)
+
+                result = table.actualizarTabla(simbolo)
+
+                if isinstance(result, Excepcion):
+                    return result
+                
+            else: #Si se declara asi normal como abajo
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, False, False, self.fila, self.columna)
+
+                result = table.actualizarTabla(simbolo)
+
+                if isinstance(result, Excepcion):
+                    return result
+
+        elif simboloVar == None: #Declarar variable
+            simbolo = Simbolo(str(self.identificador), self.tipo, value, False, False, self.fila, self.columna)
+
+            result = table.setTabla(simbolo)
+            if isinstance(result, Excepcion):
+                return result
+            
         return None
 
-        
-        

@@ -11,7 +11,6 @@ class While(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
-        print("Entro jeje")
         while True:
             condicion = self.condicion.interpretar(tree, table)
             if isinstance(condicion, Excepcion):
