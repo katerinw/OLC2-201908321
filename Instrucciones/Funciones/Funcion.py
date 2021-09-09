@@ -2,6 +2,7 @@ from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from TS.TablaSimbolos import TablaSimbolos
+from Instrucciones.Sentencias_Transferencia.Return import Return
 
 class Funcion(Instruccion):
     def __init__(self, identificador, parametros, instrucciones, fila, columna):
@@ -20,4 +21,9 @@ class Funcion(Instruccion):
                 tree.getExcepciones().append(value)
                 tree.updateConsolaln(value.toString())
 
-        return None
+            if isinstance(value, Return):
+                self.tipo = value.tipo
+                return value.result
+
+        self.tipo = Tipo.NULO
+        return "Nothing"

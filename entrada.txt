@@ -1,30 +1,32 @@
-x = (3*5)::Int64;
-str = "Saludos";
-function ejemplo()
-    local str; 
-    str = "Ejemplo";
-    x = 0;
-    i = 1;
-    while i < 5
-        local x = 0;
-        local str = "HEY";
-        x = i *2;
-        println(x);
-        i = i + 1;
-    end;
-    println(x);
-    println(str);
-end;
-
-function ejemplo2()
-    println(str);
-end;
-
-ejemplo();
-ejemplo2();
-
-println(x);
-println(str);
-
-
-#HAY PROBLEMA PORQUE AGARRA LA X LOCAL COMO GLOBAL Y MODIFICA LA GLOBAL
+print("COS: ");
+println(cos(8));
+print("LOG10: ");
+println(log10(1000));
+print("LOG: ");
+println(log(2,1000));
+print("SIN: ");
+println(sin(8));
+print("SQRT: ");
+println(sqrt(25));
+print("TAN: ");
+println(tan(1000));
+print("TYPEOF: ");
+println(typeof(1000));
+println(typeof(true));
+println(typeof(10.0));
+println(typeof("Hola"));
+println(typeof('s'));
+println(typeof(nothing));
+print("TRUNC: ");
+println(trunc(10.9999));
+print("FLOAT: ");
+println(float(10));
+print("UPPER: ");
+println(uppercase("hola"));
+print("LOWER: ");
+println(lowercase("HOLA"));
+print("PARSE: ");
+println(parse(int64, "8"));
+println(parse(float64, "8"));
+print("STRING: ");
+println(string(90));

@@ -22,6 +22,15 @@ class TablaSimbolos:
                 tablaActual = tablaActual.anterior
         return None
 
+    def getRealTabla(self, identificador):
+        tablaActual = self
+        while tablaActual != None:
+            if identificador in tablaActual.tabla:
+                return tablaActual #Devuelve un nodo simbolo
+            else:
+                tablaActual = tablaActual.anterior
+        return None
+
     def actualizarTabla(self, simbolo):
         tablaActual = self
         while tablaActual != None:

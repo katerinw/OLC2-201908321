@@ -2,6 +2,7 @@
 
 import re
 import sys
+from typing import Type
 
 #LISTA DE ERRORES
 errores = []
@@ -19,19 +20,16 @@ reservedWords = {
     'struct': 'STRUCT',
     'print': 'PRINT',
     'println': 'PRINTLN',
-    'log10' : 'LOG10',
-    'log' : 'LOG',
-    'sin' : 'SIN',
-    'cos' : 'COS',
-    'tan' : 'TAN',
-    'sqrt' : 'SQRT',
     'function' : 'FUNCTION',
     'end' : 'END',
     'while' : 'WHILE',
     'for' : 'FOR',
     'local' : 'LOCAL',
-    'global' : 'GLOBAL'
-
+    'global' : 'GLOBAL',
+    'return' : 'RETURN',
+    'break' : 'BREAK',
+    'continue' : 'CONTINUE',
+    'parse' : 'PARSE'
 }
 
 #DECLARACION DE TOKENS
@@ -181,6 +179,12 @@ from Expresiones.Identificador import Identificador
 from Instrucciones.Funciones.Funcion import Funcion
 from Instrucciones.Ciclos.While import While
 from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
+from Instrucciones.Sentencias_Transferencia.Return import Return
+from Instrucciones.Sentencias_Transferencia.Break import Break
+from Instrucciones.Sentencias_Transferencia.Continue import Continue
+from Nativas.Parse import Parse
+from Nativas.String import String
+
 
 
 
@@ -228,7 +232,8 @@ def p_instruccion(p):
                    | declaracion_var_instr fininstr
                    | funciones_instr fininstr
                    | while_instr fininstr
-                   | llamada_funcion_instr fininstr'''
+                   | llamada_funcion_instr fininstr
+                   | sentencia_transferencia fininstr'''
     p[0] = p[1]
 
 def p_instruccion_error(p):
@@ -329,6 +334,21 @@ def p_expresion_unaria(p):
     elif p[1] == '-':
         p[0] = OperacionAritmetica(OperadorAritmetico.UMENOS, p[2], None, p.lineno(1), find_column(input, p.slice[1]))
 
+def p_expresion_llamada_funcion(p):
+    'expresion : llamada_funcion_instr'
+    p[0] = p[1]
+
+def p_parse_int64(p):
+    'expresion : PARSE PARENTESISA INT64 COMA expresion PARENTESISC'
+    p[0] = Parse(Tipo.ENTERO, p[5],  p.lineno(1), find_column(input, p.slice[1]))
+
+def p_parse_float64(p):
+    'expresion : PARSE PARENTESISA FLOAT64 COMA expresion PARENTESISC'
+    p[0] = Parse(Tipo.DOBLE, p[5],  p.lineno(1), find_column(input, p.slice[1]))
+
+def p_parse_string(p):
+    'expresion : STRING PARENTESISA expresion PARENTESISC'
+    p[0] = String(p[3], p.lineno(1), find_column(input, p.slice[1]))
 
 #//////////////////////////////////////////////////BOOLEAN
 def p_bandera(p):
@@ -401,7 +421,7 @@ def p_imprimirln(p):
 #//////////////////////////////////////////////////FUNCIONES
 def p_funciones(p):
     'funciones_instr : FUNCTION ID PARENTESISA PARENTESISC instrucciones END'
-    p[0] = Funcion(p[2], None, p[5], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = Funcion(p[2], [], p[5], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_funciones_parametros(p):
     'funciones_instr : FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END'
@@ -431,12 +451,64 @@ def p_llamada_funcion(p):
     'llamada_funcion_instr : ID PARENTESISA PARENTESISC'
     p[0] = LlamadaFuncion(p[1], [], p.lineno(1), find_column(input, p.slice[1]))
 
+def p_llamada_funcion_parametros(p):
+    'llamada_funcion_instr : ID PARENTESISA parametros_llamada PARENTESISC'
+    p[0] = LlamadaFuncion(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
+
+#//////////////////////////////////////////////////PARAMETOS LLAMADA FUNCION
+def p_parametros_llamada_funcion(p):
+    'parametros_llamada : parametros_llamada COMA parametro_llamada '
+    p[1].append(p[3])
+    p[0] = p[1]
+
+def p_parametros_llamada_parametro_funcion(p):
+    'parametros_llamada : parametro_llamada'
+    p[0] = [p[1]]
+
+def p_parametro_llamada_funcion(p):
+    'parametro_llamada : expresion'
+    p[0] = p[1]
+
 #//////////////////////////////////////////////////WHILE
 def p_While(p):
     'while_instr : WHILE expresion instrucciones END'
     p[0] = While(p[2], p[3], p.lineno(1), find_column(input, p.slice[1]))
 
+#//////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
+def p_sentencia_transferencia_return_expresion(p):
+    'sentencia_transferencia : RETURN expresion'
+    p[0] = Return(p[2], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_sentencia_transferencia_return(p):
+    'sentencia_transferencia : RETURN'
+    p[0] = Return(None, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_sentencia_transferencia_break(p):
+    'sentencia_transferencia : BREAK'
+    p[0] = Break(p.lineno(1), find_column(input, p.slice[1]))
+
+def p_sentencia_transferencia_continue(p):
+    'sentencia_transferencia : CONTINUE'
+    p[0] = Continue(p.lineno(1), find_column(input, p.slice[1]))
+
 #Haciendo el parser
+from Nativas.Length import Length
+from Nativas.Typeof import Typeof
+from Nativas.Float import Float
+from Nativas.Log10 import Log10
+from Nativas.Trunc import Trunc
+from Nativas.Upper import Upper
+from Nativas.Lower import Lower
+from Nativas.Push import Push
+from Nativas.Sqrt import Sqrt
+from Nativas.Log import Log
+from Nativas.Pop import Pop
+from Nativas.Sin import Sin
+from Nativas.Tan import Tan
+from Nativas.Cos import Cos
+
+
+
 import ply.yacc as yacc
 parser = yacc.yacc()
 
@@ -444,6 +516,92 @@ input = ''
 
 def getErrores():
     return errores 
+
+def crearNativas(ast): #Creacion y declaracion de funciones nativas
+    identificador = 'cos'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Cos$$Parametros123'}]
+    instrucciones = []
+    cos = Cos(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(cos)
+
+    identificador = 'float'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'Float$$Parametros123'}]
+    instrucciones = []
+    float = Float(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(float)
+
+    identificador = "length"
+    parametros = [{'tipo': Tipo.ARREGLO, 'dimensiones': None, 'identificador': 'Length$$Parametros123'}] 
+    instrucciones = []
+    length = Length(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(length)
+
+    identificador = 'log'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log$$Parametros123'}, {'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log$$Parametros456'}]
+    instrucciones = []
+    log = Log(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(log)
+
+    identificador = 'log10'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log10$$Parametros123'}]
+    instrucciones = []
+    log10 = Log10(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(log10)
+
+    identificador = 'lowercase'
+    parametros = [{'tipo': Tipo.CADENA, 'dimensiones': None, 'identificador': 'Lower$$Parametros123'}]
+    instrucciones = []
+    lowercase = Lower(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(lowercase)
+    
+    identificador = 'pop'
+    parametros = [{'tipo': Tipo.ARREGLO, 'dimensiones': None, 'identificador': 'Pop$$Parametros123'}]
+    instrucciones = []
+    pop = Pop(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(pop)
+
+    identificador = 'push'
+    parametros = [{'tipo': Tipo.ARREGLO, 'dimensiones': None, 'identificador': 'Push$$Parametros123'}]
+    instrucciones = []
+    push = Push(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(push)
+
+    identificador = 'sin'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Sin$$Parametros123'}]
+    instrucciones = []
+    sin = Sin(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(sin)
+
+    identificador = 'sqrt'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Sqrt$$Parametros123'}]
+    instrucciones = []
+    sqrt = Sqrt(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(sqrt)  
+
+    identificador = 'tan'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'Tan$$Parametros123'}]
+    instrucciones = []
+    tan = Tan(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(tan)
+
+    identificador = 'trunc'
+    parametros = [{'tipo': Tipo.DOBLE, 'dimensiones': [], 'identificador': 'Trunc$$Parametros123'}]
+    instrucciones = []
+    trunc = Trunc(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(trunc)
+
+    identificador = 'typeof'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'TypeOf$$Parametros123'}]
+    instrucciones = []
+    typeof = Typeof(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(typeof)
+    
+    identificador = 'uppercase'
+    parametros = [{'tipo': Tipo.CADENA, 'dimensiones': [], 'identificador': 'Upper$$Parametros123'}]
+    instrucciones = []
+    uppercase = Upper(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(uppercase)
+
 
 def parse(inp):
     global errores 
@@ -467,6 +625,7 @@ instrucciones = parse(entrada) #ARBOL AST
 ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos()
 ast.setTSGlobal(TSGlobal)
+crearNativas(ast)
 
 for error in errores: #Captura de errores lexicos y sintacticos 
     ast.getExcepciones().append(error)
@@ -514,6 +673,30 @@ println(x);
 println(str);
     '''
 
-    
+'''x = (3*5)::Int64;
+str = "Saludos";
 
+function ejemplo()
+    local str = "Ejemplo";
+    local x = 0;
+    i = 1;
+    while i < 5
+        local x = 0;
+        local str = "HEY";
+        x = i *2;
+        println(x);
+        i = i + 1;
+    end;
+    println(x);
+    println(str);
+end;
 
+function ejemplo2()
+    println(str);
+end;
+
+ejemplo();
+ejemplo2();
+
+println(x);
+println(str);'''

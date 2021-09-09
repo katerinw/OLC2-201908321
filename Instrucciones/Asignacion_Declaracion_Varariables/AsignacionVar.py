@@ -12,17 +12,22 @@ class AsignacionVar(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
-        value = self.valor.interpretar(tree, table)
-        if isinstance(value, Excepcion):
+        value = self.valor.interpretar(tree, table) #Interpreta el valor
+        if isinstance(value, Excepcion): 
             return value
 
-        if self.tipo == None:
+        if self.tipo == None: #Verifica si la variable trae tipo
             self.tipo = self.valor.tipo
 
-            if self.tipo != self.valor.tipo:
+            if self.tipo != self.valor.tipo: #Verifica que sea el mismo tipo de variable
                 return Excepcion("Semántico", "El tipo de dato en la variable \""+self.identificador+"\" es diferente", self.fila, self.columna)
 
-        simboloVar = table.getTabla(str(self.identificador))
+        simboloVar = table.getTabla(str(self.identificador)) #Verifica si la varuable ya existe en algún entorno
+
+        tablaSimbolo = table.getRealTabla(str(self.identificador))
+        if tablaSimbolo == tree.getTSGlobal() and table != tree.getTSGlobal():  #Verofica que la variable que se encontro sea diferente 
+            simboloVar = None
+
 
         if simboloVar != None: #Reasignar variable
             if simboloVar.globall: #Si la variable es global jsjs
@@ -45,10 +50,9 @@ class AsignacionVar(Instruccion):
                     return result
                 
             else: #Si se declara asi normal como abajo
+
                 simbolo = Simbolo(str(self.identificador), self.tipo, value, False, False, self.fila, self.columna)
-
                 result = table.actualizarTabla(simbolo)
-
                 if isinstance(result, Excepcion):
                     return result
 
