@@ -2,7 +2,7 @@
 
 import re
 import sys
-from typing import Type
+sys.setrecursionlimit(3000)
 
 #LISTA DE ERRORES
 errores = []
@@ -12,24 +12,29 @@ reservedWords = {
     'true': 'TRUE',
     'false': 'FALSE',
     'nothing' : 'NOTHING',
-    'int64': 'INT64',
-    'float64': 'FLOAT64',
-    'string': 'STRING',
-    'bool': 'BOOL',
-    'char': 'CHAR',
-    'struct': 'STRUCT',
+    'Int64': 'INT64',
+    'Float64': 'FLOAT64',
+    'String': 'STRING',
+    'string' : 'SSTRING',
+    'Bool': 'BOOL',
+    'Char': 'CHAR',
+    'Struct': 'STRUCT',
     'print': 'PRINT',
     'println': 'PRINTLN',
     'function' : 'FUNCTION',
     'end' : 'END',
     'while' : 'WHILE',
     'for' : 'FOR',
+    'in' : 'IN',
     'local' : 'LOCAL',
     'global' : 'GLOBAL',
     'return' : 'RETURN',
     'break' : 'BREAK',
     'continue' : 'CONTINUE',
-    'parse' : 'PARSE'
+    'parse' : 'PARSE',
+    'if' : 'IF',
+    'else' : 'ELSE',
+    'elseif' : 'ELSEIF'
 }
 
 #DECLARACION DE TOKENS
@@ -53,8 +58,10 @@ tokens = [
     'NOT',
     'PARENTESISA',
     'PARENTESISC',
-    'LLAVESA',
-    'LLAVESC',
+    'LLAVEA',
+    'LLAVEC',
+    'CORCHETEA',
+    'CORCHETEC',
     'PUNTOCOMA',
     'DOSPUNTOS',
     'COMA',
@@ -87,8 +94,10 @@ t_AND = r'&&'
 t_NOT = r'\!'
 t_PARENTESISA = r'\('
 t_PARENTESISC = r'\)' 
-t_LLAVESA = r'\{'
-t_LLAVESC = r'\}'
+t_LLAVEA = r'\{'
+t_LLAVEC = r'\}'
+t_CORCHETEA = r'\['
+t_CORCHETEC = r'\]'
 t_PUNTOCOMA = r';' 
 t_DOSPUNTOS = r':' 
 t_COMA = r','
@@ -96,7 +105,7 @@ t_COMA = r','
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reservedWords.get(t.value.lower(),'ID') #Cecha las palbras reservadas
+    t.type = reservedWords.get(t.value,'ID') #Cecha las palbras reservadas
     return t
 
 def t_DOBLE(t):
@@ -163,29 +172,31 @@ t_ignore = " \t"
 
 #Construyendo un analizador
 import ply.lex as lex
-lexer = lex.lex()
+lexer = lex.lex(reflags = re.VERBOSE)
 
-from TS.Excepcion import Excepcion
-from Instrucciones.Funciones.Imprimir import Imprimir
-from Expresiones.Primitivos import Primitivos
-from TS.Tipo import Tipo
-from Expresiones.OperacionAritmetica import OperacionAritmetica
-from Expresiones.OperacionRelacional import OperacionRelacional
-from Expresiones.OperacionLogica import OperacionLogica
-from TS.Tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
-from Instrucciones.Asignacion_Declaracion_Varariables.AsignacionVar import AsignacionVar
+
 from Instrucciones.Asignacion_Declaracion_Varariables.DeclaracionVar import DeclaracionVar
-from Expresiones.Identificador import Identificador
-from Instrucciones.Funciones.Funcion import Funcion
-from Instrucciones.Ciclos.While import While
+from Instrucciones.Asignacion_Declaracion_Varariables.AsignacionVar import AsignacionVar
+from Instrucciones.Arreglos.Declaracion_Arreglos import Declaracion_Arreglos
+from TS.Tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
+from Instrucciones.Sentencias_Transferencia.Continue import Continue
 from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
 from Instrucciones.Sentencias_Transferencia.Return import Return
+from Expresiones.OperacionAritmetica import OperacionAritmetica
+from Expresiones.OperacionRelacional import OperacionRelacional
 from Instrucciones.Sentencias_Transferencia.Break import Break
-from Instrucciones.Sentencias_Transferencia.Continue import Continue
-from Nativas.Parse import Parse
+from Instrucciones.Sentencias_Ciclicas.While import While
+from Expresiones.OperacionLogica import OperacionLogica
+from Instrucciones.Funciones.Imprimir import Imprimir
+from Instrucciones.Sentencias_Ciclicas.For import For
+from Instrucciones.Funciones.Funcion import Funcion
+from Expresiones.Identificador import Identificador
+from Instrucciones.Sentencias_Control.If import If
+from Expresiones.Primitivos import Primitivos
+from TS.Excepcion import Excepcion
 from Nativas.String import String
-
-
+from Nativas.Parse import Parse
+from TS.Tipo import Tipo
 
 
 #Definir precedencia
@@ -233,7 +244,11 @@ def p_instruccion(p):
                    | funciones_instr fininstr
                    | while_instr fininstr
                    | llamada_funcion_instr fininstr
-                   | sentencia_transferencia fininstr'''
+                   | break_instr fininstr
+                   | continue_instr fininstr
+                   | return_instr fininstr
+                   | if_instr fininstr
+                   | for_instr fininstr'''
     p[0] = p[1]
 
 def p_instruccion_error(p):
@@ -347,13 +362,32 @@ def p_parse_float64(p):
     p[0] = Parse(Tipo.DOBLE, p[5],  p.lineno(1), find_column(input, p.slice[1]))
 
 def p_parse_string(p):
-    'expresion : STRING PARENTESISA expresion PARENTESISC'
+    'expresion : SSTRING PARENTESISA expresion PARENTESISC'
     p[0] = String(p[3], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_lista_expresiones(p):
+    'expresion : CORCHETEA expresiones_coma CORCHETEC'
+    p[0] = p[2]
+
+#//////////////////////////////EXPRESIONES COMA
+def p_expresiones_coma_expresiones_coma_epxresion(p):
+    'expresiones_coma : expresiones_coma COMA expresion'
+    p[1].append(p[3])
+    p[0] = p[1]
+
+def p_expresiones_coma_expresion(p):
+    'expresiones_coma : expresion'
+    p[0] = [p[1]]
 
 #//////////////////////////////////////////////////BOOLEAN
 def p_bandera(p):
     '''bandera : TRUE
                | FALSE'''
+    if p[1].lower() == 'true':
+        p[1] = True
+    elif p[1].lower() == 'false':
+        p[1] == False
+
     p[0] = Primitivos(Tipo.BANDERA, p[1], p.lineno(1), find_column(input, p.slice[1]))
 
 #//////////////////////////////////////////////////TIPO DE DATOS
@@ -381,7 +415,10 @@ def p_asignacion_var_tipo(p):
 
 def p_asignacion_var(p):
     'asignacion_instr : ID IGUAL expresion'
-    p[0] = AsignacionVar(p[1], p[3], None, p.lineno(1), find_column(input, p.slice[1]))    
+    if isinstance(p[3], list):
+        p[0] = Declaracion_Arreglos(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
+    else:
+        p[0] = AsignacionVar(p[1], p[3], None, p.lineno(1), find_column(input, p.slice[1]))    
 
 #///////////////////////////////////////////////////////////DECLARACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_local(p):
@@ -391,6 +428,10 @@ def p_declaracion_local(p):
 def p_declaracion_global(p):
     'declaracion_var_instr : GLOBAL ID'
     p[0] = DeclaracionVar(p[2], None, None, False, True, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_declaracion(p):
+    'declaracion_var_instr : ID'
+    p[0] = DeclaracionVar(p[1], None, None, True, False, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////DECLARACION Y ASIGNACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_global_asignacion_var_tipo(p):
@@ -425,7 +466,7 @@ def p_funciones(p):
 
 def p_funciones_parametros(p):
     'funciones_instr : FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END'
-    p[0] = Funcion(p[1], p[4], p[6], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = Funcion(p[2], p[4], p[6], p.lineno(1), find_column(input, p.slice[1]))
 
 #//////////////////////////////////////////////////PARAMETROS DE FUNCION
 def p_parametros_funcion(p):
@@ -440,11 +481,11 @@ def p_parametros_parametro(p):
 #//////////////////////////////////////////////////PARAMETRO DE FUNCION
 def p_parametro_tipo(p):
     'parametro : ID DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = {'tipo' : p[4], 'dimensiones' : None, 'identificador' : p[1]}
+    p[0] = {'tipo' : p[4],'identificador' : p[1]}
 
 def p_parametro(p):
     'parametro : ID'
-    p[0] = {'tipo' : None, 'dimensiones' : None, 'identificador' : p[1]}
+    p[0] = {'tipo' : None,'identificador' : p[1]}
 
 #//////////////////////////////////////////////////LLAMADA FUNCION
 def p_llamada_funcion(p):
@@ -474,22 +515,67 @@ def p_While(p):
     'while_instr : WHILE expresion instrucciones END'
     p[0] = While(p[2], p[3], p.lineno(1), find_column(input, p.slice[1]))
 
+#//////////////////////////////////////////////////FOR
+def p_for_string(p): #Lo hace con strings
+    'for_instr : FOR declaracion_var_instr IN expresion instrucciones END'
+    p[0] = For(p[2], p[4], None, p[5], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_for_rango(p): #Lo hace con rango
+    'for_instr : FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END'
+    p[0] = For(p[2], p[4], p[6], p[7], p.lineno(1), find_column(input, p.slice[1]))
+
 #//////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
 def p_sentencia_transferencia_return_expresion(p):
-    'sentencia_transferencia : RETURN expresion'
+    'return_instr : RETURN expresion'
     p[0] = Return(p[2], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_return(p):
-    'sentencia_transferencia : RETURN'
+    'return_instr : RETURN'
     p[0] = Return(None, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_break(p):
-    'sentencia_transferencia : BREAK'
+    'break_instr : BREAK'
     p[0] = Break(p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_continue(p):
-    'sentencia_transferencia : CONTINUE'
+    'continue_instr : CONTINUE'
     p[0] = Continue(p.lineno(1), find_column(input, p.slice[1]))
+
+#//////////////////////////////////////////////////SENTENCIAS DE CONTROL
+def p_if(p):
+    'if_instr : IF expresion instrucciones END'
+    p[0] = If(p[2], p[3], None, None, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_if_elseif_else(p):
+    'if_instr : IF expresion instrucciones elseifs_instr ELSE instrucciones END'
+    p[0] = p[0] = If(p[2], p[3], p[6], p[4], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_if_elseif(p):
+    'if_instr : IF expresion instrucciones elseifs_instr END'
+    p[0] = p[0] = If(p[2], p[3], None, p[4], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_if_else(p):
+    'if_instr : IF expresion instrucciones ELSE instrucciones END'
+    p[0] = If(p[2], p[3], p[5], None, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_elseifs_elseifs_elseif(p):
+    'elseifs_instr : elseifs_instr elseif_instr'
+    if p[2] != "":
+        p[1].append(p[2])
+    p[0] = p[1] 
+
+def p_elseifs_elseif(p):
+    'elseifs_instr : elseif_instr'
+    if p[1] == "":
+        p[0] = []
+    else:
+        p[0] = [p[1]] 
+
+def p_elseif(p):
+    'elseif_instr : ELSEIF expresion instrucciones'
+    p[0] = If(p[2], p[3], None, None, p.lineno(1), find_column(input, p.slice[1]))
+
+
 
 #Haciendo el parser
 from Nativas.Length import Length
@@ -674,29 +760,5 @@ println(str);
     '''
 
 '''x = (3*5)::Int64;
-str = "Saludos";
-
-function ejemplo()
-    local str = "Ejemplo";
-    local x = 0;
-    i = 1;
-    while i < 5
-        local x = 0;
-        local str = "HEY";
-        x = i *2;
-        println(x);
-        i = i + 1;
-    end;
-    println(x);
-    println(str);
-end;
-
-function ejemplo2()
-    println(str);
-end;
-
-ejemplo();
-ejemplo2();
-
-println(x);
-println(str);'''
+str = "Saludos";'''
+#HAY QUE VER QUE SI UN WHILE ESTA EN EL ENTORNO GLOBAL SUS VARIABLE SERAN LAS GLOBALES Y SI NO SERAN LAS DEL ENTRONO EN EL QIE ESTE

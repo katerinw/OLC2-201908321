@@ -1,6 +1,7 @@
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
+from TS.Tipo import Tipo
 
 class DeclaracionVar(Instruccion):
     def __init__(self, identificador, valor, tipo, local, globall, fila, columna):
@@ -33,11 +34,14 @@ class DeclaracionVar(Instruccion):
                 return Excepcion("Semántico", "El tipo de dato en la variable \""+self.identificador+"\" es diferente", self.fila, self.columna) 
         
         if self.local:  #Se encarga de las variables locales jeje
-            if self.valor != None:  #Si trae valor para ponerle valor jsjs     
-                simbolo = Simbolo(str(self.identificador), self.valor.tipo, value, True, False, self.fila, self.columna)
-            else: #Si no trae valor jsjsj
-                simbolo = Simbolo(str(self.identificador), simboloVar.tipo, simboloVar.valor, True, False, self.fila, self.columna)
-             
+            if simboloVar != None:    #Siver para los fors
+                if self.valor != None:  #Si trae valor para ponerle valor jsjs     
+                    simbolo = Simbolo(str(self.identificador), self.valor.tipo, value, True, False, self.fila, self.columna)
+                else: #Si no trae valor jsjsj
+                    simbolo = Simbolo(str(self.identificador), simboloVar.tipo, simboloVar.valor, True, False, self.fila, self.columna)
+            else:
+                simbolo = Simbolo(str(self.identificador), Tipo.NULO, None, True, False, self.fila, self.columna)
+
         elif self.globall:  #Se encarga de las variables globales
             if self.valor != None: #Si la variable trae valor
                 simbolo = Simbolo(str(self.identificador), self.valor.tipo, value, False, True, self.fila, self.columna)

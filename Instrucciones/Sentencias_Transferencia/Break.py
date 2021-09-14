@@ -1,5 +1,4 @@
 from Abstract.Instruccion import Instruccion
-from TS.Excepcion import Excepcion
 
 class Break(Instruccion):
     def __init__(self, fila, columna):
@@ -7,4 +6,4 @@ class Break(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
-        return super().interpretar(tree, table)
+        return self

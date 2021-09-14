@@ -14,7 +14,7 @@ class Return(Instruccion):
     def interpretar(self, tree, table):
         if self.expresion == None:
             self.result = 'Nothing'
-            return None
+            return self
             
         result = self.expresion.interpretar(tree, table)
         if isinstance(result, Excepcion):

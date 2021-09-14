@@ -7,8 +7,10 @@ class Tipo(Enum):
     BANDERA = 3
     CARACTER = 4 
     CADENA = 5 
-    NULO = 6
-    ARREGLO = 7
+    STRUCT = 6
+    NULO = 7
+    ARREGLO =8
+    
 
 class OperadorAritmetico(Enum):
     MAS = 1
