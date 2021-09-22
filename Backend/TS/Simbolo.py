@@ -34,3 +34,9 @@ class Simbolo:
     
     def getColumna(self):
         return self.columna
+
+    def getLocal(self):
+        return self.local
+
+    def getGloball(self):
+        return self.globall

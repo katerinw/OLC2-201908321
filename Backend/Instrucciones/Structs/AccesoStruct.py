@@ -1,0 +1,29 @@
+from Abstract.Instruccion import Instruccion
+from TS.Excepcion import Excepcion
+from TS.Tipo import Tipo
+
+class AccesoStruct(Instruccion):
+    def __init__(self, identificador, atributo, fila, columna):
+        self.identificador = identificador
+        self.atributo = atributo
+        self.fila = fila
+        self.columna = columna
+        self.tipo = Tipo.NULO
+
+    def interpretar(self, tree, table):
+        simbolo = table.getTabla(str(self.identificador))
+        if simbolo == None:
+            return Excepcion("Semántico", "Variable \""+self.identificador+"\" no encontrado", self.fila, self.columna)
+
+        if simbolo.getTipo() != Tipo.STRUCT:
+            return Excepcion("Semántico", "La varible \""+str(self.identificador)+"\" a la que intenta acceder no es tipo struct", self.fila, self.columna)
+
+        try:
+            valor =  simbolo.getValor().tabla[str(self.atributo)].valor
+            if isinstance(valor, Excepcion):
+                return valor
+        except:
+            return Excepcion("Semántico", "Atributo \""+self.atributo+"\" en variable \""+self.identificador+"\" no existe", self.fila, self.columna)
+
+        self.tipo = simbolo.getValor().tabla[str(self.atributo)].tipo
+        return valor

@@ -5,6 +5,7 @@ from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
+from copy import copy
 
 class If(Instruccion):
     def __init__(self, condicion, instruccionesIf, instruccionesElse, ElseIf, fila, columna):
@@ -28,7 +29,7 @@ class If(Instruccion):
         if condicion == True: #verifica si es verdadera la condicion
             #nuevaTabla = TablaSimbolos('if', table) #Nuevo entorno
             for instruccion in self.instruccionesIf:
-                result = instruccion.interpretar(tree, table)
+                result = copy(instruccion).interpretar(tree, table)
                 if isinstance(result, Excepcion):
                     tree.getExcepciones().append(result)
                     tree.updateConsola(result.toString())
@@ -42,7 +43,7 @@ class If(Instruccion):
         else: 
             if self.ElseIf != None:
                 for elseif in self.ElseIf:
-                    result = elseif.interpretar(tree, table)
+                    result = copy(elseif).interpretar(tree, table)
 
                     if isinstance(result, Excepcion):
                         return result
@@ -60,7 +61,7 @@ class If(Instruccion):
             if self.instruccionesElse != None and self.estado == False:
                 #nuevaTabla = TablaSimbolos('else', table)
                 for instruccion in self.instruccionesElse:
-                    result = instruccion.interpretar(tree, table)
+                    result = copy(instruccion).interpretar(tree, table)
                     if isinstance(result, Excepcion):
                         tree.getExcepciones().append(result)
                         tree.updateConsola(result.toString())

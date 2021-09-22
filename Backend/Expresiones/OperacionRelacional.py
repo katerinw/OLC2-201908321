@@ -62,7 +62,13 @@ class OperacionRelacional(Instruccion):
         elif self.opIzq.tipo == Tipo.BANDERA and self.opDer.tipo == Tipo.BANDERA:
             self.tipo = Tipo.BANDERA
             return self.getType(self.opIzq, opIzq) == self.getType(self.opDer, opDer)
+        elif (self.opIzq.tipo == Tipo.NULO and self.opDer.tipo == Tipo.NULO):
+            self.tipo = Tipo.BANDERA
+            return self.getType(self.opIzq, opIzq) == self.getType(self.opDer, opDer)
         elif (self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE) or (self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO):
+            self.tipo = Tipo.BANDERA
+            return self.getType(self.opIzq, opIzq) == self.getType(self.opDer, opDer)
+        elif self.opIzq.tipo == Tipo.NULO or self.opDer.tipo == Tipo.NULO:
             self.tipo = Tipo.BANDERA
             return self.getType(self.opIzq, opIzq) == self.getType(self.opDer, opDer)
         return Excepcion("Semántico", "Los tipos de datos para el signo \"==\" no son los correctos", self.fila, self.columna)
@@ -82,7 +88,13 @@ class OperacionRelacional(Instruccion):
         elif self.opIzq.tipo == Tipo.BANDERA and self.opDer.tipo == Tipo.BANDERA:
             self.tipo = Tipo.BANDERA
             return self.getType(self.opIzq, opIzq) != self.getType(self.opDer, opDer)
+        elif (self.opIzq.tipo == Tipo.NULO and self.opDer.tipo == Tipo.NULO):
+            self.tipo = Tipo.BANDERA
+            return self.getType(self.opIzq, opIzq) != self.getType(self.opDer, opDer)
         elif (self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE) or (self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO):
+            self.tipo = Tipo.BANDERA
+            return self.getType(self.opIzq, opIzq) != self.getType(self.opDer, opDer)
+        elif self.opIzq.tipo == Tipo.NULO or self.opDer.tipo == Tipo.NULO:
             self.tipo = Tipo.BANDERA
             return self.getType(self.opIzq, opIzq) != self.getType(self.opDer, opDer)
         return Excepcion("Semántico", "Los tipos de datos para el signo \"!=\" no son los correctos", self.fila, self.columna)

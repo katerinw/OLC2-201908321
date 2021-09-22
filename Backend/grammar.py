@@ -17,7 +17,7 @@ reservedWords = {
     'String': 'STRING',
     'Bool': 'BOOL',
     'Char': 'CHAR',
-    'Struct': 'STRUCT',
+    'struct': 'STRUCT',
     'print': 'PRINT',
     'println': 'PRINTLN',
     'function' : 'FUNCTION',
@@ -36,7 +36,8 @@ reservedWords = {
     'push' : 'PUSH',
     'if' : 'IF',
     'else' : 'ELSE',
-    'elseif' : 'ELSEIF'
+    'elseif' : 'ELSEIF',
+    'mutable' : 'MUTABLE'
 }
 
 #DECLARACION DE TOKENS
@@ -67,6 +68,7 @@ tokens = [
     'PUNTOCOMA',
     'DOSPUNTOS',
     'COMA',
+    'PUNTO',
     'ID',
     'ENTERO',
     'DOBLE',
@@ -103,6 +105,7 @@ t_CORCHETEC = r'\]'
 t_PUNTOCOMA = r';' 
 t_DOSPUNTOS = r':' 
 t_COMA = r','
+t_PUNTO = r'\.'
 
 
 def t_ID(t):
@@ -179,17 +182,19 @@ lexer = lex.lex(reflags = re.VERBOSE)
 
 from Instrucciones.Asignacion_Declaracion_Varariables.DeclaracionVar import DeclaracionVar
 from Instrucciones.Asignacion_Declaracion_Varariables.AsignacionVar import AsignacionVar
+from Instrucciones.Funciones.LlamadaFuncionStruct import LlamadaFuncionStruct
 from Instrucciones.Arreglos.DeclaracionArreglos import DeclaracionArreglos
 from TS.Tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
 from Instrucciones.Arreglos.ModificacionArreglo import ModificacionArreglo
 from Instrucciones.Arreglos.AsignacionArreglos import AsignacionArreglos
+from Instrucciones.Structs.ModificacionStruct import ModificacionStruct
 from Instrucciones.Sentencias_Transferencia.Continue import Continue
-from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
 from Instrucciones.Sentencias_Transferencia.Return import Return
 from Expresiones.OperacionAritmetica import OperacionAritmetica
 from Expresiones.OperacionRelacional import OperacionRelacional
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Instrucciones.Arreglos.AccesoArreglo import AccesoArreglo
+from Instrucciones.Structs.AccesoStruct import AccesoStruct
 from Instrucciones.Sentencias_Ciclicas.While import While
 from Expresiones.OperacionLogica import OperacionLogica
 from Instrucciones.Funciones.Imprimir import Imprimir
@@ -197,6 +202,7 @@ from Instrucciones.Sentencias_Ciclicas.For import For
 from Instrucciones.Funciones.Funcion import Funcion
 from Expresiones.Identificador import Identificador
 from Instrucciones.Sentencias_Control.If import If
+from Instrucciones.Structs.Struct import Struct
 from Expresiones.Primitivos import Primitivos
 from TS.Excepcion import Excepcion
 from Nativas.String import String
@@ -205,6 +211,8 @@ from Nativas.Push import Push
 from Nativas.Pop import Pop
 from TS.Tipo import Tipo
 from copy import copy
+
+
 
 
 #Definir precedencia
@@ -226,11 +234,11 @@ def p_inicio(p):
     'inicio : instrucciones'
     p[0] = p[1]
 
-#//////////////////////////////////////////////////FINAL INSTRUCCION
+#///////////////////////////////////////////////////////////FINAL INSTRUCCION
 def p_fininstr(p):
     'fininstr : PUNTOCOMA'
 
-#//////////////////////////////////////////////////INSTRUCCIONES
+#///////////////////////////////////////////////////////////INSTRUCCIONES
 def p_instrucciones_instrucciones_instruccion(p):
     'instrucciones : instrucciones instruccion'
     if p[2] != "":
@@ -244,7 +252,7 @@ def p_instrucciones_instruccion(p):
     else: 
         p[0] = [p[1]]
 
-#//////////////////////////////////////////////////INSTRUCCION
+#///////////////////////////////////////////////////////////INSTRUCCION
 def p_instruccion(p):
     '''instruccion : imprimir_instr fininstr
                    | asignacion_instr fininstr
@@ -259,7 +267,10 @@ def p_instruccion(p):
                    | if_instr fininstr
                    | for_instr fininstr
                    | pop_instr fininstr
-                   | push_instr fininstr'''
+                   | push_instr fininstr
+                   | structs_instr fininstr
+                   | llamada_funcion_struct_instr fininstr
+                   | modificacion_struct fininstr'''
     p[0] = p[1]
 
 def p_instruccion_error(p):
@@ -267,7 +278,7 @@ def p_instruccion_error(p):
     errores.append(Excepcion("Sintáctico", "Error sintáctico, " + str(p[1].value), p.lineno(1), find_column(input, p.slice[1])))
     p[0] = ""
 
-#//////////////////////////////////////////////////EXPRESION
+#///////////////////////////////////////////////////////////EXPRESION
 def p_expresion_parentesis(p):
     'expresion : PARENTESISA expresion PARENTESISC'
     p[0] = p[2]
@@ -364,6 +375,10 @@ def p_expresion_llamada_funcion(p):
     'expresion : llamada_funcion_instr'
     p[0] = p[1]
 
+def p_expresion_llamada_funcion_struct(p):
+    'expresion : llamada_funcion_struct_instr'
+    p[0] = p[1]
+
 def p_lista_expresiones(p):
     'expresion : CORCHETEA expresiones_coma CORCHETEC'
     p[0] = p[2]
@@ -378,6 +393,10 @@ def p_push_expresion(p):
 
 def p_pop_expresion(p):
     'expresion : pop_instr'
+    p[0] = p[1]
+
+def p_acceso_struct_expresion(p):
+    'expresion : acceso_struct'
     p[0] = p[1]
 
 #//////////////////////////////////////////NATIVAS
@@ -549,25 +568,22 @@ def p_parametro(p):
 #///////////////////////////////////////////////////////////LLAMADA FUNCION
 def p_llamada_funcion(p):
     'llamada_funcion_instr : ID PARENTESISA PARENTESISC'
-    p[0] = LlamadaFuncion(p[1], [], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = LlamadaFuncionStruct(p[1], [], p.lineno(1), find_column(input, p.slice[1]))
 
+#///////////////////////////////////////////////////////////LLAMADA FUNCION / LLAMADA STRUCT
 def p_llamada_funcion_parametros(p):
-    '''llamada_funcion_instr : ID PARENTESISA parametros_llamada PARENTESISC'''
-    p[0] = LlamadaFuncion(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
-
+    'llamada_funcion_struct_instr : ID PARENTESISA parametros_llamada PARENTESISC'
+    p[0] = LlamadaFuncionStruct(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
+    
 #///////////////////////////////////////////////////////////PARAMETOS LLAMADA FUNCION
 def p_parametros_llamada_funcion(p):
-    'parametros_llamada : parametros_llamada COMA parametro_llamada '
+    'parametros_llamada : parametros_llamada COMA expresion '
     p[1].append(p[3])
     p[0] = p[1]
 
-def p_parametros_llamada_parametro_funcion(p):
-    'parametros_llamada : parametro_llamada'
+def p_parametros_llamada_expresion(p):
+    'parametros_llamada : expresion'
     p[0] = [p[1]]
-
-def p_parametro_llamada_funcion(p):
-    'parametro_llamada : expresion'
-    p[0] = p[1]
 
 #///////////////////////////////////////////////////////////WHILE
 def p_While(p):
@@ -635,6 +651,49 @@ def p_elseif(p):
     'elseif_instr : ELSEIF expresion instrucciones'
     p[0] = If(p[2], p[3], None, None, p.lineno(1), find_column(input, p.slice[1]))
 
+#///////////////////////////////////////////////////////////STRUCTS
+def p_struct(p):
+    '''structs_instr : structs_inmutable
+                     | structs_mutable'''
+    p[0] = p[1]
+
+def p_structs_inmutable(p):
+    'structs_inmutable : STRUCT ID lista_atributos END'
+    p[0] = Struct(p[2], p[3], False, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_structs_mutable(p):
+    'structs_mutable : MUTABLE STRUCT ID lista_atributos END'
+    p[0] = Struct(p[3], p[4], True, p.lineno(1), find_column(input, p.slice[1]))
+
+#///////////////////////////////////////////////////////////ATRIBUTOS
+def p_atributos_atributos(p):
+    'lista_atributos : lista_atributos atributo fininstr'
+    p[1].append(p[2])
+    p[0] = p[1] 
+
+def p_atributos(p):
+    'lista_atributos : atributo fininstr'
+    p[0] = [p[1]]
+
+#///////////////////////////////////////////////////////////ATRIBUTO
+def p_atributo_tipo(p):
+    'atributo : ID DOSPUNTOS DOSPUNTOS tipo'
+    p[0] = {'tipo' : p[4],'identificador' : p[1], 'tipado' : True}
+
+def p_atributo(p):
+    'atributo : ID'
+    p[0] = {'tipo' : None,'identificador' : p[1], 'tipado' : False}
+
+
+#///////////////////////////////////////////////////////////ACCESO STRUCT
+def p_acceso_struct(p):
+    'acceso_struct : ID PUNTO ID'
+    p[0] = AccesoStruct(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
+
+#///////////////////////////////////////////////////////////MODIFICACION STRUCT
+def p_modificacion_struct(p):
+    'modificacion_struct : ID PUNTO ID IGUAL expresion'
+    p[0] = ModificacionStruct(p[1], p[3], p[5], p.lineno(1), find_column(input, p.slice[1]))
 
 
 #Haciendo el parser
@@ -765,6 +824,8 @@ for error in errores: #Captura de errores lexicos y sintacticos
 for instruccion in ast.getInstrucciones():
     if isinstance(instruccion, Funcion):
         ast.addFuncion(instruccion)
+    elif isinstance(instruccion, Struct):
+        ast.addStruct(instruccion)
     else:
         valor = instruccion.interpretar(ast, TSGlobal)
         if isinstance(valor, Excepcion):

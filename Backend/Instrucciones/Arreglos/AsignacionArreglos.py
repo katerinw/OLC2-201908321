@@ -13,11 +13,12 @@ class AsignacionArreglos(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
-        value = self.interpretarArreglos(tree, table, self.expresiones)
-        if isinstance(value, Excepcion):
-            return value
+        value = copy(self.expresiones)
+        self.copiarArreglo(value, self.expresiones)
+        val = self.interpretarArreglos(tree, table, value)
+        if isinstance(val, Excepcion):
+            return val
         
-        value = self.expresiones
         simboloVar = table.getTabla(str(self.identificador)) #Verifica si la variable ya existe en algún entorno
         
 
@@ -74,4 +75,14 @@ class AsignacionArreglos(Instruccion):
             i += 1
         return None
                   
+    def copiarArreglo(self, valor, arreglo):
+        i = 0
+        while i < len(arreglo):
+            if isinstance(arreglo[i], list):
+                valor[i] = copy(arreglo[i])
+            else:
+                valor[i] = copy(arreglo[i])
+            i += 1
+        return None 
+
     

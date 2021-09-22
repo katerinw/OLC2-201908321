@@ -14,10 +14,11 @@ class ModificacionArreglo(Instruccion):
 
     def interpretar(self, tree, table):
         if isinstance(self.expresiones, list):
-            value = self.interpretarArreglos(tree, table, self.expresiones)
-            if isinstance(value, Excepcion):
-                return value
-            value = self.expresiones
+            value = copy(self.expresiones)
+            self.copiarArreglo(value, self.expresiones)
+            val = self.interpretarArreglos(tree, table, value)
+            if isinstance(val, Excepcion):
+                return val
         else:
             value = self.expresiones.interpretar(tree, table)
 
@@ -47,6 +48,17 @@ class ModificacionArreglo(Instruccion):
                 arreglo[i] = valor
             i += 1
         return None
+
+
+    def copiarArreglo(self, valor, arreglo):
+        i = 0
+        while i < len(arreglo):
+            if isinstance(arreglo[i], list):
+                valor[i] = copy(arreglo[i])
+            else:
+                valor[i] = copy(arreglo[i])
+            i += 1
+        return None 
 
 
     def modify(self, tree, table, dimensiones, arreglo, valor):
@@ -82,4 +94,4 @@ class ModificacionArreglo(Instruccion):
         if valor != None:
             arreglo[num-1] = valor
 
-        return None
+        return None       

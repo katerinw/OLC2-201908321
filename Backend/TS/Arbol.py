@@ -2,6 +2,7 @@ class Arbol:
     def __init__(self, instrucciones):
         self.instrucciones = instrucciones
         self.funciones = []
+        self.structs = []
         self.excepciones = []
         self.consola = ""
         self.TSGlobal = None
@@ -47,5 +48,17 @@ class Arbol:
 
     def addFuncion(self, funcion):
         self.funciones.append(funcion)
+
+    def getStructs(self):
+        return self.structs
+
+    def getStruct(self, identificador):
+        for struct in self.structs:
+            if struct.identificador == identificador:
+                return struct
+        return None
+
+    def addStruct(self, struct):
+        self.structs.append(struct)
 
     

@@ -18,7 +18,6 @@ class While(Instruccion):
             condicion = self.condicion.interpretar(tree, table)
             if isinstance(condicion, Excepcion):
                 return condicion
-
             if self.condicion.tipo == Tipo.BANDERA:
                 if condicion == True: #Verifica en cada ciclo que la condicion sea verdadera
                     nuevaTabla = TablaSimbolos('while', table)
@@ -30,7 +29,7 @@ class While(Instruccion):
                             tree.updateConsolaln(result.toString())
                         
                         if isinstance(result, Return): #Sentencia Return  
-                            return result.expresion
+                            return result
                         
                         if isinstance(result, Break): #Sentencia Break
                             return None
