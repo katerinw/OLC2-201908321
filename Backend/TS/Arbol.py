@@ -6,6 +6,8 @@ class Arbol:
         self.excepciones = []
         self.consola = ""
         self.TSGlobal = None
+        self.dot = ""
+        self.contador = 0
 
     def getInstrucciones(self):
         return self.instrucciones
@@ -61,4 +63,21 @@ class Arbol:
     def addStruct(self, struct):
         self.structs.append(struct)
 
-    
+    def getDot(self, root):
+        self.dot = ""
+        self.dot += "digraph {\n"
+        self.dot += "n0[label=\"" + root.getValue().replace("\"", "\\\"")+"\"];\n"
+        self.contador = 1
+        self.recorrerCST("n0", root)
+        self.dot += "}"
+        return self.dot
+
+    def recorrerCST(self, dadId, dadNode):
+        for child in dadNode.getChildren():
+            childName = "n"+str(self.contador)
+            if child == None:
+                continue
+            self.dot += childName+"[label=\"" + child.getValue().replace("\"", "\\\"")+"\"];\n"
+            self.dot += dadId+"->"+childName+";\n"
+            self.contador += 1
+            self.recorrerCST(childName, child)

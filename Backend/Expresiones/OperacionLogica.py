@@ -1,5 +1,6 @@
 from Abstract.Instruccion import Instruccion
 from TS.Tipo import OperadorLogico, Tipo
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 
 class OperacionLogica(Instruccion):
@@ -72,3 +73,21 @@ class OperacionLogica(Instruccion):
         elif nodo.tipo == Tipo.CARACTER:
             return str(valor)
         return valor
+
+    def getNode(self):
+        nodo = NodeCst("expresion")
+        nodo.addChildNode(self.opIzq.getNode())
+        nodo.addChild(str(self.tipoOperador(self.operador)))
+        if self.opDer != None:
+            nodo.addChildNode(self.opDer.getNode())
+        return nodo
+
+
+    
+    def tipoOperador(self, op):
+        if op == OperadorLogico.NOT:
+            return '!'
+        elif op == OperadorLogico.AND:
+            return '&&'
+        elif op == OperadorLogico.OR:
+            return '||'

@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 
 class Break(Instruccion):
     def __init__(self, fila, columna):
@@ -7,3 +8,8 @@ class Break(Instruccion):
 
     def interpretar(self, tree, table):
         return self
+
+    def getNode(self):
+        nodo = NodeCst("break_instr")
+        nodo.addChild("BREAK")
+        return nodo

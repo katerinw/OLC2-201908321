@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
 from TS.Tipo import Tipo
@@ -11,6 +12,7 @@ class AsignacionArreglos(Instruccion):
         self.tipo = tipo
         self.fila = fila
         self.columna = columna
+        self.value = ""
 
     def interpretar(self, tree, table):
         value = copy(self.expresiones)
@@ -18,7 +20,7 @@ class AsignacionArreglos(Instruccion):
         val = self.interpretarArreglos(tree, table, value)
         if isinstance(val, Excepcion):
             return val
-        
+        self.value = value
         simboloVar = table.getTabla(str(self.identificador)) #Verifica si la variable ya existe en algún entorno
         
 
@@ -84,5 +86,14 @@ class AsignacionArreglos(Instruccion):
                 valor[i] = copy(arreglo[i])
             i += 1
         return None 
+
+
+    def getNode(self):
+        nodo = NodeCst("asignacion_instr")
+        nodo.addChild(str(self.identificador))
+        expresionsNode = NodeCst("expresion")
+        expresionsNode.addChild(str(self.value))
+        nodo.addChildNode(expresionsNode)
+        return nodo
 
     

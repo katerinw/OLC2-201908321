@@ -21,9 +21,10 @@ export default function Consolas() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ codigo:editorRef.current.getValue() })
         };
-        fetch('http://localhost:4000/compiler', requestOptions)
+        fetch('https://backendkaterinw.herokuapp.com/compiler', requestOptions)
             .then(response => response.json())
-            .then(data => setText(data.salida));
+            .then(data => (setText(data.salida), console.log(data)));
+            
       }
 
     return (

@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -36,3 +37,9 @@ class Pop(Instruccion):
             return Tipo.BANDERA
         elif isinstance(value, list):
             return Tipo.ARREGLO
+
+    def getNode(self):
+        nodo = NodeCst("nativas_instr")
+        nodo.addChild("POP!")
+        nodo.addChildNode(self.expresion.getNode())
+        return nodo

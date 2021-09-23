@@ -1,5 +1,6 @@
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from copy import copy
@@ -13,6 +14,7 @@ class Imprimir(Instruccion):
 
     def interpretar(self, tree, table):
         valores = ""
+        valor = ""
         if self.expresiones != None:
             for expresion in self.expresiones:
                 valor = expresion.interpretar(tree, table) #Retorna cualquier valor interpretado
@@ -40,3 +42,15 @@ class Imprimir(Instruccion):
                 structNuevo[keys] = copy(value.valor.tabla)
                 self.interpretarStruct(structNuevo[keys],value.valor.tabla)
         return None
+    
+    def getNode(self):
+        nodo = NodeCst("imprimir_instr")
+        if isinstance(self.expresiones, list):
+            for expresion in self.expresiones:
+                nodo.addChildNode(expresion.getNode())
+        elif self.expresiones == None:
+            nodo.addChild("")    
+        else:
+            nodo.addChildNode(self.expresiones.getNode())    
+        return nodo
+        

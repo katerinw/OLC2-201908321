@@ -1,6 +1,8 @@
 from Abstract.Instruccion import Instruccion
-from TS.Excepcion import Excepcion
 from TS.Tipo import OperadorRelacional, Tipo
+from Abstract.NodeCst import NodeCst
+from TS.Excepcion import Excepcion
+
 
 class OperacionRelacional(Instruccion):
     def __init__(self, operador, opIzq, opDer, fila, columna):
@@ -183,3 +185,26 @@ class OperacionRelacional(Instruccion):
             elif str(valor).lower() == 'false':
                 return False
         return valor
+
+    def getNode(self):
+        nodo = NodeCst("expresion")
+        nodo.addChildNode(self.opIzq.getNode())
+        nodo.addChild(str(self.tipoOperador(self.operador)))
+        if self.opDer != None:
+            nodo.addChildNode(self.opDer.getNode())
+        return nodo
+
+
+    def tipoOperador(self, op):
+        if op == OperadorRelacional.MENOR:
+            return '<'
+        elif op == OperadorRelacional.MAYOR:
+            return '>'
+        elif op == OperadorRelacional.MENORIGUAL:
+            return '<='
+        elif op == OperadorRelacional.MAYORIGUAL:
+            return '>='
+        elif op == OperadorRelacional.IGUALIGUAL:
+            return '=='
+        elif op == OperadorRelacional.DIFERENTE:
+            return '=!'

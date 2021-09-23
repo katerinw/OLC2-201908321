@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -55,3 +56,8 @@ class String(Instruccion):
 
         return Excepcion("Semántico", "Parametro de funcion string erroneo", self.fila, self.columna)
         
+    def getNode(self):
+        nodo = NodeCst("nativas_instr")
+        nodo.addChild("STRING")
+        nodo.addChildNode(self.expresion.getNode())
+        return nodo

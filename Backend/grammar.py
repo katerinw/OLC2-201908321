@@ -678,11 +678,11 @@ def p_atributos(p):
 #///////////////////////////////////////////////////////////ATRIBUTO
 def p_atributo_tipo(p):
     'atributo : ID DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = {'tipo' : p[4],'identificador' : p[1], 'tipado' : True}
+    p[0] = {'tipo' : p[4],'identificador' : p[1]}
 
 def p_atributo(p):
     'atributo : ID'
-    p[0] = {'tipo' : None,'identificador' : p[1], 'tipado' : False}
+    p[0] = {'tipo' : None,'identificador' : p[1]}
 
 
 #///////////////////////////////////////////////////////////ACCESO STRUCT
@@ -819,7 +819,7 @@ crearNativas(ast)
 for error in errores: #Captura de errores lexicos y sintacticos 
     ast.getExcepciones().append(error)
     ast.updateConsolaln(error.toString())
-    
+
 
 for instruccion in ast.getInstrucciones():
     if isinstance(instruccion, Funcion):
@@ -832,7 +832,12 @@ for instruccion in ast.getInstrucciones():
             ast.getExcepciones().append(valor)
             ast.updateConsolaln(valor.toString())
 
+
 print(ast.getConsola())
+
+
+
+
 
 
 '''

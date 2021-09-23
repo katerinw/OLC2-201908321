@@ -1,5 +1,5 @@
-from re import T
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from copy import copy
@@ -69,5 +69,13 @@ class AccesoArreglo(Instruccion):
         except:
             return Excepcion("Semántico", "Indice en arreglo \""+self.identificador+"\" fuera de rango", self.fila, self.columna)
 
-        
         return value
+
+    def getNode(self):
+        nodo = NodeCst("acceso_arreglo")
+        nodo.addChild(str(self.identificador))
+        dimentionsNode = NodeCst("lista_dimensiones")
+        for dimension in self.dimensiones:
+            dimentionsNode.addChildNode(dimension.getNode())
+        nodo.addChildNode(dimentionsNode)
+        return nodo

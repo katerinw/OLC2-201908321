@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
 
@@ -18,6 +19,12 @@ class Identificador(Instruccion):
         self.tipo = simbolo.getTipo()
 
         return simbolo.getValor()
+
+    def getNode(self):
+        nodo = NodeCst("expresion")
+        nodo.addChild(str(self.identificador))
+        return nodo
+
 
 
         

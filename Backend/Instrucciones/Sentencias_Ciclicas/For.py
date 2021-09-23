@@ -3,6 +3,7 @@ from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
 from TS.Tipo import Tipo
@@ -132,3 +133,22 @@ class For(Instruccion):
             return Tipo.BANDERA
         elif isinstance(value, list):
             return Tipo.ARREGLO
+
+    def getNode(self):
+        nodo = NodeCst("for_instr")
+        nodo.addChild("FOR")
+        nodo.addChild(self.identificador.getNode())
+        if isinstance(self.expresionIzq, list):
+            for izq in self.expresionIzq:
+                nodo.addChildNode(izq.getNode())
+        else:
+            nodo.addChildNode(self.expresionIzq.getNode())
+        if self.expresionDer != None:
+            nodo.addChildNode(self.expresionDer.getNode())
+
+        instruccionesNodo = NodeCst("instrucciones")
+        for instruccion in self.instrucciones:
+            instruccionesNodo.addChildNode(instruccion.getNode())
+        nodo.addChildNode(instruccionesNodo)
+
+        return nodo

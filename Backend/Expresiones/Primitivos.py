@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 
 class Primitivos(Instruccion):
     def __init__(self, tipo, valor, fila, columna):
@@ -9,3 +10,8 @@ class Primitivos(Instruccion):
 
     def interpretar(self, tree, table):
         return self.valor 
+
+    def getNode(self):
+        nodo = NodeCst("expresion")
+        nodo.addChild(str(self.valor))
+        return nodo

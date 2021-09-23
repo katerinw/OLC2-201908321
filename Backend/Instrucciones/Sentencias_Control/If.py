@@ -3,6 +3,7 @@ from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from copy import copy
@@ -72,3 +73,26 @@ class If(Instruccion):
                     if isinstance(result, Break):
                         return result         
                 
+    def getNode(self):
+        nodo = NodeCst("if_instr")
+        nodo.addChild("IF")
+        nodo.addChildNode(self.condicion.getNode())
+
+        instruccionesIfNodo = NodeCst("if_instr")
+        for instruccion in self.instruccionesIf:
+            instruccionesIfNodo.addChildNode(instruccion.getNode())
+        nodo.addChildNode(instruccionesIfNodo)
+
+        if self.instruccionesElse != None:
+            instruccionesElseNodo = NodeCst("else_instr")
+            for instruccion in self.instruccionesElse:
+                instruccionesElseNodo.addChildNode(instruccion.getNode())
+            nodo.addChildNode(instruccionesElseNodo)
+
+        if self.ElseIf != None:
+            instruccionesElseIfNodo = NodeCst("elseif_instr")
+            for instruccion in self.ElseIf:
+                instruccionesElseIfNodo.addChildNode(instruccion.getNode())
+            nodo.addChildNode(instruccionesElseIfNodo)
+        
+        return nodo

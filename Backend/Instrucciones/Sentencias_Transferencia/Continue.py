@@ -1,5 +1,5 @@
 from Abstract.Instruccion import Instruccion
-from TS.Excepcion import Excepcion
+from Abstract.NodeCst import NodeCst
 
 class Continue(Instruccion):
     def __init__(self, fila, columna):
@@ -8,3 +8,8 @@ class Continue(Instruccion):
 
     def interpretar(self, tree, table):
         return self
+    
+    def getNode(self):
+        nodo = NodeCst("continue_instr")
+        nodo.addChild("CONTINUE")
+        return nodo

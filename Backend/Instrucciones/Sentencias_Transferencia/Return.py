@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -24,3 +25,9 @@ class Return(Instruccion):
         self.result = result #tiene result para acceder a este cada que se quiera y no volver a interpretarlo
 
         return self #Retorna el mismo nodo para poder acceder a sus atributos
+
+    def getNode(self):
+        nodo = NodeCst("return_instr")
+        nodo.addChild("RETURN")
+        nodo.addChildNode(self.expresion.getNode())
+        return nodo

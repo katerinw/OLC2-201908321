@@ -1,7 +1,9 @@
 from Abstract.Instruccion import  Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
-from TS.Tipo import Tipo
 from TS.Simbolo import Simbolo
+from TS.Tipo import Tipo
+
 
 class AsignacionVar(Instruccion):
     def __init__(self, identificador, valor, tipo, fila, columna):
@@ -66,7 +68,28 @@ class AsignacionVar(Instruccion):
                 return result
             
 
+    def getNode(self):
+        nodo = NodeCst("asignacion_instr")
+        nodo.addChild(str(self.identificador))
+        if self.tipo != None:
+            nodo.addChild(str(self.tipoDato(self.tipo)))
+        if self.valor != None:
+            nodo.addChildNode(self.valor.getNode())
+        return nodo
 
+    def tipoDato(self, tipo):
+        if tipo == Tipo.BANDERA:
+            return "Bool"
+        elif tipo == Tipo.CADENA:
+            return "String"
+        elif tipo == Tipo.CARACTER:
+            return "Char"
+        elif tipo == Tipo.DOBLE:
+            return "Float64"
+        elif tipo == Tipo.ENTERO:
+            return "Int64"
+        elif tipo == Tipo.NULO:
+            return "Nothing"
 
 
 

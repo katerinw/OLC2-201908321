@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -27,3 +28,13 @@ class AccesoStruct(Instruccion):
 
         self.tipo = simbolo.getValor().tabla[str(self.atributo)].tipo
         return valor
+
+    def getNode(self):
+        nodo = NodeCst("acceso_struct")
+        nodoID = NodeCst("ID")
+        nodoID.addChild(str(self.identificador))
+        nodoAtributo = NodeCst("ID")
+        nodoAtributo.addChild(str(self.atributo))
+        nodo.addChildNode(nodoID)
+        nodo.addChildNode(nodoAtributo)
+        return nodo

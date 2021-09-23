@@ -1,6 +1,7 @@
 from Instrucciones.Arreglos.AccesoArreglo import AccesoArreglo
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
 from TS.Tipo import Tipo
@@ -91,4 +92,17 @@ class LlamadaFuncionStruct(Instruccion):
         elif struct == None and funcion == None: #Por si no existe nada jsjs
             return Excepcion("Semántico", "Struct/Funcion \""+self.identificador+"\" no encontrado", self.fila, self.columna)
 
-        #def makeDictionary(self, valor, struct, s)
+        
+    def getNode(self):
+        nodo = NodeCst("llamada_funcion_instr")
+        nodo.addChild(str(self.identificador))
+        
+        parametrosNodo = NodeCst("parametros_llamada")
+        for parametro in self.parametros:
+            parametroNodo = NodeCst("parametro_llamada")
+            parametroNodo.addChild(parametro.getNode())
+            parametrosNodo.addChildNode(parametroNodo)
+
+        nodo.addChildNode(parametrosNodo)
+        
+        return nodo

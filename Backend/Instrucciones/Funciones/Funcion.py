@@ -3,6 +3,7 @@ from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -37,3 +38,39 @@ class Funcion(Instruccion):
 
         self.tipo = Tipo.NULO
         return "Nothing"
+
+    def getNode(self):
+        nodo = NodeCst("funciones_instr")
+        nodo.addChild(str(self.identificador))
+
+        if self.parametros != None:
+            parametrosNodo = NodeCst("parametros")
+            for param in self.parametros:
+                parametroNodo = NodeCst("parametro")
+                parametroNodo.addChild(str(self.tipoDato(param['tipo'])))
+                idNodo = NodeCst("expresion")
+                idNodo.addChild(str(param['identificador']))
+                parametroNodo.addChildNode(idNodo)
+                parametrosNodo.addChildNode(parametroNodo)
+            nodo.addChildNode(parametrosNodo)
+
+        instruccionesNodo = NodeCst("instrucciones")
+        for instruccion in self.instrucciones:
+            instruccionesNodo.addChildNode(instruccion.getNode())
+        nodo.addChildNode(instruccionesNodo)
+
+        return nodo
+
+    def tipoDato(self, tipo):
+        if tipo == Tipo.BANDERA:
+            return "Bool"
+        elif tipo == Tipo.CADENA:
+            return "String"
+        elif tipo == Tipo.CARACTER:
+            return "Char"
+        elif tipo == Tipo.DOBLE:
+            return "Float64"
+        elif tipo == Tipo.ENTERO:
+            return "Int64"
+        elif tipo == Tipo.NULO:
+            return "Nothing"

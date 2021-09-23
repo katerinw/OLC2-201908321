@@ -3,6 +3,7 @@ from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -42,5 +43,15 @@ class While(Instruccion):
             else:
                 return Excepcion("Semántico", "La condición de While no es tipo boolean", self.fila, self.columna)
 
+    def getNode(self):
+        nodo = NodeCst("while_instr")
+        nodo.addChild("WHILE")
+        nodo.addChildNode(self.condicion.getNode())
+        
+        instruccionesNodo = NodeCst("instrucciones")
+        for instruccion in self.instrucciones:
+            instruccionesNodo.addChildNode(instruccion.getNode())
+        nodo.addChildNode(instruccionesNodo)
 
+        return nodo
         

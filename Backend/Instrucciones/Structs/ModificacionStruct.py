@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
 from TS.Tipo import Tipo
@@ -55,3 +56,14 @@ class ModificacionStruct(Instruccion):
                     return  True
                 else:
                     return False
+
+    def getNode(self):
+        nodo = NodeCst("modificacion_struct")
+        nodoID = NodeCst("ID")
+        nodoID.addChild(str(self.identificador))
+        nodoAtributo = NodeCst("ID")
+        nodoAtributo.addChild(str(self.atributo))
+        nodo.addChildNode(nodoID)
+        nodo.addChildNode(nodoAtributo)
+        nodo.addChildNode(self.valor.getNode())
+        return nodo

@@ -1,5 +1,5 @@
-from os import execv
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from copy import copy
@@ -11,6 +11,7 @@ class ModificacionArreglo(Instruccion):
         self.expresiones = expresiones
         self.fila = fila
         self.columna = columna
+        self.value = ""
 
     def interpretar(self, tree, table):
         if isinstance(self.expresiones, list):
@@ -21,6 +22,8 @@ class ModificacionArreglo(Instruccion):
                 return val
         else:
             value = self.expresiones.interpretar(tree, table)
+        
+        self.value = value
 
         simbolo = table.getTabla(str(self.identificador))
         if simbolo == None:
@@ -95,3 +98,15 @@ class ModificacionArreglo(Instruccion):
             arreglo[num-1] = valor
 
         return None       
+
+    def getNode(self):
+        nodo = NodeCst("modificar_arreglo")
+        nodo.addChild(str(self.identificador))
+        dimentionsNode = NodeCst("lista_dimensiones")
+        for dimension in self.dimensiones:
+            dimentionsNode.addChildNode(dimension.getNode())
+        nodo.addChildNode(dimentionsNode)
+        expresionsNode = NodeCst("expresion")
+        expresionsNode.addChild(str(self.value))
+        nodo.addChildNode(expresionsNode)
+        return nodo

@@ -7,3 +7,6 @@ class DeclaracionArreglos(Instruccion):
 
     def interpretar(self, tree, table):
         return super().interpretar(tree, table)
+
+    def getNode(self):
+        pass

@@ -1,4 +1,5 @@
 from Abstract.Instruccion import Instruccion
+from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 from copy import copy
@@ -57,3 +58,21 @@ class Push(Instruccion):
                 valor[i] = copy(arreglo[i])
             i += 1
         return None        
+
+
+    def getNode(self):
+        nodo = NodeCst("nativas_instr")
+        nodo.addChild("PUSH!")
+        nodo.addChildNode(self.arreglo.getNode())
+        if isinstance(self.valor, list):
+            self.listaNode(self.valor, nodo)
+        else:
+            nodo.addChildNode(self.valor.getNode())
+
+    def listaNode(self, value, nodo):
+        for val in value:
+            if isinstance(val, list):
+                self.listaNode(val, nodo)
+            else:
+                nodo.addChildNode(val.getNode())
+        return None

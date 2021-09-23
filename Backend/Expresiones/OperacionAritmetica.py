@@ -1,6 +1,8 @@
 from Abstract.Instruccion import Instruccion
-from TS.Excepcion import Excepcion
 from TS.Tipo import OperadorAritmetico, Tipo
+from Abstract.NodeCst import NodeCst
+from TS.Excepcion import Excepcion
+
 
 class OperacionAritmetica(Instruccion):
     def __init__(self, operador, opIzq, opDer, fila, columna):
@@ -214,3 +216,27 @@ class OperacionAritmetica(Instruccion):
             elif str(valor).lower() == 'false':
                 return False
         return valor
+
+    def getNode(self):
+        nodo = NodeCst("expresion")
+        nodo.addChildNode(self.opIzq.getNode())
+        nodo.addChild(str(self.tipoOperador(self.operador)))
+        if self.opDer != None:
+            nodo.addChildNode(self.opDer.getNode())
+        return nodo
+
+    def tipoOperador(self, op):
+        if op == OperadorAritmetico.MAS:
+            return '+'
+        elif op == OperadorAritmetico.MENOS:
+            return '-'
+        elif op == OperadorAritmetico.ASTERISCO:
+            return '*'
+        elif op == OperadorAritmetico.DIVISION:
+            return '/'
+        elif op == OperadorAritmetico.PORCENTAJE:
+            return '%'
+        elif op == OperadorAritmetico.POTENCIA:
+            return '^'
+        elif op == OperadorAritmetico.UMENOS:
+            return '-'
