@@ -180,9 +180,16 @@ import ply.lex as lex
 lexer = lex.lex(reflags = re.VERBOSE)
 
 #Importaciones
+from Expresiones.Aritmeticas.Multiplicacion import Multiplicacion
+from Expresiones.Primitivos.BooleanValue import BooleanValue
+from Expresiones.Primitivos.DoubleValue import DoubleValue
+from Expresiones.Primitivos.StringValue import StringValue
+from Expresiones.Primitivos.CharValue import CharValue
 from Instrucciones.Funciones.Imprimir import Imprimir
+from Expresiones.Aritmeticas.Division import Division
+from Expresiones.Primitivos.IntValue import IntValue
+from Expresiones.Aritmeticas.Resta import Resta
 from Expresiones.Aritmeticas.Suma import Suma
-from Expresiones.Primitivos.IntVal import IntVal
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -256,19 +263,19 @@ def p_expresion_parentesis(p):
 
 def p_expresion_string(p):
     'expresion : CADENA'
-    p[0] = ''
+    p[0] = StringValue(p[1], Tipo.CADENA, True, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_character(p):
     'expresion : CARACTER'
-    p[0] = ''
+    p[0] = CharValue(p[1], Tipo.CARACTER, True, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_integer(p):
     'expresion : ENTERO'
-    p[0] = IntVal(p[1], Tipo.ENTERO, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = IntValue(p[1], Tipo.ENTERO, True, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_double(p):
     'expresion : DOBLE'
-    p[0] = ''
+    p[0] = DoubleValue(p[1], Tipo.DOBLE, True, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_nothing(p):
     'expresion : NOTHING'
@@ -293,11 +300,11 @@ def p_expresion_binaria_aritmetica(p):
     if p[2] == '+':
         p[0] = Suma(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '-':
-        p[0] = ''
+        p[0] = Resta(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '*':
-        p[0] = ''
+        p[0] = Multiplicacion(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '/':
-        p[0] = ''
+        p[0] = Division(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '^':
         p[0] = ''
     elif p[2] == '%':
@@ -410,7 +417,7 @@ def p_bandera(p):
     elif p[1].lower() == 'false':
         p[1] == False
 
-    p[0] = ''
+    p[0] = BooleanValue(p[1], Tipo.BANDERA, True, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////TIPO DE DATOS
 def p_tipo_datos(p):
@@ -569,7 +576,6 @@ def p_for_string(p): #Lo hace con strings y arreglos
 def p_for_rango(p): #Lo hace con rango
     'for_instr : FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END'
     p[0] = ''
-
 
 #///////////////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
 def p_sentencia_transferencia_return_expresion(p):
@@ -774,20 +780,21 @@ instrucciones = parse(entrada) #ARBOL AST
 ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos('global')
 ast.setTSGlobal(TSGlobal)
+generator = Generador()
 #crearNativas(ast)
 
 for error in errores: #Captura de errores lexicos y sintacticos 
     ast.getExcepciones().append(error)
     ast.updateConsolaln(error.toString())
 
-generator = Generador()
 
 for instruccion in ast.getInstrucciones():
-    instruccion.generador = generator
-    valor = instruccion.interpretar(ast, TSGlobal)
+    valor = instruccion.interpretar(ast, TSGlobal, generator)
     if isinstance(valor, Excepcion):
         ast.getExcepciones().append(valor)
         ast.updateConsolaln(valor.toString())
 
 print(generator.getCode())
 #print(ast.getConsola())
+
+'''println(5+6+9+4+7+89+4+2+1+1+1+1+7);'''

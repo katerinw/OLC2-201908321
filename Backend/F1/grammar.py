@@ -599,7 +599,6 @@ def p_for_rango(p): #Lo hace con rango
     'for_instr : FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END'
     p[0] = For(p[2], p[4], p[6], p[7], p.lineno(1), find_column(input, p.slice[1]))
 
-
 #///////////////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
 def p_sentencia_transferencia_return_expresion(p):
     'return_instr : RETURN expresion'

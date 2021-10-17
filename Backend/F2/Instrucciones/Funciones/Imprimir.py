@@ -8,18 +8,17 @@ class Imprimir(Instruccion):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, tree, table):
-        self.expresiones.generador = self.generador
-        tempValue = self.expresiones.interpretar(tree, table)
+    def interpretar(self, tree, table, generator):
+        tempValue = self.expresiones.interpretar(tree, table, generator)
 
-        if tempValue.tipo == Tipo.ENTERO:
-            self.generador.addPrint("d", "(int)" + str(tempValue.getValue()))
-        elif tempValue.tipo == Tipo.DOBLE:
-            self.generador.addPrint("f", "(double)" + str(tempValue.getValue()))
+        if self.expresiones.tipo == Tipo.ENTERO:
+            generator.addPrint("d", "(int)" + str(tempValue))
+        elif self.expresiones.tipo == Tipo.DOBLE:
+            generator.addPrint("f", "(double)" + str(tempValue))
         else:
             print("ERROR")
 
-        self.generador.addNewLine()      
+        generator.addNewLine()      
 
     def getNode(self):
         return super().getNode()
