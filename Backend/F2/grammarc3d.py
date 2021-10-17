@@ -180,6 +180,9 @@ import ply.lex as lex
 lexer = lex.lex(reflags = re.VERBOSE)
 
 #Importaciones
+from Instrucciones.Funciones.Imprimir import Imprimir
+from Expresiones.Aritmeticas.Suma import Suma
+from Expresiones.Primitivos.IntVal import IntVal
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -243,8 +246,8 @@ def p_instruccion(p):
 
 def p_instruccion_error(p):
     'instruccion : error fininstr'
-    
-    p[0] = ''
+    errores.append(Excepcion("Sintáctico", "Error sintáctico, " + str(p[1].value), p.lineno(1), find_column(input, p.slice[1])))
+    p[0] = ""
 
 #///////////////////////////////////////////////////////////EXPRESION
 def p_expresion_parentesis(p):
@@ -261,7 +264,7 @@ def p_expresion_character(p):
 
 def p_expresion_integer(p):
     'expresion : ENTERO'
-    p[0] = ''
+    p[0] = IntVal(p[1], Tipo.ENTERO, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_double(p):
     'expresion : DOBLE'
@@ -288,7 +291,7 @@ def p_expresion_binaria_aritmetica(p):
                  | expresion PORCENTAJE expresion'''
     
     if p[2] == '+':
-        p[0] = ''
+        p[0] = Suma(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '-':
         p[0] = ''
     elif p[2] == '*':
@@ -498,12 +501,12 @@ def p_imprimirln_vacio(p):
     p[0] = ''
 
 def p_imprimir_expresiones_coma(p):
-    'imprimir_instr : PRINT PARENTESISA expresiones_coma PARENTESISC'
-    p[0] = ''
+    'imprimir_instr : PRINT PARENTESISA expresion PARENTESISC'
+    p[0] = Imprimir(p[3], False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_imprimirln_expresiones_coma(p):
-    'imprimir_instr : PRINTLN PARENTESISA expresiones_coma PARENTESISC'
-    p[0] = ''
+    'imprimir_instr : PRINTLN PARENTESISA expresion PARENTESISC'
+    p[0] = Imprimir(p[3], True, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////FUNCIONES
 def p_funciones(p):
@@ -664,18 +667,7 @@ def p_modificacion_struct(p):
 
 
 #Haciendo el parser
-from Nativas.Length import Length
-from Nativas.Typeof import Typeof
-from Nativas.Float import Float
-from Nativas.Log10 import Log10
-from Nativas.Trunc import Trunc
-from Nativas.Upper import Upper
-from Nativas.Lower import Lower
-from Nativas.Sqrt import Sqrt
-from Nativas.Log import Log
-from Nativas.Sin import Sin
-from Nativas.Tan import Tan
-from Nativas.Cos import Cos
+
 
 import ply.yacc as yacc
 parser = yacc.yacc()
@@ -684,7 +676,7 @@ input = ''
 
 def getErrores():
     return errores 
-
+'''
 def crearNativas(ast): #Creacion y declaracion de funciones nativas
     identificador = 'cos'
     parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Cos$$Parametros123'}]
@@ -757,7 +749,7 @@ def crearNativas(ast): #Creacion y declaracion de funciones nativas
     instrucciones = []
     uppercase = Upper(identificador, parametros, instrucciones, -1, -1)
     ast.addFuncion(uppercase)
-
+'''
 
 def parse(inp):
     global errores 
@@ -771,31 +763,31 @@ def parse(inp):
     return parser.parse(inp)
 
 #Se va para la interfaz
-'''file = open("./entrada.txt", "r", encoding="utf-8-sig")
+file = open("./entrada.txt", "r", encoding="utf-8-sig")
 entrada = file.read()
 
-from TS.Arbol import Arbol
 from TS.TablaSimbolos import TablaSimbolos
+from Generador.Generador import Generador
+from TS.Arbol import Arbol
 
 instrucciones = parse(entrada) #ARBOL AST
 ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos('global')
 ast.setTSGlobal(TSGlobal)
-crearNativas(ast)
+#crearNativas(ast)
 
 for error in errores: #Captura de errores lexicos y sintacticos 
     ast.getExcepciones().append(error)
     ast.updateConsolaln(error.toString())
 
-for instruccion in ast.getInstrucciones():
-    if isinstance(instruccion, Funcion):
-        ast.addFuncion(instruccion)
-    elif isinstance(instruccion, Struct):
-        ast.addStruct(instruccion)
-    else:
-        valor = instruccion.interpretar(ast, TSGlobal)
-        if isinstance(valor, Excepcion):
-            ast.getExcepciones().append(valor)
-            ast.updateConsolaln(valor.toString())
+generator = Generador()
 
-print(ast.getConsola())'''
+for instruccion in ast.getInstrucciones():
+    instruccion.generador = generator
+    valor = instruccion.interpretar(ast, TSGlobal)
+    if isinstance(valor, Excepcion):
+        ast.getExcepciones().append(valor)
+        ast.updateConsolaln(valor.toString())
+
+print(generator.getCode())
+#print(ast.getConsola())

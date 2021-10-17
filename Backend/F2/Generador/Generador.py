@@ -24,10 +24,17 @@ class Generador:
         self.codigo.append(target + ' = ' + izq + ' ' + operador + ' ' + der + ';')
 
     def addPrint(self, typePrint, value): #Añade un printf
-        self.code.append('fmt.Printf(\"%' + typePrint + '\",' + value + ');')
+        self.codigo.append('fmt.Printf(\"%' + typePrint + '\",' + value + ');')
 
     def addNewLine(self):
         self.codigo.append('fmt.Printf(\"%c\",10);')
+
+    def getCode(self):
+        tempCode = 'void main(){\n'
+        tempCode += "\n".join(self.codigo)
+        tempCode += '\nreturn\n}\n'
+
+        return tempCode 
 
     
 
