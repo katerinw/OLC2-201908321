@@ -9,12 +9,18 @@ class Imprimir(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table, generator):
-        tempValue = self.expresiones.interpretar(tree, table, generator)
+        tempValor = self.expresiones.interpretar(tree, table, generator)
 
-        if self.expresiones.tipo == Tipo.ENTERO:
-            generator.addPrint("d", "(int)" + str(tempValue))
-        elif self.expresiones.tipo == Tipo.DOBLE:
-            generator.addPrint("f", "(double)" + str(tempValue))
+        if tempValor.tipo == Tipo.ENTERO:
+            generator.addPrint("d", "(int)" + str(tempValor.getValor()))
+        elif tempValor.tipo == Tipo.DOBLE:
+            generator.addPrint("f", "(double)" + str(tempValor.getValor()))
+        elif tempValor.tipo == Tipo.BANDERA:
+            newLabel = generator.newLabel()
+            generator.addLabel(str(tempValor.trueLabel))
+            generator.addGoto(str(newLabel))
+            generator.addLabel(str(tempValor.falseLabel))
+            generator.addLabel(str(newLabel))
         else:
             print("ERROR")
 

@@ -17,6 +17,12 @@ class Generador:
         self.label += 1
         return label
 
+    def addIf(self, opIzq, opDer, operador, label):
+        self.codigo.append("if(" + opIzq + " " + operador + " " + opDer + ") goto " + label + ";")
+
+    def addGoto(self, label):
+        self.codigo.append("goto " + label + ";")
+
     def addLabel(self, label):
         self.codigo.append(str(label) + ":")
 

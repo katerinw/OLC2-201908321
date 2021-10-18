@@ -181,17 +181,25 @@ lexer = lex.lex(reflags = re.VERBOSE)
 
 #Importaciones
 from Expresiones.Aritmeticas.Multiplicacion import Multiplicacion
+from Expresiones.Primitivos.NegativeValue import NegativeValue
 from Expresiones.Primitivos.BooleanValue import BooleanValue
+from Expresiones.Relacionales.IgualIgual import IgualIgual
 from Expresiones.Primitivos.DoubleValue import DoubleValue
 from Expresiones.Primitivos.StringValue import StringValue
+from Expresiones.Relacionales.MayorIgual import MayorIgual
+from Expresiones.Relacionales.MenorIgual import MenorIgual
+from Expresiones.Relacionales.Diferente import Diferente
 from Expresiones.Primitivos.CharValue import CharValue
 from Instrucciones.Funciones.Imprimir import Imprimir
 from Expresiones.Aritmeticas.Division import Division
 from Expresiones.Primitivos.IntValue import IntValue
+from Expresiones.Relacionales.Mayor import Mayor
+from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
 from Expresiones.Aritmeticas.Suma import Suma
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
+
 
 #Definir precedencia
 precedence = (
@@ -263,19 +271,27 @@ def p_expresion_parentesis(p):
 
 def p_expresion_string(p):
     'expresion : CADENA'
-    p[0] = StringValue(p[1], Tipo.CADENA, True, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = StringValue(p[1], Tipo.CADENA, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_character(p):
     'expresion : CARACTER'
-    p[0] = CharValue(p[1], Tipo.CARACTER, True, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = CharValue(p[1], Tipo.CARACTER, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_integer(p):
     'expresion : ENTERO'
-    p[0] = IntValue(p[1], Tipo.ENTERO, True, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = IntValue(p[1], Tipo.ENTERO, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_expresion_integer_negative(p):
+    'expresion : MENOS ENTERO %prec UMINUS'
+    p[0] = NegativeValue(p[2], Tipo.ENTERO, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_double(p):
     'expresion : DOBLE'
-    p[0] = DoubleValue(p[1], Tipo.DOBLE, True, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = DoubleValue(p[1], Tipo.DOBLE, p.lineno(1), find_column(input, p.slice[1]))
+
+def p_expresion_double_negative(p):
+    'expresion : MENOS DOBLE %prec UMINUS'
+    p[0] = NegativeValue(p[2], Tipo.DOBLE, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_nothing(p):
     'expresion : NOTHING'
@@ -319,17 +335,17 @@ def p_expresion_binaria_relacional(p):
                  | expresion MAYORIGUAL expresion'''
     
     if p[2] == '==':
-        p[0] = ''
+        p[0] = IgualIgual(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '!=':
-        p[0] = ''
+        p[0] = Diferente(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '<':
-        p[0] = ''
+        p[0] = Menor(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '>':
-        p[0] = ''
+        p[0] = Mayor(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '<=':
-        p[0] = ''
+        p[0] = MenorIgual(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '>=':
-        p[0] = ''
+        p[0] = MayorIgual(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
 
 def p_expresion_binaria_logica(p):
     '''expresion : expresion AND expresion
@@ -341,12 +357,9 @@ def p_expresion_binaria_logica(p):
         p[0] = ''
 
 def p_expresion_unaria(p):
-    '''expresion : NOT expresion %prec UNOT
-                 | MENOS expresion %prec UMINUS'''
+    'expresion : NOT expresion %prec UNOT'
 
     if p[1] == '!':
-        p[0] = ''
-    elif p[1] == '-':
         p[0] = ''
 
 def p_expresion_llamada_funcion(p):
@@ -417,7 +430,7 @@ def p_bandera(p):
     elif p[1].lower() == 'false':
         p[1] == False
 
-    p[0] = BooleanValue(p[1], Tipo.BANDERA, True, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = BooleanValue(p[1], Tipo.BANDERA, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////TIPO DE DATOS
 def p_tipo_datos(p):
