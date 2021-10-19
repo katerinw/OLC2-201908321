@@ -28,6 +28,7 @@ class IgualIgual(Instruccion):
         return super().getNode()
         
     def Igualar(self, opIzq, opDer, generator):
+        #BOOLEAN
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.BANDERA
             return self.returnValue(opIzq, opDer, generator)
@@ -35,6 +36,9 @@ class IgualIgual(Instruccion):
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
             self.tipo = Tipo.BANDERA
             return self.returnValue(opIzq, opDer, generator)
+
+        elif self.opIzq.tipo == Tipo.CADENA and self.opDer.tipo == Tipo.CADENA:
+            self.tipo = Tipo.BANDERA
 
         elif (self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO) or (self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE): 
             self.tipo = Tipo.BANDERA

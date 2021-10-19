@@ -1,15 +1,16 @@
+from typing import NewType
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Value import Value
 from TS.Tipo import Tipo
 
-class Multiplicacion(Instruccion):
+class Potencia(Instruccion):
     def __init__(self, opIzq, opDer, fila, columna):
         self.opIzq = opIzq
         self.opDer = opDer
+        self.tipo = None
         self.fila = fila
         self.columna = columna
-        self.tipo = None
 
     def interpretar(self, tree, table, generator):
         opIzq = self.opIzq.interpretar(tree, table, generator)
@@ -22,34 +23,25 @@ class Multiplicacion(Instruccion):
 
         newTemp = generator.newTemp()
 
-        return self.multiplicar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
-
+        self.potenciar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+    
     def getNode(self):
         return super().getNode()
 
-    def multiplicar(self, opIzq, opDer, newTemp, generator):
+    def potenciar(self, opIzq, opDer, newTemp, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "*")
             self.tipo = Tipo.ENTERO
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "*")
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
-        elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO or self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "*")
+        elif self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE or self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
         #STRING
-        elif self.opIzq.tipo == Tipo.CADENA and self.opDer.tipo == Tipo.CADENA:
+        elif self.opIzq.tipo == Tipo.CADENA and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.CADENA
 
-        return Excepcion("Semántico", "Los tipos de datos para el signo \"*\" no pueden ser operados", self.fila, self.columna)
+        return Excepcion("Semántico", "Los tipos de datos para el signo \"^\" no pueden ser operados", self.fila, self.columna)

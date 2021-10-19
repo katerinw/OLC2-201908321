@@ -28,12 +28,14 @@ class Division(Instruccion):
         return super().getNode()
 
     def dividir(self, opIzq, opDer, newTemp, generator):
+        #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
             generator.addExpresion(newTemp, str(opIzq), str(opDer), "/")
             self.tipo = Tipo.ENTERO
             newValue = Value(newTemp, self.tipo, True)
             return newValue
 
+        #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
             generator.addExpresion(newTemp, str(opIzq), str(opDer), "/")
             self.tipo = Tipo.DOBLE
@@ -47,3 +49,4 @@ class Division(Instruccion):
             return newValue
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"/\" no pueden ser operados", self.fila, self.columna)
+

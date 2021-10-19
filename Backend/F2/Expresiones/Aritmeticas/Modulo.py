@@ -3,13 +3,13 @@ from TS.Excepcion import Excepcion
 from TS.Value import Value
 from TS.Tipo import Tipo
 
-class Suma(Instruccion):
+class Modulo(Instruccion):
     def __init__(self, opIzq, opDer, fila, columna):
         self.opIzq = opIzq
         self.opDer = opDer
+        self.tipo = None
         self.fila = fila
         self.columna = columna
-        self.tipo = None
 
     def interpretar(self, tree, table, generator):
         opIzq = self.opIzq.interpretar(tree, table, generator)
@@ -21,31 +21,21 @@ class Suma(Instruccion):
             return opDer
 
         newTemp = generator.newTemp()
-
-        return self.sumar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+        self.modulo(opIzq.getValor(), opDer.getValor(), newTemp, generator)
 
     def getNode(self):
         return super().getNode()
 
-    def sumar(self, opIzq, opDer, newTemp, generator):
+    def modulo(self, opIzq, opDer, newTemp, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "+")
             self.tipo = Tipo.ENTERO
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "+")
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
-        elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO or self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "+")
+        elif self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE or self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
 
-        return Excepcion("Semántico", "Los tipos de datos para el signo \"+\" no pueden ser operados", self.fila, self.columna)
+        return Excepcion("Semántico", "Los tipos de datos para el signo \"%\" no pueden ser operados", self.fila, self.columna)
