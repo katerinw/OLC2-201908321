@@ -197,6 +197,9 @@ from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
 from Expresiones.Aritmeticas.Suma import Suma
+from Expresiones.Logicas.And import And
+from Expresiones.Logicas.Not import Not
+from Expresiones.Logicas.Or import Or
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
 
@@ -352,15 +355,13 @@ def p_expresion_binaria_logica(p):
                  | expresion OR expresion'''
 
     if p[2] == '&&':
-        p[0] = ''
+        p[0] = And(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '||':
-        p[0] = ''
+        p[0] = Or(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
 
 def p_expresion_unaria(p):
     'expresion : NOT expresion %prec UNOT'
-
-    if p[1] == '!':
-        p[0] = ''
+    p[0] = Not(p[2], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_llamada_funcion(p):
     'expresion : llamada_funcion_instr'

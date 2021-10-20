@@ -48,7 +48,8 @@ class IgualIgual(Instruccion):
 
 
     def returnValue(self, opIzq, opDer, generator):
-        newValue = Value("", self.tipo, False)
+        valor = opIzq == opDer
+        newValue = Value(valor, self.tipo, False)
             
         if self.trueLabel == None:
             self.trueLabel = generator.newLabel()

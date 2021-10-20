@@ -1,3 +1,5 @@
+from Expresiones.Relacionales.Diferente import Diferente
+from Expresiones.Primitivos.IntValue import IntValue
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Value import Value
@@ -22,31 +24,37 @@ class Division(Instruccion):
 
         newTemp = generator.newTemp()
 
-        return self.dividir(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+        return self.dividir(opIzq.getValor(), opDer.getValor(), newTemp, tree, table, generator)
 
     def getNode(self):
         return super().getNode()
 
-    def dividir(self, opIzq, opDer, newTemp, generator):
+    def dividir(self, opIzq, opDer, newTemp, tree, table, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "/")
             self.tipo = Tipo.ENTERO
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
-
+            return self.returnValue(opIzq, opDer, newTemp, tree, table, generator)
+            
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "/")
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
+            return self.returnValue(opIzq, opDer, newTemp, tree, table, generator)
 
         elif self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE or self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "/")
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
-            return newValue
+            return self.returnValue(opIzq, opDer, newTemp, tree, table, generator)
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"/\" no pueden ser operados", self.fila, self.columna)
 
+
+    def returnValue(self, opIzq, newTemp, tree, table, opDer, generator):
+        trueIns = generator.newExpresion(newTemp, str(opIzq), str(opDer), "/")
+        falseIns = generator.newCallFunc('print_math_error_armc')  
+
+        cero = IntValue(0, Tipo.ENTERO, self.fila, self.columna)
+        diferente = Diferente(self.opDer, cero, self.fila, self.columna)
+        diferente.interpretar(tree, table, generator)
+        
+        generator.addOpRelacional(diferente, trueIns, falseIns)
+        newValue = Value(newTemp, self.tipo, True)
+        return newValue

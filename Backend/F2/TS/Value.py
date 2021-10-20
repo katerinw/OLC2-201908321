@@ -9,7 +9,7 @@ class Value:
         self.falseLabel = None
 
     def getValor(self):
-        return str(self.valor)
+        return self.valor
 
     def setValor(self, valor):
         self.valor = str(valor)

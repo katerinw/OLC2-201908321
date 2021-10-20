@@ -48,6 +48,7 @@ class MenorIgual(Instruccion):
 
 
     def returnValue(self, opIzq, opDer, generator):
+        valor = opIzq <= opDer
         newValue = Value("", self.tipo, False)
             
         if self.trueLabel == None:

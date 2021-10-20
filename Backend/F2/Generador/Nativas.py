@@ -28,6 +28,7 @@ def addMathError():
     functionMathError += addPrintf("c", "114")
     functionMathError += addPrintf("c", "111")
     functionMathError += addPrintf("c", "114")
+    functionMathError += addPrintf("c", "10")
     functionMathError += '}\n\n'
     return functionMathError
 
@@ -44,6 +45,7 @@ def addBoundsError():
     functionBoundsError += addPrintf("c", "114")
     functionBoundsError += addPrintf("c", "111")
     functionBoundsError += addPrintf("c", "114")
+    functionBoundsError += addPrintf("c", "10")
     functionBoundsError += '}\n\n'
     return functionBoundsError
 
