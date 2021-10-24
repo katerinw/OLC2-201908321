@@ -1,8 +1,10 @@
 class Simbolo:
-    def __init__(self, identificador, tipo, valor, local, globall, fila, columna):
+    def __init__(self, identificador, tipo, valor, posicion, posicionTemp, local, globall, fila, columna):
         self.identificador = identificador
         self.tipo = tipo
         self.valor = valor
+        self.posicion = posicion
+        self.posicionTemp = posicionTemp
         self.local = local
         self.globall = globall
         self.fila = fila
@@ -15,7 +17,7 @@ class Simbolo:
         self.identificador = identificador
 
     def getTipo(self):
-        self.tipo
+        return self.tipo
 
     def setTipo(self, tipo):
         self.tipo = tipo 
@@ -25,6 +27,12 @@ class Simbolo:
 
     def setValor(self, valor):
         self.valor = valor
+
+    def getPosicion(self):
+        return self.posicion
+
+    def setPosicion(self, posicion):
+        self.posicion = posicion
 
     def getFila(self):
         return self.fila

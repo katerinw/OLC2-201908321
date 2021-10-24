@@ -7,14 +7,30 @@ class BooleanValue(Instruccion):
     def __init__(self, valor, tipo, fila, columna):
         self.valor = valor
         self.tipo = tipo
+        self.trueLabel = None
+        self.falseLabel = None
         self.fila = fila
         self.columna = columna
 
     def interpretar(self, tree, table, generator):
         if self.tipo != Tipo.BANDERA:
             return Excepcion("Semántico", "El valor no es tipo BOOLEAN", self.fila, self.columna)
+        
+        newValue = Value(self.valor, self.tipo, False)
 
-        return Value(str(self.valor), self.tipo, False)
+        if self.trueLabel == None:
+            self.trueLabel = generator.createLabel()
+
+        if self.falseLabel == None:
+            self.falseLabel = generator.createLabel()
+
+        tree.updateConsola(generator.newIf(str(self.valor).lower(), 'true', '==', self.trueLabel))
+        tree.updateConsola(generator.newGoto(self.falseLabel))
+
+        newValue.trueLabel = self.trueLabel
+        newValue.falseLabel = self.falseLabel
+
+        return newValue
 
     def getNode(self):
         return super().getNode()

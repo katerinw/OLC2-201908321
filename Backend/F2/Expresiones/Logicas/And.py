@@ -26,9 +26,9 @@ class And(Instruccion):
 
         if isinstance(opIzq.trueLabel, list):
             for L in opIzq.trueLabel:
-                generator.addLabel(str(L))
+                tree.updateConsola(generator.newLabel(str(L)))
         else:
-            generator.addLabel(str(opIzq.trueLabel))
+            tree.updateConsola(generator.newLabel(str(opIzq.trueLabel)))
 
         opDer = self.opDer.interpretar(tree, table, generator)
         if isinstance(opDer, Excepcion):
@@ -72,7 +72,7 @@ class And(Instruccion):
 
     def agregarLabel(self, op, generator):
         if op.trueLabel == None:
-            op.trueLabel = generator.newLabel()
+            op.trueLabel = generator.createLabel()
 
         if op.falseLabel == None:
-            op.falseLabel = generator.newLabel()
+            op.falseLabel = generator.createLabel()

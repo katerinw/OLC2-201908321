@@ -1,7 +1,6 @@
 from Abstract.Instruccion import Instruccion
 from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
-from TS.Simbolo import Simbolo
 
 class Identificador(Instruccion):
     def __init__(self, identificador, fila, columna):

@@ -20,7 +20,7 @@ class Modulo(Instruccion):
         if isinstance(opDer, Excepcion):
             return opDer
 
-        newTemp = generator.newTemp()
+        newTemp = generator.createTemp()
         self.modulo(opIzq.getValor(), opDer.getValor(), newTemp, generator)
 
     def getNode(self):

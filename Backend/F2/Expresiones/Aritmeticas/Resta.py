@@ -21,28 +21,28 @@ class Resta(Instruccion):
             if isinstance(opDer, Excepcion):
                     return opDer
 
-        newTemp = generator.newTemp()
+        newTemp = generator.createTemp()
 
-        return self.restar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+        return self.restar(opIzq.getValor(), opDer.getValor(), newTemp, tree, generator)
 
     def getNode(self):
         return super().getNode()
 
-    def restar(self, opIzq, opDer, newTemp, generator):
+    def restar(self, opIzq, opDer, newTemp, tree, generator):
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "-")
+            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "-"))
             self.tipo = Tipo.ENTERO
             newValue = Value(newTemp, self.tipo, True)
             return newValue
 
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "-")
+            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "-"))
             self.tipo = Tipo.DOBLE
             newValue = Value(newTemp, self.tipo, True)
             return newValue
 
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO or self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE:
-            generator.addExpresion(newTemp, str(opIzq), str(opDer), "-")
+            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "-"))
             self.tipo = Tipo.DOBLE
             newValue = Value(newTemp, self.tipo, True)
             return newValue

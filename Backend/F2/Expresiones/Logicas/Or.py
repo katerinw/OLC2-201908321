@@ -25,9 +25,9 @@ class Or(Instruccion):
 
         if isinstance(opIzq.falseLabel, list):
             for L in opIzq.falseLabel:
-                generator.addLabel(str(L))
+                tree.updateConsola(generator.newLabel(str(L)))
         else:
-            generator.addLabel(str(opIzq.falseLabel))
+            tree.updateConsola(generator.newLabel(str(opIzq.falseLabel)))
 
         opDer = self.opDer.interpretar(tree, table, generator)
         if isinstance(opDer, Excepcion):
@@ -39,7 +39,7 @@ class Or(Instruccion):
         self.agregarLabel(opDer, generator)
         self.tipo = Tipo.BANDERA
 
-        valor = opIzq.getValor() and opDer.getValor()
+        valor = opIzq.getValor() or opDer.getValor()
         newValue = Value(valor, self.tipo, False)
 
         self.transferirLabelsTrue(opIzq.trueLabel)
@@ -72,7 +72,7 @@ class Or(Instruccion):
 
     def agregarLabel(self, op, generator):
         if op.trueLabel == None:
-            op.trueLabel = generator.newLabel()
+            op.trueLabel = generator.createLabel()
 
         if op.falseLabel == None:
-            op.falseLabel = generator.newLabel()
+            op.falseLabel = generator.createLabel()

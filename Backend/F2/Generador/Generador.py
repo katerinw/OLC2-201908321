@@ -8,14 +8,20 @@ class Generador:
         self.codigo = []
         self.listaTemporales = []
 
-    def newTemp(self): #Generar un nuevo temporal
+    def createTemp(self): #Generar un nuevo temporal
         temporal = 't' + str(self.temporal)
         self.temporal += 1
         self.listaTemporales.append(temporal) #Se guarda para declararse
         return temporal
 
+    def newAsigTemp(self, temp, valor):
+        return temp + ' = ' + str(valor) + ';\n'
+
+    def addAsigTemp(self, temp, valor):
+        self.codigo.append(temp + ' = ' + str(valor) + ';')
+
 #---------------------------------------------------------LABELS---------------------------------------------------------
-    def newLabel(self):
+    def createLabel(self):
         label  = 'L' + str(self.label)
         self.label += 1
         return label
@@ -23,12 +29,15 @@ class Generador:
     def addLabel(self, label):
         self.codigo.append(str(label) + ":")
 
+    def newLabel(self, label):
+        return str(label) + ":\n"
+
 #---------------------------------------------------------FUNCIONES---------------------------------------------------------
     def addCallFunc(self, nombre):
         self.codigo.append(nombre+"();")
 
     def newCallFunc(self, nombre):
-        return nombre+"();"
+        return nombre+"();\n"
 
 #---------------------------------------------------------ANY---------------------------------------------------------
     def addInstruction(self, instruction):
@@ -38,18 +47,24 @@ class Generador:
     def addIf(self, opIzq, opDer, operador, label):
         self.codigo.append("if(" + opIzq + " " + operador + " " + opDer + ") {goto " + label + ";}")
 
+    def newIf(self, opIzq, opDer, operador, label):
+        return "if(" + opIzq + " " + operador + " " + opDer + ") {goto " + label + ";}\n"
+
     def addGoto(self, label):
         self.codigo.append("goto " + label + ";")
+
+    def newGoto(self, label):
+        return "goto " + label + ";\n"
 
 #---------------------------------------------------------EXPRESIONES---------------------------------------------------------
     def addExpresion(self, target, izq, der, operador): #Agrega las expresiones al codigo
         self.codigo.append(target + ' = ' + izq + ' ' + operador + ' ' + der + ';')
 
     def newExpresion(self, target, izq, der, operador): #Agrega las expresiones al codigo
-        return target + ' = ' + izq + ' ' + operador + ' ' + der + ';'
+        return target + ' = ' + izq + ' ' + operador + ' ' + der + ';\n'
 
     def addOpRelacional(self, expresion, trueIns, falseIns):
-        newLabel = self.newLabel()
+        newLabel = self.createLabel()
         if isinstance(expresion.trueLabel, list):
             for L in expresion.trueLabel:
                 self.addLabel(str(L))
@@ -66,14 +81,85 @@ class Generador:
 
         self.addInstruction(falseIns)
         self.addLabel(str(newLabel))
+
+    def newOpRelacional(self, expresion, trueIns, falseIns):
+        opRelacional = ''
+        newLabel = self.createLabel()
+        if isinstance(expresion.trueLabel, list):
+            for L in expresion.trueLabel:
+                opRelacional += self.newLabel(str(L))
+        else:
+            opRelacional += self.newLabel(str(expresion.trueLabel))
+
+        opRelacional += trueIns
+        opRelacional += self.newGoto(str(newLabel))
+        if isinstance(expresion.falseLabel, list):
+            for L in expresion.falseLabel:
+                opRelacional +=  self.newLabel(str(L))
+        else:
+            opRelacional +=  self.newLabel(str(expresion.falseLabel))
+
+        opRelacional += falseIns
+        opRelacional +=  self.newLabel(str(newLabel))
+        return opRelacional
         
 #---------------------------------------------------------PRINT---------------------------------------------------------
     def addPrint(self, typePrint, value): #Añade un printf
         self.codigo.append('fmt.Printf(\"%' + typePrint + '\",' + value + ');')
 
+    def newPrint(self, typePrint, value): #Añade un printf
+        return 'fmt.Printf(\"%' + typePrint + '\",' + value + ');\n'
+
 #---------------------------------------------------------NEWLINE---------------------------------------------------------
     def addNewLine(self):
         self.codigo.append('fmt.Printf(\"%c\",10);')
+
+    def newNewLine(self):
+        return 'fmt.Printf(\"%c\",10);\n'
+
+#---------------------------------------------------------MANEJO DE MEMORIA HEAP---------------------------------------------------------
+    def addGetHeap(self, target, index):
+        self.codigo.append(target + " = heap[int(" + index + ")];")
+
+    def newGetHeap(self, target, index):
+        return target + " = heap[int(" + index + ")];\n"
+
+    def addSetHeap(self, index, value):
+        self.codigo.append("heap[int(" + index + ")] = " + value + ";" )
+
+    def newSetHeap(self, index, value):
+        return "heap[int(" + index + ")] = " + value + ";\n" 
+
+    def addNextHeap(self):
+        self.codigo.append("H = H + 1;")
+
+    def newNextHeap(self):
+        return "H = H + 1;\n"
+
+#---------------------------------------------------------MANEJO DE MEMORIA STACK---------------------------------------------------------
+    def addGetStack(self, target, index): #Obtiene el valor del stack en cierta posicion
+        self.codigo.append(target+' = stack[int(' + index + ')];')
+
+    def newGetStack(self, target, index): #Obtiene el valor del stack en cierta posicion
+        return target+' = stack[int(' + index + ')];\n'
+
+    def addSetStack(self, index, value): #Inserta valor del stack
+        self.codigo.append('stack[int(' + index + ')] = ' + value + ';')
+
+    def newSetStack(self, index, value): #Inserta valor del stack
+        return 'stack[int(' + index + ')] = ' + value + ';\n'
+
+    def addNextStack(self,index:str): #Se mueve hacia la posicion siguiente del stack
+        self.codigo.append("P = P + " + index + ";")
+
+    def newNextStack(self,index:str): #Se mueve hacia la posicion siguiente del stack
+        return "P = P + " + index + ";\n"
+    
+    def addBackStack(self, index:str): #Se mueve hacia la posicion anterior del stack
+        self.codigo.append("P = P - " + index + ";")
+
+    def newBackStack(self, index:str): #Se mueve hacia la posicion anterior del stack
+        return "P = P - " + index + ";\n"
 
 #---------------------------------------------------------GENERAR CODIGO---------------------------------------------------------
     def getCode(self):
@@ -92,7 +178,7 @@ class Generador:
         tempCode += addBoundsError()
         tempCode += 'func main(){\n'
         tempCode += "\n".join(self.codigo)
-        tempCode += '\n}\n'
+        tempCode += '}\n'
 
         return tempCode 
 

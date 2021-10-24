@@ -180,19 +180,26 @@ import ply.lex as lex
 lexer = lex.lex(reflags = re.VERBOSE)
 
 #Importaciones
+from Instrucciones.Asignacion_Declaracion_Variables.DeclaracionVar import DeclaracionVar
+from Instrucciones.Asignacion_Declaracion_Variables.AsignacionVar import AsignacionVar
 from Expresiones.Aritmeticas.Multiplicacion import Multiplicacion
 from Expresiones.Primitivos.NegativeValue import NegativeValue
+from Expresiones.Primitivos.Identificador import Identificador
 from Expresiones.Primitivos.BooleanValue import BooleanValue
+from Expresiones.Primitivos.NothingValue import NothingValue
 from Expresiones.Relacionales.IgualIgual import IgualIgual
 from Expresiones.Primitivos.DoubleValue import DoubleValue
 from Expresiones.Primitivos.StringValue import StringValue
 from Expresiones.Relacionales.MayorIgual import MayorIgual
 from Expresiones.Relacionales.MenorIgual import MenorIgual
+from Instrucciones.Sentencias_Ciclicas.While import While
 from Expresiones.Relacionales.Diferente import Diferente
 from Expresiones.Primitivos.CharValue import CharValue
+from Expresiones.Aritmeticas.Potencia import Potencia
 from Instrucciones.Funciones.Imprimir import Imprimir
 from Expresiones.Aritmeticas.Division import Division
 from Expresiones.Primitivos.IntValue import IntValue
+from Expresiones.Aritmeticas.Modulo import Modulo
 from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
@@ -243,23 +250,23 @@ def p_instrucciones_instruccion(p):
 
 #///////////////////////////////////////////////////////////INSTRUCCION
 def p_instruccion(p):
-    '''instruccion : imprimir_instr fininstr
-                   | asignacion_instr fininstr
+    '''instruccion : llamada_funcion_struct_instr fininstr 
                    | declaracion_var_instr fininstr
-                   | modificar_arreglo fininstr
-                   | funciones_instr fininstr
-                   | while_instr fininstr
                    | llamada_funcion_instr fininstr
-                   | break_instr fininstr
+                   | modificacion_struct fininstr
+                   | modificar_arreglo fininstr
+                   | asignacion_instr fininstr
+                   | funciones_instr fininstr
                    | continue_instr fininstr
+                   | imprimir_instr fininstr
+                   | structs_instr fininstr
                    | return_instr fininstr
-                   | if_instr fininstr
+                   | while_instr fininstr
+                   | break_instr fininstr
+                   | push_instr fininstr
                    | for_instr fininstr
                    | pop_instr fininstr
-                   | push_instr fininstr
-                   | structs_instr fininstr
-                   | llamada_funcion_struct_instr fininstr
-                   | modificacion_struct fininstr'''
+                   | if_instr fininstr'''
     p[0] = p[1]
 
 def p_instruccion_error(p):
@@ -298,11 +305,11 @@ def p_expresion_double_negative(p):
 
 def p_expresion_nothing(p):
     'expresion : NOTHING'
-    p[0] = ''
+    p[0] = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_identificador(p):
     'expresion : ID'
-    p[0] = ''
+    p[0] = Identificador(p[1], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_boolean(p):
     'expresion : bandera'
@@ -325,9 +332,9 @@ def p_expresion_binaria_aritmetica(p):
     elif p[2] == '/':
         p[0] = Division(p[1], p[3], p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '^':
-        p[0] = ''
+        p[0] = Potencia(p[1], p[3],p.lineno(2), find_column(input, p.slice[2]))
     elif p[2] == '%':
-        p[0] = ''
+        p[0] = Modulo(p[1], p[3],p.lineno(2), find_column(input, p.slice[2]))
 
 def p_expresion_binaria_relacional(p):
     '''expresion : expresion IGUALIGUAL expresion
@@ -454,14 +461,14 @@ def p_tipo_datos(p):
 #///////////////////////////////////////////////////////////ASIGNACION DE VARIABLES
 def p_asignacion_var_tipo(p):
     'asignacion_instr : ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = ''
+    p[0] = AsignacionVar(p[1], p[3], p[6], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_asignacion_var(p):
     'asignacion_instr : ID IGUAL expresion'
     if isinstance(p[3], list):
         p[0] = ''
     else:
-        p[0] = '' 
+        p[0] = AsignacionVar(p[1], p[3], None, p.lineno(1), find_column(input, p.slice[1])) 
 
 #///////////////////////////////////////////////////////////MODIFICAR ARREGLO
 def p_modificar_arreglo(p):
@@ -485,48 +492,46 @@ def p_lista_dimensione(p):
 #///////////////////////////////////////////////////////////DECLARACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_local(p):
     'declaracion_var_instr : LOCAL ID'
-    p[0] = ''
+    value = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = DeclaracionVar(p[2], value, Tipo.NULO, True, False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_declaracion_global(p):
     'declaracion_var_instr : GLOBAL ID'
-    p[0] = ''
-
-def p_declaracion(p):
-    'declaracion_var_instr : ID'
-    p[0] = ''
+    value = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = DeclaracionVar(p[2], value, Tipo.NULO, False, True, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////DECLARACION Y ASIGNACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_global_asignacion_var_tipo(p):
     'declaracion_var_instr : GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = ''    
+    p[0] = DeclaracionVar(p[2], p[4], p[7], False, True, p.lineno(1), find_column(input, p.slice[1]))    
 
 def p_declaracion_local_asignacion_var_tipo(p):
     'declaracion_var_instr : LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo'
-    p[0] = ''    
+    p[0] = DeclaracionVar(p[2], p[4], p[7], True, False, p.lineno(1), find_column(input, p.slice[1]))    
 
 def p_declaracion_global_asignacion_var(p):
     'declaracion_var_instr : GLOBAL ID IGUAL expresion'
-    p[0] = ''    
+    p[0] = DeclaracionVar(p[2], p[4], None, False, True, p.lineno(1), find_column(input, p.slice[1]))    
 
 def p_declaracion_local_asignacion_var(p):
     'declaracion_var_instr : LOCAL ID IGUAL expresion'
-    p[0] = ''    
+    p[0] = DeclaracionVar(p[2], p[4], None, True, False, p.lineno(1), find_column(input, p.slice[1]))   
 
 #///////////////////////////////////////////////////////////IMPRIMIR
 def p_imprimir_vacio(p):
     'imprimir_instr : PRINT PARENTESISA PARENTESISC'
-    p[0] = ''
+    p[0] = Imprimir(None, False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_imprimirln_vacio(p):
     'imprimir_instr : PRINTLN PARENTESISA PARENTESISC'
-    p[0] = ''
+    p[0] = Imprimir(None, True, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_imprimir_expresiones_coma(p):
-    'imprimir_instr : PRINT PARENTESISA expresion PARENTESISC'
+    'imprimir_instr : PRINT PARENTESISA expresiones_coma PARENTESISC'
     p[0] = Imprimir(p[3], False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_imprimirln_expresiones_coma(p):
-    'imprimir_instr : PRINTLN PARENTESISA expresion PARENTESISC'
+    'imprimir_instr : PRINTLN PARENTESISA expresiones_coma PARENTESISC'
     p[0] = Imprimir(p[3], True, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////FUNCIONES
@@ -580,7 +585,7 @@ def p_parametros_llamada_expresion(p):
 #///////////////////////////////////////////////////////////WHILE
 def p_While(p):
     'while_instr : WHILE expresion instrucciones END'
-    p[0] = ''
+    p[0] = While(p[2], p[3], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////FOR
 def p_for_string(p): #Lo hace con strings y arreglos
@@ -806,9 +811,15 @@ for instruccion in ast.getInstrucciones():
     valor = instruccion.interpretar(ast, TSGlobal, generator)
     if isinstance(valor, Excepcion):
         ast.getExcepciones().append(valor)
-        ast.updateConsolaln(valor.toString())
+        #ast.updateConsolaln(valor.toString())
+        ast.setConsola('')
+    else:
+        generator.addInstruction(ast.getConsola())
+        ast.setConsola('')
+
 
 print(generator.getCode())
 #print(ast.getConsola())
+
 
 '''println(5+6+9+4+7+89+4+2+1+1+1+1+7);'''

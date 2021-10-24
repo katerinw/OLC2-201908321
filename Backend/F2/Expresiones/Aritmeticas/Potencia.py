@@ -21,7 +21,7 @@ class Potencia(Instruccion):
         if isinstance(opDer, Excepcion):
             return opDer
 
-        newTemp = generator.newTemp()
+        newTemp = generator.createTemp()
 
         self.potenciar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
     

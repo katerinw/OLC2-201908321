@@ -15,7 +15,7 @@ class Not(Instruccion):
         if isinstance(opIzq, Excepcion):
             return opIzq
 
-        if self.opIzq.tipo == Tipo.ENTERO:
+        if self.opIzq.tipo != Tipo.BANDERA:
             return Excepcion("Semántico", "Los tipos de datos para el signo \"!\" no pueden ser operados", self.fila, self.columna)
 
         self.tipo = Tipo.BANDERA

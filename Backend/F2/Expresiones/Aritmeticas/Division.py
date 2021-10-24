@@ -22,7 +22,7 @@ class Division(Instruccion):
         if isinstance(opDer, Excepcion):
             return opDer
 
-        newTemp = generator.newTemp()
+        newTemp = generator.createTemp()
 
         return self.dividir(opIzq.getValor(), opDer.getValor(), newTemp, tree, table, generator)
 
@@ -47,14 +47,16 @@ class Division(Instruccion):
         return Excepcion("Semántico", "Los tipos de datos para el signo \"/\" no pueden ser operados", self.fila, self.columna)
 
 
-    def returnValue(self, opIzq, newTemp, tree, table, opDer, generator):
+    def returnValue(self, opIzq, opDer, newTemp, tree, table, generator):
         trueIns = generator.newExpresion(newTemp, str(opIzq), str(opDer), "/")
         falseIns = generator.newCallFunc('print_math_error_armc')  
 
         cero = IntValue(0, Tipo.ENTERO, self.fila, self.columna)
         diferente = Diferente(self.opDer, cero, self.fila, self.columna)
-        diferente.interpretar(tree, table, generator)
+        result = diferente.interpretar(tree, table, generator)
+        if isinstance(result, Excepcion):
+            return result
         
-        generator.addOpRelacional(diferente, trueIns, falseIns)
+        tree.updateConsola(generator.newOpRelacional(diferente, trueIns, falseIns))
         newValue = Value(newTemp, self.tipo, True)
         return newValue

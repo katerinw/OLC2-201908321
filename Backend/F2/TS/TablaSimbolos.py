@@ -3,12 +3,17 @@ class TablaSimbolos:
         self.tabla = {}
         self.owner = owner
         self.anterior = anterior
+        self.size = 0
+
+        if anterior != None:
+            self.size = anterior.size
 
     def setTabla(self, simbolo): #Agrega una variable al entorno
         if simbolo.identificador in self.tabla:
             return True
         else:
             self.tabla[simbolo.identificador] = simbolo
+            self.size += 1
             return None
 
     def getTabla(self, identificador):
