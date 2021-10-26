@@ -14,7 +14,7 @@ class IntValue(Instruccion):
         if self.tipo != Tipo.ENTERO:
             return Excepcion("Semántico", "El valor no es tipo INT", self.fila, self.columna)
 
-        return Value(str(self.valor), self.tipo, False)
+        return Value(self.valor, "", self.tipo, False)
 
         
     def getNode(self):

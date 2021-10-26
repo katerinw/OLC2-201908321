@@ -106,8 +106,8 @@ Rule 92    llamada_funcion_struct_instr -> ID PARENTESISA parametros_llamada PAR
 Rule 93    parametros_llamada -> parametros_llamada COMA expresion
 Rule 94    parametros_llamada -> expresion
 Rule 95    while_instr -> WHILE expresion instrucciones END
-Rule 96    for_instr -> FOR declaracion_var_instr IN expresion instrucciones END
-Rule 97    for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+Rule 96    for_instr -> FOR ID IN expresion instrucciones END
+Rule 97    for_instr -> FOR ID IN expresion DOSPUNTOS expresion instrucciones END
 Rule 98    return_instr -> RETURN expresion
 Rule 99    return_instr -> RETURN
 Rule 100   break_instr -> BREAK
@@ -157,7 +157,7 @@ FLOAT64              : 56 65
 FOR                  : 96 97
 FUNCTION             : 85 86
 GLOBAL               : 76 77 79
-ID                   : 31 69 70 71 72 75 76 77 78 79 80 85 86 89 90 91 92 111 112 115 116 117 117 118 118
+ID                   : 31 69 70 71 72 75 76 77 78 79 80 85 86 89 90 91 92 96 97 111 112 115 116 117 117 118 118
 IF                   : 102 103 104 105
 IGUAL                : 69 70 71 77 78 79 80 118
 IGUALIGUAL           : 39
@@ -206,7 +206,7 @@ atributo             : 113 114
 bandera              : 32
 break_instr          : 17
 continue_instr       : 12
-declaracion_var_instr : 6 96 97
+declaracion_var_instr : 6
 elseif_instr         : 106 107
 elseifs_instr        : 103 104 106
 expresion            : 23 33 33 34 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 55 56 57 58 59 59 60 61 69 70 71 73 74 77 78 79 80 93 94 95 96 97 97 98 102 103 104 105 108 118
@@ -289,8 +289,8 @@ state 0
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -394,8 +394,8 @@ state 2
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -878,19 +878,11 @@ state 34
 
 state 35
 
-    (96) for_instr -> FOR . declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> FOR . declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
-    (75) declaracion_var_instr -> . LOCAL ID
-    (76) declaracion_var_instr -> . GLOBAL ID
-    (77) declaracion_var_instr -> . GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
-    (78) declaracion_var_instr -> . LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo
-    (79) declaracion_var_instr -> . GLOBAL ID IGUAL expresion
-    (80) declaracion_var_instr -> . LOCAL ID IGUAL expresion
+    (96) for_instr -> FOR . ID IN expresion instrucciones END
+    (97) for_instr -> FOR . ID IN expresion DOSPUNTOS expresion instrucciones END
 
-    LOCAL           shift and go to state 23
-    GLOBAL          shift and go to state 24
+    ID              shift and go to state 94
 
-    declaracion_var_instr          shift and go to state 94
 
 state 36
 
@@ -1777,7 +1769,6 @@ state 65
     (80) declaracion_var_instr -> LOCAL ID . IGUAL expresion
 
     PUNTOCOMA       reduce using rule 75 (declaracion_var_instr -> LOCAL ID .)
-    IN              reduce using rule 75 (declaracion_var_instr -> LOCAL ID .)
     IGUAL           shift and go to state 107
 
 
@@ -1788,7 +1779,6 @@ state 66
     (79) declaracion_var_instr -> GLOBAL ID . IGUAL expresion
 
     PUNTOCOMA       reduce using rule 76 (declaracion_var_instr -> GLOBAL ID .)
-    IN              reduce using rule 76 (declaracion_var_instr -> GLOBAL ID .)
     IGUAL           shift and go to state 108
 
 
@@ -2104,7 +2094,6 @@ state 72
     COMA            reduce using rule 24 (expresion -> CADENA .)
     DOSPUNTOS       reduce using rule 24 (expresion -> CADENA .)
     CORCHETEC       reduce using rule 24 (expresion -> CADENA .)
-    IN              reduce using rule 24 (expresion -> CADENA .)
 
 
 state 73
@@ -2147,7 +2136,6 @@ state 73
     COMA            reduce using rule 25 (expresion -> CARACTER .)
     DOSPUNTOS       reduce using rule 25 (expresion -> CARACTER .)
     CORCHETEC       reduce using rule 25 (expresion -> CARACTER .)
-    IN              reduce using rule 25 (expresion -> CARACTER .)
 
 
 state 74
@@ -2190,7 +2178,6 @@ state 74
     COMA            reduce using rule 26 (expresion -> ENTERO .)
     DOSPUNTOS       reduce using rule 26 (expresion -> ENTERO .)
     CORCHETEC       reduce using rule 26 (expresion -> ENTERO .)
-    IN              reduce using rule 26 (expresion -> ENTERO .)
 
 
 state 75
@@ -2242,7 +2229,6 @@ state 76
     COMA            reduce using rule 28 (expresion -> DOBLE .)
     DOSPUNTOS       reduce using rule 28 (expresion -> DOBLE .)
     CORCHETEC       reduce using rule 28 (expresion -> DOBLE .)
-    IN              reduce using rule 28 (expresion -> DOBLE .)
 
 
 state 77
@@ -2285,7 +2271,6 @@ state 77
     COMA            reduce using rule 30 (expresion -> NOTHING .)
     DOSPUNTOS       reduce using rule 30 (expresion -> NOTHING .)
     CORCHETEC       reduce using rule 30 (expresion -> NOTHING .)
-    IN              reduce using rule 30 (expresion -> NOTHING .)
 
 
 state 78
@@ -2334,7 +2319,6 @@ state 78
     COMA            reduce using rule 31 (expresion -> ID .)
     DOSPUNTOS       reduce using rule 31 (expresion -> ID .)
     CORCHETEC       reduce using rule 31 (expresion -> ID .)
-    IN              reduce using rule 31 (expresion -> ID .)
     PARENTESISA     shift and go to state 132
     PUNTO           shift and go to state 134
     CORCHETEA       shift and go to state 64
@@ -2381,7 +2365,6 @@ state 79
     COMA            reduce using rule 32 (expresion -> bandera .)
     DOSPUNTOS       reduce using rule 32 (expresion -> bandera .)
     CORCHETEC       reduce using rule 32 (expresion -> bandera .)
-    IN              reduce using rule 32 (expresion -> bandera .)
 
 
 state 80
@@ -2497,7 +2480,6 @@ state 81
     COMA            reduce using rule 48 (expresion -> llamada_funcion_instr .)
     DOSPUNTOS       reduce using rule 48 (expresion -> llamada_funcion_instr .)
     CORCHETEC       reduce using rule 48 (expresion -> llamada_funcion_instr .)
-    IN              reduce using rule 48 (expresion -> llamada_funcion_instr .)
 
 
 state 82
@@ -2540,7 +2522,6 @@ state 82
     COMA            reduce using rule 49 (expresion -> llamada_funcion_struct_instr .)
     DOSPUNTOS       reduce using rule 49 (expresion -> llamada_funcion_struct_instr .)
     CORCHETEC       reduce using rule 49 (expresion -> llamada_funcion_struct_instr .)
-    IN              reduce using rule 49 (expresion -> llamada_funcion_struct_instr .)
 
 
 state 83
@@ -2659,7 +2640,6 @@ state 84
     COMA            reduce using rule 51 (expresion -> acceso_arreglo .)
     DOSPUNTOS       reduce using rule 51 (expresion -> acceso_arreglo .)
     CORCHETEC       reduce using rule 51 (expresion -> acceso_arreglo .)
-    IN              reduce using rule 51 (expresion -> acceso_arreglo .)
 
 
 state 85
@@ -2702,7 +2682,6 @@ state 85
     COMA            reduce using rule 52 (expresion -> push_instr .)
     DOSPUNTOS       reduce using rule 52 (expresion -> push_instr .)
     CORCHETEC       reduce using rule 52 (expresion -> push_instr .)
-    IN              reduce using rule 52 (expresion -> push_instr .)
 
 
 state 86
@@ -2745,7 +2724,6 @@ state 86
     COMA            reduce using rule 53 (expresion -> pop_instr .)
     DOSPUNTOS       reduce using rule 53 (expresion -> pop_instr .)
     CORCHETEC       reduce using rule 53 (expresion -> pop_instr .)
-    IN              reduce using rule 53 (expresion -> pop_instr .)
 
 
 state 87
@@ -2788,7 +2766,6 @@ state 87
     COMA            reduce using rule 54 (expresion -> acceso_struct .)
     DOSPUNTOS       reduce using rule 54 (expresion -> acceso_struct .)
     CORCHETEC       reduce using rule 54 (expresion -> acceso_struct .)
-    IN              reduce using rule 54 (expresion -> acceso_struct .)
 
 
 state 88
@@ -2846,7 +2823,6 @@ state 90
     COMA            reduce using rule 62 (bandera -> TRUE .)
     DOSPUNTOS       reduce using rule 62 (bandera -> TRUE .)
     CORCHETEC       reduce using rule 62 (bandera -> TRUE .)
-    IN              reduce using rule 62 (bandera -> TRUE .)
 
 
 state 91
@@ -2889,7 +2865,6 @@ state 91
     COMA            reduce using rule 63 (bandera -> FALSE .)
     DOSPUNTOS       reduce using rule 63 (bandera -> FALSE .)
     CORCHETEC       reduce using rule 63 (bandera -> FALSE .)
-    IN              reduce using rule 63 (bandera -> FALSE .)
 
 
 state 92
@@ -2955,8 +2930,8 @@ state 92
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -3028,8 +3003,8 @@ state 93
 
 state 94
 
-    (96) for_instr -> FOR declaracion_var_instr . IN expresion instrucciones END
-    (97) for_instr -> FOR declaracion_var_instr . IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> FOR ID . IN expresion instrucciones END
+    (97) for_instr -> FOR ID . IN expresion DOSPUNTOS expresion instrucciones END
 
     IN              shift and go to state 141
 
@@ -3107,8 +3082,8 @@ state 96
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -3240,7 +3215,6 @@ state 100
     COMA            reduce using rule 91 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
     DOSPUNTOS       reduce using rule 91 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
     CORCHETEC       reduce using rule 91 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
-    IN              reduce using rule 91 (llamada_funcion_instr -> ID PARENTESISA PARENTESISC .)
 
 
 state 101
@@ -4833,7 +4807,6 @@ state 130
     COMA            reduce using rule 27 (expresion -> MENOS ENTERO .)
     DOSPUNTOS       reduce using rule 27 (expresion -> MENOS ENTERO .)
     CORCHETEC       reduce using rule 27 (expresion -> MENOS ENTERO .)
-    IN              reduce using rule 27 (expresion -> MENOS ENTERO .)
 
 
 state 131
@@ -4876,7 +4849,6 @@ state 131
     COMA            reduce using rule 29 (expresion -> MENOS DOBLE .)
     DOSPUNTOS       reduce using rule 29 (expresion -> MENOS DOBLE .)
     CORCHETEC       reduce using rule 29 (expresion -> MENOS DOBLE .)
-    IN              reduce using rule 29 (expresion -> MENOS DOBLE .)
 
 
 state 132
@@ -4998,7 +4970,6 @@ state 133
     COMA            reduce using rule 72 (acceso_arreglo -> ID lista_dimensiones .)
     DOSPUNTOS       reduce using rule 72 (acceso_arreglo -> ID lista_dimensiones .)
     CORCHETEC       reduce using rule 72 (acceso_arreglo -> ID lista_dimensiones .)
-    IN              reduce using rule 72 (acceso_arreglo -> ID lista_dimensiones .)
     CORCHETEA       shift and go to state 105
 
 
@@ -5051,7 +5022,6 @@ state 135
     COMA            reduce using rule 47 (expresion -> NOT expresion .)
     DOSPUNTOS       reduce using rule 47 (expresion -> NOT expresion .)
     CORCHETEC       reduce using rule 47 (expresion -> NOT expresion .)
-    IN              reduce using rule 47 (expresion -> NOT expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -5220,8 +5190,8 @@ state 139
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -5345,8 +5315,8 @@ state 140
 
 state 141
 
-    (96) for_instr -> FOR declaracion_var_instr IN . expresion instrucciones END
-    (97) for_instr -> FOR declaracion_var_instr IN . expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> FOR ID IN . expresion instrucciones END
+    (97) for_instr -> FOR ID IN . expresion DOSPUNTOS expresion instrucciones END
     (23) expresion -> . PARENTESISA expresion PARENTESISC
     (24) expresion -> . CADENA
     (25) expresion -> . CARACTER
@@ -5544,8 +5514,8 @@ state 143
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -5681,7 +5651,6 @@ state 148
     COMA            reduce using rule 92 (llamada_funcion_struct_instr -> ID PARENTESISA parametros_llamada PARENTESISC .)
     DOSPUNTOS       reduce using rule 92 (llamada_funcion_struct_instr -> ID PARENTESISA parametros_llamada PARENTESISC .)
     CORCHETEC       reduce using rule 92 (llamada_funcion_struct_instr -> ID PARENTESISA parametros_llamada PARENTESISC .)
-    IN              reduce using rule 92 (llamada_funcion_struct_instr -> ID PARENTESISA parametros_llamada PARENTESISC .)
 
 
 state 149
@@ -5949,7 +5918,6 @@ state 154
     COMA            reduce using rule 74 (lista_dimensiones -> CORCHETEA expresion CORCHETEC .)
     DOSPUNTOS       reduce using rule 74 (lista_dimensiones -> CORCHETEA expresion CORCHETEC .)
     CORCHETEC       reduce using rule 74 (lista_dimensiones -> CORCHETEA expresion CORCHETEC .)
-    IN              reduce using rule 74 (lista_dimensiones -> CORCHETEA expresion CORCHETEC .)
 
 
 state 155
@@ -5973,7 +5941,6 @@ state 155
 
     DOSPUNTOS       shift and go to state 202
     PUNTOCOMA       reduce using rule 80 (declaracion_var_instr -> LOCAL ID IGUAL expresion .)
-    IN              reduce using rule 80 (declaracion_var_instr -> LOCAL ID IGUAL expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -6011,7 +5978,6 @@ state 156
 
     DOSPUNTOS       shift and go to state 203
     PUNTOCOMA       reduce using rule 79 (declaracion_var_instr -> GLOBAL ID IGUAL expresion .)
-    IN              reduce using rule 79 (declaracion_var_instr -> GLOBAL ID IGUAL expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -6087,8 +6053,8 @@ state 158
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -6291,7 +6257,6 @@ state 164
     COMA            reduce using rule 33 (expresion -> expresion MAS expresion .)
     DOSPUNTOS       reduce using rule 33 (expresion -> expresion MAS expresion .)
     CORCHETEC       reduce using rule 33 (expresion -> expresion MAS expresion .)
-    IN              reduce using rule 33 (expresion -> expresion MAS expresion .)
     ASTERISCO       shift and go to state 117
     DIVISION        shift and go to state 118
     POTENCIA        shift and go to state 119
@@ -6363,7 +6328,6 @@ state 165
     COMA            reduce using rule 34 (expresion -> expresion MENOS expresion .)
     DOSPUNTOS       reduce using rule 34 (expresion -> expresion MENOS expresion .)
     CORCHETEC       reduce using rule 34 (expresion -> expresion MENOS expresion .)
-    IN              reduce using rule 34 (expresion -> expresion MENOS expresion .)
     ASTERISCO       shift and go to state 117
     DIVISION        shift and go to state 118
     POTENCIA        shift and go to state 119
@@ -6438,7 +6402,6 @@ state 166
     COMA            reduce using rule 35 (expresion -> expresion ASTERISCO expresion .)
     DOSPUNTOS       reduce using rule 35 (expresion -> expresion ASTERISCO expresion .)
     CORCHETEC       reduce using rule 35 (expresion -> expresion ASTERISCO expresion .)
-    IN              reduce using rule 35 (expresion -> expresion ASTERISCO expresion .)
     POTENCIA        shift and go to state 119
 
   ! POTENCIA        [ reduce using rule 35 (expresion -> expresion ASTERISCO expresion .) ]
@@ -6510,7 +6473,6 @@ state 167
     COMA            reduce using rule 36 (expresion -> expresion DIVISION expresion .)
     DOSPUNTOS       reduce using rule 36 (expresion -> expresion DIVISION expresion .)
     CORCHETEC       reduce using rule 36 (expresion -> expresion DIVISION expresion .)
-    IN              reduce using rule 36 (expresion -> expresion DIVISION expresion .)
     POTENCIA        shift and go to state 119
 
   ! POTENCIA        [ reduce using rule 36 (expresion -> expresion DIVISION expresion .) ]
@@ -6583,7 +6545,6 @@ state 168
     COMA            reduce using rule 37 (expresion -> expresion POTENCIA expresion .)
     DOSPUNTOS       reduce using rule 37 (expresion -> expresion POTENCIA expresion .)
     CORCHETEC       reduce using rule 37 (expresion -> expresion POTENCIA expresion .)
-    IN              reduce using rule 37 (expresion -> expresion POTENCIA expresion .)
 
   ! MAS             [ shift and go to state 115 ]
   ! MENOS           [ shift and go to state 116 ]
@@ -6654,7 +6615,6 @@ state 169
     COMA            reduce using rule 38 (expresion -> expresion PORCENTAJE expresion .)
     DOSPUNTOS       reduce using rule 38 (expresion -> expresion PORCENTAJE expresion .)
     CORCHETEC       reduce using rule 38 (expresion -> expresion PORCENTAJE expresion .)
-    IN              reduce using rule 38 (expresion -> expresion PORCENTAJE expresion .)
     POTENCIA        shift and go to state 119
 
   ! POTENCIA        [ reduce using rule 38 (expresion -> expresion PORCENTAJE expresion .) ]
@@ -6721,7 +6681,6 @@ state 170
     COMA            reduce using rule 39 (expresion -> expresion IGUALIGUAL expresion .)
     DOSPUNTOS       reduce using rule 39 (expresion -> expresion IGUALIGUAL expresion .)
     CORCHETEC       reduce using rule 39 (expresion -> expresion IGUALIGUAL expresion .)
-    IN              reduce using rule 39 (expresion -> expresion IGUALIGUAL expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -6793,7 +6752,6 @@ state 171
     COMA            reduce using rule 40 (expresion -> expresion DIFERENTE expresion .)
     DOSPUNTOS       reduce using rule 40 (expresion -> expresion DIFERENTE expresion .)
     CORCHETEC       reduce using rule 40 (expresion -> expresion DIFERENTE expresion .)
-    IN              reduce using rule 40 (expresion -> expresion DIFERENTE expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -6865,7 +6823,6 @@ state 172
     COMA            reduce using rule 41 (expresion -> expresion MENOR expresion .)
     DOSPUNTOS       reduce using rule 41 (expresion -> expresion MENOR expresion .)
     CORCHETEC       reduce using rule 41 (expresion -> expresion MENOR expresion .)
-    IN              reduce using rule 41 (expresion -> expresion MENOR expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -6937,7 +6894,6 @@ state 173
     COMA            reduce using rule 42 (expresion -> expresion MAYOR expresion .)
     DOSPUNTOS       reduce using rule 42 (expresion -> expresion MAYOR expresion .)
     CORCHETEC       reduce using rule 42 (expresion -> expresion MAYOR expresion .)
-    IN              reduce using rule 42 (expresion -> expresion MAYOR expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -7009,7 +6965,6 @@ state 174
     COMA            reduce using rule 43 (expresion -> expresion MENORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 43 (expresion -> expresion MENORIGUAL expresion .)
     CORCHETEC       reduce using rule 43 (expresion -> expresion MENORIGUAL expresion .)
-    IN              reduce using rule 43 (expresion -> expresion MENORIGUAL expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -7081,7 +7036,6 @@ state 175
     COMA            reduce using rule 44 (expresion -> expresion MAYORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 44 (expresion -> expresion MAYORIGUAL expresion .)
     CORCHETEC       reduce using rule 44 (expresion -> expresion MAYORIGUAL expresion .)
-    IN              reduce using rule 44 (expresion -> expresion MAYORIGUAL expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -7147,7 +7101,6 @@ state 176
     COMA            reduce using rule 45 (expresion -> expresion AND expresion .)
     DOSPUNTOS       reduce using rule 45 (expresion -> expresion AND expresion .)
     CORCHETEC       reduce using rule 45 (expresion -> expresion AND expresion .)
-    IN              reduce using rule 45 (expresion -> expresion AND expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -7218,7 +7171,6 @@ state 177
     COMA            reduce using rule 46 (expresion -> expresion OR expresion .)
     DOSPUNTOS       reduce using rule 46 (expresion -> expresion OR expresion .)
     CORCHETEC       reduce using rule 46 (expresion -> expresion OR expresion .)
-    IN              reduce using rule 46 (expresion -> expresion OR expresion .)
     MAS             shift and go to state 115
     MENOS           shift and go to state 116
     ASTERISCO       shift and go to state 117
@@ -7289,7 +7241,6 @@ state 178
     COMA            reduce using rule 23 (expresion -> PARENTESISA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 23 (expresion -> PARENTESISA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 23 (expresion -> PARENTESISA expresion PARENTESISC .)
-    IN              reduce using rule 23 (expresion -> PARENTESISA expresion PARENTESISC .)
 
 
 state 179
@@ -7332,7 +7283,6 @@ state 179
     COMA            reduce using rule 117 (acceso_struct -> ID PUNTO ID .)
     DOSPUNTOS       reduce using rule 117 (acceso_struct -> ID PUNTO ID .)
     CORCHETEC       reduce using rule 117 (acceso_struct -> ID PUNTO ID .)
-    IN              reduce using rule 117 (acceso_struct -> ID PUNTO ID .)
 
 
 state 180
@@ -7375,7 +7325,6 @@ state 180
     COMA            reduce using rule 50 (expresion -> CORCHETEA expresiones_coma CORCHETEC .)
     DOSPUNTOS       reduce using rule 50 (expresion -> CORCHETEA expresiones_coma CORCHETEC .)
     CORCHETEC       reduce using rule 50 (expresion -> CORCHETEA expresiones_coma CORCHETEC .)
-    IN              reduce using rule 50 (expresion -> CORCHETEA expresiones_coma CORCHETEC .)
 
 
 state 181
@@ -7471,8 +7420,8 @@ state 185
 
 state 186
 
-    (96) for_instr -> FOR declaracion_var_instr IN expresion . instrucciones END
-    (97) for_instr -> FOR declaracion_var_instr IN expresion . DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> FOR ID IN expresion . instrucciones END
+    (97) for_instr -> FOR ID IN expresion . DOSPUNTOS expresion instrucciones END
     (33) expresion -> expresion . MAS expresion
     (34) expresion -> expresion . MENOS expresion
     (35) expresion -> expresion . ASTERISCO expresion
@@ -7533,8 +7482,8 @@ state 186
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -7576,10 +7525,10 @@ state 186
     STRUCT          shift and go to state 38
     MUTABLE         shift and go to state 39
 
-    declaracion_var_instr          shift and go to state 5
     instrucciones                  shift and go to state 213
     instruccion                    shift and go to state 3
     llamada_funcion_struct_instr   shift and go to state 4
+    declaracion_var_instr          shift and go to state 5
     llamada_funcion_instr          shift and go to state 6
     modificacion_struct            shift and go to state 7
     modificar_arreglo              shift and go to state 8
@@ -7702,8 +7651,8 @@ state 190
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -8007,7 +7956,6 @@ state 201
     COMA            reduce using rule 73 (lista_dimensiones -> lista_dimensiones CORCHETEA expresion CORCHETEC .)
     DOSPUNTOS       reduce using rule 73 (lista_dimensiones -> lista_dimensiones CORCHETEA expresion CORCHETEC .)
     CORCHETEC       reduce using rule 73 (lista_dimensiones -> lista_dimensiones CORCHETEA expresion CORCHETEC .)
-    IN              reduce using rule 73 (lista_dimensiones -> lista_dimensiones CORCHETEA expresion CORCHETEC .)
 
 
 state 202
@@ -8079,8 +8027,8 @@ state 205
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -8178,8 +8126,8 @@ state 206
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -8461,7 +8409,6 @@ state 211
     COMA            reduce using rule 57 (expresion -> SSTRING PARENTESISA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 57 (expresion -> SSTRING PARENTESISA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 57 (expresion -> SSTRING PARENTESISA expresion PARENTESISC .)
-    IN              reduce using rule 57 (expresion -> SSTRING PARENTESISA expresion PARENTESISC .)
 
 
 state 212
@@ -8539,7 +8486,7 @@ state 212
 
 state 213
 
-    (96) for_instr -> FOR declaracion_var_instr IN expresion instrucciones . END
+    (96) for_instr -> FOR ID IN expresion instrucciones . END
     (3) instrucciones -> instrucciones . instruccion
     (5) instruccion -> . llamada_funcion_struct_instr fininstr
     (6) instruccion -> . declaracion_var_instr fininstr
@@ -8585,8 +8532,8 @@ state 213
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -8614,9 +8561,9 @@ state 213
     STRUCT          shift and go to state 38
     MUTABLE         shift and go to state 39
 
-    declaracion_var_instr          shift and go to state 5
     instruccion                    shift and go to state 40
     llamada_funcion_struct_instr   shift and go to state 4
+    declaracion_var_instr          shift and go to state 5
     llamada_funcion_instr          shift and go to state 6
     modificacion_struct            shift and go to state 7
     modificar_arreglo              shift and go to state 8
@@ -8637,7 +8584,7 @@ state 213
 
 state 214
 
-    (97) for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS . expresion instrucciones END
+    (97) for_instr -> FOR ID IN expresion DOSPUNTOS . expresion instrucciones END
     (23) expresion -> . PARENTESISA expresion PARENTESISC
     (24) expresion -> . CADENA
     (25) expresion -> . CARACTER
@@ -8748,7 +8695,6 @@ state 215
     COMA            reduce using rule 58 (pop_instr -> POP NOT PARENTESISA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 58 (pop_instr -> POP NOT PARENTESISA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 58 (pop_instr -> POP NOT PARENTESISA expresion PARENTESISC .)
-    IN              reduce using rule 58 (pop_instr -> POP NOT PARENTESISA expresion PARENTESISC .)
 
 
 state 216
@@ -8800,8 +8746,8 @@ state 216
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -8914,8 +8860,8 @@ state 219
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9027,8 +8973,8 @@ state 220
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9135,7 +9081,6 @@ state 225
     (64) tipo -> INT64 .
 
     PUNTOCOMA       reduce using rule 64 (tipo -> INT64 .)
-    IN              reduce using rule 64 (tipo -> INT64 .)
     PARENTESISC     reduce using rule 64 (tipo -> INT64 .)
     COMA            reduce using rule 64 (tipo -> INT64 .)
 
@@ -9145,7 +9090,6 @@ state 226
     (65) tipo -> FLOAT64 .
 
     PUNTOCOMA       reduce using rule 65 (tipo -> FLOAT64 .)
-    IN              reduce using rule 65 (tipo -> FLOAT64 .)
     PARENTESISC     reduce using rule 65 (tipo -> FLOAT64 .)
     COMA            reduce using rule 65 (tipo -> FLOAT64 .)
 
@@ -9155,7 +9099,6 @@ state 227
     (66) tipo -> STRING .
 
     PUNTOCOMA       reduce using rule 66 (tipo -> STRING .)
-    IN              reduce using rule 66 (tipo -> STRING .)
     PARENTESISC     reduce using rule 66 (tipo -> STRING .)
     COMA            reduce using rule 66 (tipo -> STRING .)
 
@@ -9165,7 +9108,6 @@ state 228
     (67) tipo -> CHAR .
 
     PUNTOCOMA       reduce using rule 67 (tipo -> CHAR .)
-    IN              reduce using rule 67 (tipo -> CHAR .)
     PARENTESISC     reduce using rule 67 (tipo -> CHAR .)
     COMA            reduce using rule 67 (tipo -> CHAR .)
 
@@ -9175,7 +9117,6 @@ state 229
     (68) tipo -> BOOL .
 
     PUNTOCOMA       reduce using rule 68 (tipo -> BOOL .)
-    IN              reduce using rule 68 (tipo -> BOOL .)
     PARENTESISC     reduce using rule 68 (tipo -> BOOL .)
     COMA            reduce using rule 68 (tipo -> BOOL .)
 
@@ -9286,8 +9227,8 @@ state 234
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9451,14 +9392,14 @@ state 238
 
 state 239
 
-    (96) for_instr -> FOR declaracion_var_instr IN expresion instrucciones END .
+    (96) for_instr -> FOR ID IN expresion instrucciones END .
 
-    PUNTOCOMA       reduce using rule 96 (for_instr -> FOR declaracion_var_instr IN expresion instrucciones END .)
+    PUNTOCOMA       reduce using rule 96 (for_instr -> FOR ID IN expresion instrucciones END .)
 
 
 state 240
 
-    (97) for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS expresion . instrucciones END
+    (97) for_instr -> FOR ID IN expresion DOSPUNTOS expresion . instrucciones END
     (33) expresion -> expresion . MAS expresion
     (34) expresion -> expresion . MENOS expresion
     (35) expresion -> expresion . ASTERISCO expresion
@@ -9519,8 +9460,8 @@ state 240
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9561,10 +9502,10 @@ state 240
     STRUCT          shift and go to state 38
     MUTABLE         shift and go to state 39
 
-    declaracion_var_instr          shift and go to state 5
     instrucciones                  shift and go to state 252
     instruccion                    shift and go to state 3
     llamada_funcion_struct_instr   shift and go to state 4
+    declaracion_var_instr          shift and go to state 5
     llamada_funcion_instr          shift and go to state 6
     modificacion_struct            shift and go to state 7
     modificar_arreglo              shift and go to state 8
@@ -9631,8 +9572,8 @@ state 241
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9736,8 +9677,8 @@ state 243
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -9800,7 +9741,6 @@ state 245
     (78) declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .
 
     PUNTOCOMA       reduce using rule 78 (declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
-    IN              reduce using rule 78 (declaracion_var_instr -> LOCAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
 
 
 state 246
@@ -9808,7 +9748,6 @@ state 246
     (77) declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .
 
     PUNTOCOMA       reduce using rule 77 (declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
-    IN              reduce using rule 77 (declaracion_var_instr -> GLOBAL ID IGUAL expresion DOSPUNTOS DOSPUNTOS tipo .)
 
 
 state 247
@@ -9866,7 +9805,6 @@ state 249
     COMA            reduce using rule 55 (expresion -> PARSE PARENTESISA INT64 COMA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 55 (expresion -> PARSE PARENTESISA INT64 COMA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 55 (expresion -> PARSE PARENTESISA INT64 COMA expresion PARENTESISC .)
-    IN              reduce using rule 55 (expresion -> PARSE PARENTESISA INT64 COMA expresion PARENTESISC .)
 
 
 state 250
@@ -9909,7 +9847,6 @@ state 250
     COMA            reduce using rule 56 (expresion -> PARSE PARENTESISA FLOAT64 COMA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 56 (expresion -> PARSE PARENTESISA FLOAT64 COMA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 56 (expresion -> PARSE PARENTESISA FLOAT64 COMA expresion PARENTESISC .)
-    IN              reduce using rule 56 (expresion -> PARSE PARENTESISA FLOAT64 COMA expresion PARENTESISC .)
 
 
 state 251
@@ -9952,12 +9889,11 @@ state 251
     COMA            reduce using rule 59 (push_instr -> PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC .)
     DOSPUNTOS       reduce using rule 59 (push_instr -> PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC .)
     CORCHETEC       reduce using rule 59 (push_instr -> PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC .)
-    IN              reduce using rule 59 (push_instr -> PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC .)
 
 
 state 252
 
-    (97) for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones . END
+    (97) for_instr -> FOR ID IN expresion DOSPUNTOS expresion instrucciones . END
     (3) instrucciones -> instrucciones . instruccion
     (5) instruccion -> . llamada_funcion_struct_instr fininstr
     (6) instruccion -> . declaracion_var_instr fininstr
@@ -10003,8 +9939,8 @@ state 252
     (95) while_instr -> . WHILE expresion instrucciones END
     (100) break_instr -> . BREAK
     (59) push_instr -> . PUSH NOT PARENTESISA expresion COMA expresion PARENTESISC
-    (96) for_instr -> . FOR declaracion_var_instr IN expresion instrucciones END
-    (97) for_instr -> . FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END
+    (96) for_instr -> . FOR ID IN expresion instrucciones END
+    (97) for_instr -> . FOR ID IN expresion DOSPUNTOS expresion instrucciones END
     (58) pop_instr -> . POP NOT PARENTESISA expresion PARENTESISC
     (102) if_instr -> . IF expresion instrucciones END
     (103) if_instr -> . IF expresion instrucciones elseifs_instr ELSE instrucciones END
@@ -10032,9 +9968,9 @@ state 252
     STRUCT          shift and go to state 38
     MUTABLE         shift and go to state 39
 
-    declaracion_var_instr          shift and go to state 5
     instruccion                    shift and go to state 40
     llamada_funcion_struct_instr   shift and go to state 4
+    declaracion_var_instr          shift and go to state 5
     llamada_funcion_instr          shift and go to state 6
     modificacion_struct            shift and go to state 7
     modificar_arreglo              shift and go to state 8
@@ -10062,7 +9998,7 @@ state 253
 
 state 254
 
-    (97) for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END .
+    (97) for_instr -> FOR ID IN expresion DOSPUNTOS expresion instrucciones END .
 
-    PUNTOCOMA       reduce using rule 97 (for_instr -> FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END .)
+    PUNTOCOMA       reduce using rule 97 (for_instr -> FOR ID IN expresion DOSPUNTOS expresion instrucciones END .)
 

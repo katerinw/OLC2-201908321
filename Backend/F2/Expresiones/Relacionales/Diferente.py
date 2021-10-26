@@ -22,7 +22,7 @@ class Diferente(Instruccion):
         if isinstance(opDer, Excepcion):
             return opDer
 
-        return self.Diferenciar(opIzq.getValor(), opDer.getValor(), tree, generator)
+        return self.Diferenciar(opIzq, opDer, tree, generator)
 
     def getNode(self):
         return super().getNode()
@@ -48,8 +48,11 @@ class Diferente(Instruccion):
 
 
     def returnValue(self, opIzq, opDer, tree, generator):
-        valor = opIzq != opDer
-        newValue = Value(valor, self.tipo, False)
+        valIzq = self.correctValue(opIzq)
+        valDer = self.correctValue(opDer)
+
+        valor = opIzq.getValor() != opDer.getValor()
+        newValue = Value(valor, "", self.tipo, False)
             
         if self.trueLabel == None:
             self.trueLabel = generator.createLabel()
@@ -57,10 +60,16 @@ class Diferente(Instruccion):
         if self.falseLabel == None:
             self.falseLabel = generator.createLabel()
 
-        tree.updateConsola(generator.newIf(str(opIzq), str(opDer), '!=', self.trueLabel))
+        tree.updateConsola(generator.newIf(str(valIzq), str(valDer), '!=', self.trueLabel))
         tree.updateConsola(generator.newGoto(self.falseLabel))
 
         newValue.trueLabel = self.trueLabel
         newValue.falseLabel = self.falseLabel
 
         return newValue
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()

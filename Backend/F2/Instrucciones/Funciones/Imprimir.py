@@ -1,6 +1,3 @@
-from typing import _SpecialForm
-from Expresiones.Relacionales.Diferente import Diferente
-from Expresiones.Aritmeticas.Division import Division
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
@@ -34,18 +31,32 @@ class Imprimir(Instruccion):
         if isinstance(tempValor, Excepcion):
             return tempValor
 
+        valor = self.correctValue(tempValor)
+
         if tempValor.tipo == Tipo.ENTERO:     
-            tree.updateConsola(generator.newPrint("d", "int(" + str(tempValor.getValor()) + ")"))
+            tree.updateConsola(generator.newPrint("d", "int(" + str(valor) + ")"))
             
         elif tempValor.tipo == Tipo.DOBLE:
-            tree.updateConsola(generator.newPrint("f", str(tempValor.getValor())))
-            
+            tree.updateConsola(generator.newPrint("f", str(valor)))
+
+        elif tempValor.tipo == Tipo.CARACTER:
+            tree.updateConsola(generator.newPrint("c", str(valor)))
+        
+        elif tempValor.tipo == Tipo.CADENA:
+            pass
+
         elif tempValor.tipo == Tipo.BANDERA:
             trueIns = generator.newCallFunc('print_true_armc')
             falseIns = generator.newCallFunc('print_false_armc')
             tree.updateConsola(generator.newOpRelacional(tempValor, trueIns, falseIns))
         elif tempValor.tipo == Tipo.CADENA:
-            tree.updateConsola(generator.newPrint("c", str(tempValor.getValor())))
+            tree.updateConsola(generator.newPrint("c", str(valor)))
             
         else:
             print("ERROR")
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()

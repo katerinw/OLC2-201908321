@@ -1,6 +1,2 @@
-x = 10::Int64;
-while x <= 20
-    println(x);
-    x = x + 1;
-end;
-
+println(8);
+println('a');

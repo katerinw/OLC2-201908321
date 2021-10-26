@@ -36,20 +36,21 @@ class DeclaracionVar(Instruccion):
             if self.tipo != self.valor.tipo: #Verifica que las variables sean del mismo tipo 
                 return Excepcion("Semántico", "El tipo de dato en la variable \""+self.identificador+"\" es diferente", self.fila, self.columna) 
 
+        tamTable = table.size
+        newTemp = generator.createTemp()
+
         if self.local: #Se encarga de las variable locales
-            tamTable = table.size
-            newTemp = generator.createTemp()
             if simboloVar != None:
-                simbolo = Simbolo(str(self.identificador), self.tipo, value, tamTable, newTemp, True, False, self.fila, self.columna)
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, tamTable, True, False, self.fila, self.columna)
             else:
-                simbolo = Simbolo(str(self.identificador), self.tipo, value, tamTable, newTemp, True, False, self.fila, self.columna)
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, tamTable, True, False, self.fila, self.columna)
         
         
         elif self.globall: #Se encarga de las variables globales
             if simboloVar == None: #Verifica si la variable no estaba declarada anteriormente de modo global        
                 return Excepcion("Semántico", "La variable \""+self.identificador+"\" no existe en el entorno global", self.fila, self.columna) 
             elif simboloVar != None:#Verifica si la variable ya estaba declarada anteriormente de modo global
-                simbolo = Simbolo(str(self.identificador), self.tipo, value, simboloVar.posicion, simboloVar.posicionTemp, False, True, self.fila, self.columna)
+                simbolo = Simbolo(str(self.identificador), self.tipo, value, simboloVar.posicion, False, True, self.fila, self.columna)
                 resultGlobal = tree.getTSGlobal().actualizarTabla(simbolo) #Actualiza el simbolo al entorno global
                 if isinstance(resultGlobal, Excepcion):
                     return resultGlobal
@@ -60,12 +61,13 @@ class DeclaracionVar(Instruccion):
 
         #Creacion de C3D
         if self.tipo == Tipo.BANDERA:
-            self.addBoolean(simbolo.posicionTemp, simbolo.posicion, tree, generator)
+            self.addBoolean(newTemp, simbolo.posicion, tree, generator)
         elif self.tipo == Tipo.CADENA:
-            self.addCadena(value, simbolo.posicionTemp, simbolo.posicion, tree, generator)
+            self.addCadena(value, newTemp, simbolo.posicion, tree, generator)
         else:
-            tree.updateConsola(generator.newExpresion(simbolo.posicionTemp, 'P', str(simbolo.posicion), '+'))
-            tree.updateConsola(generator.newSetStack(simbolo.posicionTemp, str(value.getValor())))
+            valor = self.correctValue(value)
+            tree.updateConsola(generator.newExpresion(newTemp, 'P', str(simbolo.posicion), '+'))
+            tree.updateConsola(generator.newSetStack(newTemp, str(valor)))
 
         return None
         
@@ -82,19 +84,22 @@ class DeclaracionVar(Instruccion):
             tree.updateConsola(generator.newSetHeap('H', str(ord(char))))
             tree.updateConsola(generator.newNextHeap())
         tree.updateConsola(generator.newSetHeap('H', str(-1)))
-        if tamTable != None:
-            tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
+        tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, newTempH))
 
     def addBoolean(self, newTemp, tamTable, tree, generator):
         newLabel = generator.createLabel()
         tree.updateConsola(generator.newLabel(newLabel.trueLabel))
-        if tamTable != None:
-            tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
+        tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '1'))
         tree.updateConsola(generator.newGoto(newLabel))
         tree.updateConsola(generator.newLabel(newLabel.falseLabel))
-        if tamTable != None:
-            tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
+        tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '0'))
         tree.updateConsola(generator.newLabel(newLabel))
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()

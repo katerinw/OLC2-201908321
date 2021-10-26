@@ -198,7 +198,9 @@ from Expresiones.Primitivos.CharValue import CharValue
 from Expresiones.Aritmeticas.Potencia import Potencia
 from Instrucciones.Funciones.Imprimir import Imprimir
 from Expresiones.Aritmeticas.Division import Division
+from Instrucciones.Sentencias_Ciclicas.For import For
 from Expresiones.Primitivos.IntValue import IntValue
+from Instrucciones.Sentencias_Control.If import If
 from Expresiones.Aritmeticas.Modulo import Modulo
 from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
@@ -305,7 +307,7 @@ def p_expresion_double_negative(p):
 
 def p_expresion_nothing(p):
     'expresion : NOTHING'
-    p[0] = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = NothingValue('NULL', Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_expresion_identificador(p):
     'expresion : ID'
@@ -492,12 +494,12 @@ def p_lista_dimensione(p):
 #///////////////////////////////////////////////////////////DECLARACION DE VARIABLES LOCALES Y GLOBALES
 def p_declaracion_local(p):
     'declaracion_var_instr : LOCAL ID'
-    value = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
+    value = NothingValue('NULL', Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
     p[0] = DeclaracionVar(p[2], value, Tipo.NULO, True, False, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_declaracion_global(p):
     'declaracion_var_instr : GLOBAL ID'
-    value = NothingValue(None, Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
+    value = NothingValue('NULL', Tipo.NULO, p.lineno(1), find_column(input, p.slice[1]))
     p[0] = DeclaracionVar(p[2], value, Tipo.NULO, False, True, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////DECLARACION Y ASIGNACION DE VARIABLES LOCALES Y GLOBALES
@@ -589,12 +591,12 @@ def p_While(p):
 
 #///////////////////////////////////////////////////////////FOR
 def p_for_string(p): #Lo hace con strings y arreglos
-    'for_instr : FOR declaracion_var_instr IN expresion instrucciones END'
-    p[0] = ''
+    'for_instr : FOR ID IN expresion instrucciones END'
+    p[0] = For(p[2], p[4], None, p[5] ,p.lineno(1), find_column(input, p.slice[1]))
 
 def p_for_rango(p): #Lo hace con rango
-    'for_instr : FOR declaracion_var_instr IN expresion DOSPUNTOS expresion instrucciones END'
-    p[0] = ''
+    'for_instr : FOR ID IN expresion DOSPUNTOS expresion instrucciones END'
+    p[0] = For(p[2], p[4], p[6], p[7], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
 def p_sentencia_transferencia_return_expresion(p):
@@ -616,19 +618,19 @@ def p_sentencia_transferencia_continue(p):
 #///////////////////////////////////////////////////////////SENTENCIAS DE CONTROL
 def p_if(p):
     'if_instr : IF expresion instrucciones END'
-    p[0] = ''
+    p[0] = If(p[2], p[3], None, None, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_if_elseif_else(p):
     'if_instr : IF expresion instrucciones elseifs_instr ELSE instrucciones END'
-    p[0] = ''
+    p[0] = If(p[2], p[3], p[6], p[4], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_if_elseif(p):
     'if_instr : IF expresion instrucciones elseifs_instr END'
-    p[0] = ''
+    p[0] = If(p[2], p[3], None, p[4], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_if_else(p):
     'if_instr : IF expresion instrucciones ELSE instrucciones END'
-    p[0] = ''
+    p[0] = If(p[2], p[3], p[5], None, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_elseifs_elseifs_elseif(p):
     'elseifs_instr : elseifs_instr elseif_instr'
@@ -645,7 +647,7 @@ def p_elseifs_elseif(p):
 
 def p_elseif(p):
     'elseif_instr : ELSEIF expresion instrucciones'
-    p[0] = ''
+    p[0] = If(p[2], p[3], None, None, p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////STRUCTS
 def p_struct(p):
@@ -822,4 +824,11 @@ print(generator.getCode())
 #print(ast.getConsola())
 
 
-'''println(5+6+9+4+7+89+4+2+1+1+1+1+7);'''
+'''
+for i in 1:4
+	println(i);
+end;
+
+x = 0::Int64;
+x = x + 1;
+'''

@@ -16,7 +16,7 @@ class BooleanValue(Instruccion):
         if self.tipo != Tipo.BANDERA:
             return Excepcion("Semántico", "El valor no es tipo BOOLEAN", self.fila, self.columna)
         
-        newValue = Value(self.valor, self.tipo, False)
+        newValue = Value(self.valor, "", self.tipo, False)
 
         if self.trueLabel == None:
             self.trueLabel = generator.createLabel()

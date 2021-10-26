@@ -1,8 +1,9 @@
 from TS.Tipo import Tipo
 
 class Value:
-    def __init__(self, valor, tipo, isTemp):
+    def __init__(self, valor, temporal, tipo, isTemp):
         self.valor = valor
+        self.temporal = temporal
         self.tipo = tipo
         self.isTemp = isTemp
         self.trueLabel = None
@@ -13,6 +14,12 @@ class Value:
 
     def setValor(self, valor):
         self.valor = str(valor)
+
+    def getTemporal(self):
+        return self.temporal
+
+    def setTemporal(self, temporal):
+        self.temporal = str(temporal)
 
     def getTipo(self):
         return self.tipo

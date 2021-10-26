@@ -14,7 +14,7 @@ class NegativeValue(Instruccion):
         if self.tipo != Tipo.ENTERO and self.tipo != Tipo.DOBLE:
             return Excepcion("Semántico", "Los tipos de datos para el signo \"-\" no pueden ser negados", self.fila, self.columna)
         
-        return Value(str(-self.valor), self.tipo, False)
+        return Value(str(-self.valor), "", self.tipo, False)
 
     def getNode(self):
         return super().getNode()

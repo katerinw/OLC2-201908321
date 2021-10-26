@@ -40,7 +40,7 @@ class Or(Instruccion):
         self.tipo = Tipo.BANDERA
 
         valor = opIzq.getValor() or opDer.getValor()
-        newValue = Value(valor, self.tipo, False)
+        newValue = Value(valor, "", self.tipo, False)
 
         self.transferirLabelsTrue(opIzq.trueLabel)
         self.transferirLabelsTrue(opDer.trueLabel)

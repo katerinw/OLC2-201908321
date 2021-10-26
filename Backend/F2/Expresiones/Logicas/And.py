@@ -42,7 +42,7 @@ class And(Instruccion):
         self.tipo = Tipo.BANDERA
 
         valor = opIzq.getValor() and opDer.getValor()
-        newValue = Value(valor, self.tipo, False)
+        newValue = Value(valor, "", self.tipo, False)
 
         self.transferirLabelsTrue(opDer.trueLabel)
         self.transferirLabelsFalse(opIzq.falseLabel)

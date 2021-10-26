@@ -14,7 +14,7 @@ class StringValue(Instruccion):
         if self.tipo != Tipo.CADENA:
             return Excepcion("Semántico", "El valor no es tipo STRING", self.fila, self.columna)
 
-        return Value(str(self.valor), self.tipo, False)
+        return Value(str(self.valor), "", self.tipo, False)
 
     def getNode(self):
         return super().getNode()

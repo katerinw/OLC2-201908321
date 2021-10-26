@@ -1,10 +1,9 @@
 class Simbolo:
-    def __init__(self, identificador, tipo, valor, posicion, posicionTemp, local, globall, fila, columna):
+    def __init__(self, identificador, tipo, valor, posicion, local, globall, fila, columna):
         self.identificador = identificador
         self.tipo = tipo
         self.valor = valor
         self.posicion = posicion
-        self.posicionTemp = posicionTemp
         self.local = local
         self.globall = globall
         self.fila = fila

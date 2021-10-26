@@ -20,14 +20,16 @@ class Identificador(Instruccion):
 
         self.tipo = simbolo.getTipo()
 
-        newTemp = generator.createTemp()
+        newTempPosicion = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempPosicion, 'P', str(simbolo.posicion), '+'))
 
-        tree.updateConsola(generator.newGetStack(newTemp, str(simbolo.posicionTemp)))
+        newTemp = generator.createTemp()
+        tree.updateConsola(generator.newGetStack(newTemp, str(newTempPosicion)))
 
         if simbolo.tipo != Tipo.BANDERA:
-            return Value(newTemp, simbolo.getTipo(), True)
+            return Value(simbolo.getValor().getValor(), newTemp, simbolo.getTipo(), True)
         else:
-            value = Value(simbolo.getValor().getValor(), Tipo.BANDERA, False)
+            value = Value(simbolo.getValor().getValor(), simbolo.getValor().getTemporal(), Tipo.BANDERA, False)
             self.agregarLabel()
 
             generator.addIf(newTemp, '1', '==', self.trueLabel)
@@ -38,7 +40,7 @@ class Identificador(Instruccion):
 
             return value
 
-
+#JAJAJA NO SE QUE HACER PQ AAAAM QUIERO TENER EL VALOR NO EL TEMPORAL JEJE
 
  
     def getNode(self):

@@ -1,4 +1,5 @@
 from Expresiones.Relacionales.Diferente import Diferente
+from Expresiones.Primitivos.Temporal import Temporal
 from Expresiones.Primitivos.IntValue import IntValue
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
@@ -24,7 +25,7 @@ class Division(Instruccion):
 
         newTemp = generator.createTemp()
 
-        return self.dividir(opIzq.getValor(), opDer.getValor(), newTemp, tree, table, generator)
+        return self.dividir(opIzq, opDer, newTemp, tree, table, generator)
 
     def getNode(self):
         return super().getNode()
@@ -32,7 +33,7 @@ class Division(Instruccion):
     def dividir(self, opIzq, opDer, newTemp, tree, table, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            self.tipo = Tipo.ENTERO
+            self.tipo = Tipo.DOBLE
             return self.returnValue(opIzq, opDer, newTemp, tree, table, generator)
             
         #DOUBLE
@@ -48,15 +49,29 @@ class Division(Instruccion):
 
 
     def returnValue(self, opIzq, opDer, newTemp, tree, table, generator):
-        trueIns = generator.newExpresion(newTemp, str(opIzq), str(opDer), "/")
+        valIzq = self.correctValue(opIzq)
+        valDer = self.correctValue(opDer)
+
+        trueIns = generator.newExpresion(newTemp, "float64("+str(valIzq)+")", "float64("+str(valDer)+")", "/")
         falseIns = generator.newCallFunc('print_math_error_armc')  
 
         cero = IntValue(0, Tipo.ENTERO, self.fila, self.columna)
-        diferente = Diferente(self.opDer, cero, self.fila, self.columna)
-        result = diferente.interpretar(tree, table, generator)
-        if isinstance(result, Excepcion):
-            return result
-        
+        val = Temporal(opDer, self.fila, self.columna)
+        diferente = Diferente(val, cero, self.fila, self.columna).interpretar(tree, table, generator)
+        if isinstance(diferente, Excepcion):
+            return diferente
+
+        valor = 'NULL'
+        if opDer.getValor() != 0:
+            valor = opIzq.getValor()/opDer.getValor()
+
         tree.updateConsola(generator.newOpRelacional(diferente, trueIns, falseIns))
-        newValue = Value(newTemp, self.tipo, True)
+        newValue = Value(valor, newTemp, self.tipo, True)
         return newValue
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()
+ 

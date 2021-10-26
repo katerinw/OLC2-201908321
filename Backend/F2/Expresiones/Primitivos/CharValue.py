@@ -14,7 +14,7 @@ class CharValue(Instruccion):
         if self.tipo != Tipo.CARACTER:
             return Excepcion("Semántico", "El valor no es tipo CHAR", self.fila, self.columna)
 
-        return Value(str(self.valor), self.tipo, False)
+        return Value(str(ord(self.valor)), "", self.tipo, False)
 
     def getNode(self):
         return super().getNode()

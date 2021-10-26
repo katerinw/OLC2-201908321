@@ -14,7 +14,7 @@ class NothingValue(Instruccion):
         if self.tipo != Tipo.NULO:
             return Excepcion("Semántico", "El valor no es tipo NOTHING", self.fila, self.columna)
 
-        return Value(str(self.valor), self.tipo, False)
+        return Value(str(self.valor), "", self.tipo, False)
 
     def getNode(self):
         return super().getNode()

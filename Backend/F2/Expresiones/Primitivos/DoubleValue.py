@@ -14,7 +14,7 @@ class DoubleValue(Instruccion):
         if self.tipo != Tipo.DOBLE:
             return Excepcion("Semántico", "El valor no es tipo DOUBLE", self.fila, self.columna)
 
-        return Value(str(self.valor), self.tipo, False)
+        return Value(self.valor, "", self.tipo, False)
 
     def getNode(self):
         return super().getNode()

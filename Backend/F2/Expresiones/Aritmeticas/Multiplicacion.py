@@ -22,30 +22,35 @@ class Multiplicacion(Instruccion):
 
         newTemp = generator.createTemp()
 
-        return self.multiplicar(opIzq.getValor(), opDer.getValor(), newTemp, tree, generator)
+        return self.multiplicar(opIzq, opDer, newTemp, tree, generator)
 
     def getNode(self):
         return super().getNode()
 
     def multiplicar(self, opIzq, opDer, newTemp, tree, generator):
+        valIzq = self.correctValue(opIzq)
+        valDer = self.correctValue(opDer)
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
-            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "*"))
+            tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "*"))
             self.tipo = Tipo.ENTERO
-            newValue = Value(newTemp, self.tipo, True)
+            valor = opIzq.getValor()*opDer.getValor()
+            newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
-            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "*"))
+            tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "*"))
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
+            valor = opIzq.getValor()*opDer.getValor()
+            newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO or self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE:
-            tree.updateConsola(generator.newExpresion(newTemp, str(opIzq), str(opDer), "*"))
+            tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "*"))
             self.tipo = Tipo.DOBLE
-            newValue = Value(newTemp, self.tipo, True)
+            valor = opIzq.getValor()*opDer.getValor()
+            newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 
         #STRING
@@ -53,3 +58,9 @@ class Multiplicacion(Instruccion):
             self.tipo = Tipo.CADENA
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"*\" no pueden ser operados", self.fila, self.columna)
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()
