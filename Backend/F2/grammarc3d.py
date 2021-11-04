@@ -2,6 +2,7 @@
 
 import re
 import sys
+from typing import get_origin
 sys.setrecursionlimit(3000)
 
 #LISTA DE ERRORES
@@ -182,6 +183,7 @@ lexer = lex.lex(reflags = re.VERBOSE)
 #Importaciones
 from Instrucciones.Asignacion_Declaracion_Variables.DeclaracionVar import DeclaracionVar
 from Instrucciones.Asignacion_Declaracion_Variables.AsignacionVar import AsignacionVar
+from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
 from Expresiones.Aritmeticas.Multiplicacion import Multiplicacion
 from Expresiones.Primitivos.NegativeValue import NegativeValue
 from Expresiones.Primitivos.Identificador import Identificador
@@ -200,12 +202,14 @@ from Instrucciones.Funciones.Imprimir import Imprimir
 from Expresiones.Aritmeticas.Division import Division
 from Instrucciones.Sentencias_Ciclicas.For import For
 from Expresiones.Primitivos.IntValue import IntValue
+from Instrucciones.Funciones.Funcion import Funcion
 from Instrucciones.Sentencias_Control.If import If
 from Expresiones.Aritmeticas.Modulo import Modulo
 from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
 from Expresiones.Aritmeticas.Suma import Suma
+from Nativas.PrintString import PrintString
 from Expresiones.Logicas.And import And
 from Expresiones.Logicas.Not import Not
 from Expresiones.Logicas.Or import Or
@@ -252,8 +256,7 @@ def p_instrucciones_instruccion(p):
 
 #///////////////////////////////////////////////////////////INSTRUCCION
 def p_instruccion(p):
-    '''instruccion : llamada_funcion_struct_instr fininstr 
-                   | declaracion_var_instr fininstr
+    '''instruccion : declaracion_var_instr fininstr
                    | llamada_funcion_instr fininstr
                    | modificacion_struct fininstr
                    | modificar_arreglo fininstr
@@ -376,9 +379,9 @@ def p_expresion_llamada_funcion(p):
     'expresion : llamada_funcion_instr'
     p[0] = p[1]
 
-def p_expresion_llamada_funcion_struct(p):
-    'expresion : llamada_funcion_struct_instr'
-    p[0] = p[1]
+#def p_expresion_llamada_funcion_struct(p):
+#    'expresion : llamada_funcion_struct_instr'
+#    p[0] = p[1]
 
 def p_lista_expresiones(p):
     'expresion : CORCHETEA expresiones_coma CORCHETEC'
@@ -567,22 +570,22 @@ def p_parametro(p):
 #///////////////////////////////////////////////////////////LLAMADA FUNCION
 def p_llamada_funcion(p):
     'llamada_funcion_instr : ID PARENTESISA PARENTESISC'
-    p[0] = ''
+    p[0] = LlamadaFuncion(p[1], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////LLAMADA FUNCION / LLAMADA STRUCT
-def p_llamada_funcion_parametros(p):
-    'llamada_funcion_struct_instr : ID PARENTESISA parametros_llamada PARENTESISC'
-    p[0] = ''
+#def p_llamada_funcion_parametros(p):
+#    'llamada_funcion_struct_instr : ID PARENTESISA parametros_llamada PARENTESISC'
+#    p[0] = ''
     
 #///////////////////////////////////////////////////////////PARAMETOS LLAMADA FUNCION
-def p_parametros_llamada_funcion(p):
-    'parametros_llamada : parametros_llamada COMA expresion '
-    p[1].append(p[3])
-    p[0] = p[1]
+#def p_parametros_llamada_funcion(p):
+#    'parametros_llamada : parametros_llamada COMA expresion '
+#    p[1].append(p[3])
+#    p[0] = p[1]
 
-def p_parametros_llamada_expresion(p):
-    'parametros_llamada : expresion'
-    p[0] = [p[1]]
+#def p_parametros_llamada_expresion(p):
+#    'parametros_llamada : expresion'
+#    p[0] = [p[1]]
 
 #///////////////////////////////////////////////////////////WHILE
 def p_While(p):
@@ -703,80 +706,15 @@ input = ''
 
 def getErrores():
     return errores 
-'''
+
 def crearNativas(ast): #Creacion y declaracion de funciones nativas
-    identificador = 'cos'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Cos$$Parametros123'}]
+    identificador = 'Print_String_armc'
+    parametros = [{'tipo': Tipo.CADENA, 'dimensiones': None, 'identificador': 'Print_String_armc'}]
     instrucciones = []
-    cos = Cos(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(cos)
+    printstring = PrintString(identificador, instrucciones, -1, -1)
+    ast.addFuncion(printstring)
 
-    identificador = 'float'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'Float$$Parametros123'}]
-    instrucciones = []
-    float = Float(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(float)
-
-    identificador = "length"
-    parametros = [{'tipo': Tipo.ARREGLO, 'dimensiones': None, 'identificador': 'Length$$Parametros123'}] 
-    instrucciones = []
-    length = Length(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(length)
-
-    identificador = 'log'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log$$Parametros123'}, {'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log$$Parametros456'}]
-    instrucciones = []
-    log = Log(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(log)
-
-    identificador = 'log10'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Log10$$Parametros123'}]
-    instrucciones = []
-    log10 = Log10(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(log10)
-
-    identificador = 'lowercase'
-    parametros = [{'tipo': Tipo.CADENA, 'dimensiones': None, 'identificador': 'Lower$$Parametros123'}]
-    instrucciones = []
-    lowercase = Lower(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(lowercase)
-
-    identificador = 'sin'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Sin$$Parametros123'}]
-    instrucciones = []
-    sin = Sin(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(sin)
-
-    identificador = 'sqrt'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Sqrt$$Parametros123'}]
-    instrucciones = []
-    sqrt = Sqrt(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(sqrt)  
-
-    identificador = 'tan'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'Tan$$Parametros123'}]
-    instrucciones = []
-    tan = Tan(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(tan)
-
-    identificador = 'trunc'
-    parametros = [{'tipo': Tipo.DOBLE, 'dimensiones': [], 'identificador': 'Trunc$$Parametros123'}]
-    instrucciones = []
-    trunc = Trunc(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(trunc)
-
-    identificador = 'typeof'
-    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': [], 'identificador': 'TypeOf$$Parametros123'}]
-    instrucciones = []
-    typeof = Typeof(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(typeof)
     
-    identificador = 'uppercase'
-    parametros = [{'tipo': Tipo.CADENA, 'dimensiones': [], 'identificador': 'Upper$$Parametros123'}]
-    instrucciones = []
-    uppercase = Upper(identificador, parametros, instrucciones, -1, -1)
-    ast.addFuncion(uppercase)
-'''
 
 def parse(inp):
     global errores 
@@ -801,8 +739,22 @@ instrucciones = parse(entrada) #ARBOL AST
 ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos('global')
 ast.setTSGlobal(TSGlobal)
-generator = Generador()
-#crearNativas(ast)
+label = 0
+temporal = 0
+indices = {'temporal' : 0, 'label' : 0}
+generator = Generador(indices)
+generatorFunction = Generador(indices)
+crearNativas(ast)
+
+for func in ast.getFunciones():
+    valor = func.interpretar(ast, TSGlobal, generatorFunction)
+    if isinstance(valor, Excepcion):
+        ast.getExcepciones().append(valor)
+        ast.setConsola('')
+    else:
+        generatorFunction.addInstruction(ast.getConsola())
+        ast.setConsola('')
+
 
 for error in errores: #Captura de errores lexicos y sintacticos 
     ast.getExcepciones().append(error)
@@ -810,17 +762,26 @@ for error in errores: #Captura de errores lexicos y sintacticos
 
 
 for instruccion in ast.getInstrucciones():
-    valor = instruccion.interpretar(ast, TSGlobal, generator)
+    if isinstance(instruccion, Funcion):
+        ast.addFuncion(instruccion)
+    elif isinstance(instruccion, LlamadaFuncion):
+        valor = instruccion.interpretar(ast, TSGlobal, generatorFunction)
+    else:
+        valor = instruccion.interpretar(ast, TSGlobal, generator)
     if isinstance(valor, Excepcion):
         ast.getExcepciones().append(valor)
         #ast.updateConsolaln(valor.toString())
         ast.setConsola('')
     else:
-        generator.addInstruction(ast.getConsola())
-        ast.setConsola('')
+        if isinstance(instruccion, LlamadaFuncion):
+            generatorFunction.addInstruction(ast.getConsola())
+            ast.setConsola('')
+        else:
+            generator.addInstruction(ast.getConsola())
+            ast.setConsola('')
 
 
-print(generator.getCode())
+print(generator.getCode(generatorFunction))
 #print(ast.getConsola())
 
 

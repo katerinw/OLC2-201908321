@@ -1,16 +1,19 @@
 from Generador.Nativas import *
 
 class Generador:
-    def __init__(self):
+    def __init__(self, indices):
         self.generador = None
+        self.indices = indices
         self.temporal = 0
-        self.label = 0
+        self.label = 0 
         self.codigo = []
         self.listaTemporales = []
 
     def createTemp(self): #Generar un nuevo temporal
+        self.temporal = self.indices['temporal']
         temporal = 't' + str(self.temporal)
         self.temporal += 1
+        self.indices['temporal'] = self.temporal
         self.listaTemporales.append(temporal) #Se guarda para declararse
         return temporal
 
@@ -22,8 +25,10 @@ class Generador:
 
 #---------------------------------------------------------LABELS---------------------------------------------------------
     def createLabel(self):
+        self.label = self.indices['label']
         label  = 'L' + str(self.label)
         self.label += 1
+        self.indices['label'] = self.label
         return label
 
     def addLabel(self, label):
@@ -161,14 +166,24 @@ class Generador:
     def newBackStack(self, index:str): #Se mueve hacia la posicion anterior del stack
         return "P = P - " + index + ";\n"
 
+    def newSimulateNextStack(self,target, index:str): #Se mueve hacia la posicion siguiente del stack de forma simulada
+        return target +" = P + " + index + ";\n"
+
+    def addSimulateNextStack(self,target, index:str): #Se mueve hacia la posicion siguiente del stack de forma simulada
+        self.codigo.append(target +" = P + " + index + ";\n")
+
 #---------------------------------------------------------GENERAR CODIGO---------------------------------------------------------
-    def getCode(self):
+    def getCode(self, functionsCode):
         tempCode = 'package main\n'
         tempCode += 'import ("fmt")\n'
         tempCode += 'var stack[30101999]float64;\n'
         tempCode += 'var heap[30101999]float64;\n'
         tempCode += 'var P, H float64;\n'
         tempCode += 'var '
+
+        if len(functionsCode.listaTemporales) > 0:
+            tempCode += functionsCode.getUsedTemps()
+        tempCode += ','
         if len(self.listaTemporales) > 0:
             tempCode += self.getUsedTemps()
         tempCode += ' float64; \n\n'
@@ -176,11 +191,13 @@ class Generador:
         tempCode += addFalse()
         tempCode += addMathError()
         tempCode += addBoundsError()
-        tempCode += 'func main(){\n'
+        tempCode += "\n".join(functionsCode.codigo)
+        tempCode += '\n\nfunc main(){\n'
         tempCode += "\n".join(self.codigo)
         tempCode += '}\n'
 
         return tempCode 
+
 
     def getUsedTemps(self):
         return ",".join(self.listaTemporales)

@@ -1,6 +1,7 @@
 from Instrucciones.Sentencias_Transferencia.Continue import Continue
 from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
+from Expresiones.Aritmeticas.Suma import Suma
 from Abstract.Instruccion import Instruccion
 from TS.TablaSimbolos import TablaSimbolos
 from TS.Excepcion import Excepcion

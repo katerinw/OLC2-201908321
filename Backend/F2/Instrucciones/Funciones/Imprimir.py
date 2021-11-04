@@ -43,7 +43,21 @@ class Imprimir(Instruccion):
             tree.updateConsola(generator.newPrint("c", str(valor)))
         
         elif tempValor.tipo == Tipo.CADENA:
-            pass
+            newTempUno = generator.createTemp()
+            tree.updateConsola(generator.newSimulateNextStack(newTempUno, str(table.size)))
+
+            newTempDos = generator.createTemp()
+            tree.updateConsola(generator.newExpresion(newTempDos, newTempUno, '1', '+'))
+
+            tree.updateConsola(generator.newSetStack(newTempDos, str(valor)))
+
+            tree.updateConsola(generator.newNextStack(str(table.size)))
+            tree.updateConsola(generator.newCallFunc('Print_String_armc'))
+
+            newTempTres = generator.createTemp()
+            tree.updateConsola(generator.newGetStack(newTempTres, 'P'))
+
+            tree.updateConsola(generator.newBackStack(str(table.size)))
 
         elif tempValor.tipo == Tipo.BANDERA:
             trueIns = generator.newCallFunc('print_true_armc')
