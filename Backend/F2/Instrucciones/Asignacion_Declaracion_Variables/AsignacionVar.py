@@ -67,7 +67,8 @@ class AsignacionVar(Instruccion):
             if self.tipo == Tipo.BANDERA:
                 self.addBoolean(newTemp, tamTable, tree, generator)
             elif self.tipo == Tipo.CADENA:
-                self.addCadena(value, newTemp, tamTable, tree, generator)
+                pass
+                #self.addCadena(value, newTemp, tamTable, tree, generator)
             else:
                 valor = self.correctValue(value)
                 tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))

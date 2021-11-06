@@ -39,7 +39,7 @@ class Generador:
 
 #---------------------------------------------------------FUNCIONES---------------------------------------------------------
     def addCallFunc(self, nombre):
-        self.codigo.append(nombre+"();")
+        self.codigo.append(nombre+"();\n")
 
     def newCallFunc(self, nombre):
         return nombre+"();\n"

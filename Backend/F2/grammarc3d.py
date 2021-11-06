@@ -2,7 +2,6 @@
 
 import re
 import sys
-from typing import get_origin
 sys.setrecursionlimit(3000)
 
 #LISTA DE ERRORES
@@ -183,10 +182,13 @@ lexer = lex.lex(reflags = re.VERBOSE)
 #Importaciones
 from Instrucciones.Asignacion_Declaracion_Variables.DeclaracionVar import DeclaracionVar
 from Instrucciones.Asignacion_Declaracion_Variables.AsignacionVar import AsignacionVar
+from Instrucciones.Sentencias_Transferencia.Continue import Continue
 from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
 from Expresiones.Aritmeticas.Multiplicacion import Multiplicacion
+from Instrucciones.Sentencias_Transferencia.Return import Return
 from Expresiones.Primitivos.NegativeValue import NegativeValue
 from Expresiones.Primitivos.Identificador import Identificador
+from Instrucciones.Sentencias_Transferencia.Break import Break
 from Expresiones.Primitivos.BooleanValue import BooleanValue
 from Expresiones.Primitivos.NothingValue import NothingValue
 from Expresiones.Relacionales.IgualIgual import IgualIgual
@@ -256,7 +258,8 @@ def p_instrucciones_instruccion(p):
 
 #///////////////////////////////////////////////////////////INSTRUCCION
 def p_instruccion(p):
-    '''instruccion : declaracion_var_instr fininstr
+    '''instruccion : llamada_funcion_struct_instr fininstr 
+                   | declaracion_var_instr fininstr
                    | llamada_funcion_instr fininstr
                    | modificacion_struct fininstr
                    | modificar_arreglo fininstr
@@ -542,11 +545,11 @@ def p_imprimirln_expresiones_coma(p):
 #///////////////////////////////////////////////////////////FUNCIONES
 def p_funciones(p):
     'funciones_instr : FUNCTION ID PARENTESISA PARENTESISC instrucciones END'
-    p[0] = ''
+    p[0] = Funcion(p[2], [], p[5], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_funciones_parametros(p):
     'funciones_instr : FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END'
-    p[0] = ''
+    p[0] = Funcion(p[2], p[4], p[6], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////PARAMETROS DE FUNCION
 def p_parametros_funcion(p):
@@ -570,22 +573,22 @@ def p_parametro(p):
 #///////////////////////////////////////////////////////////LLAMADA FUNCION
 def p_llamada_funcion(p):
     'llamada_funcion_instr : ID PARENTESISA PARENTESISC'
-    p[0] = LlamadaFuncion(p[1], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = LlamadaFuncion(p[1], [], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////LLAMADA FUNCION / LLAMADA STRUCT
-#def p_llamada_funcion_parametros(p):
-#    'llamada_funcion_struct_instr : ID PARENTESISA parametros_llamada PARENTESISC'
-#    p[0] = ''
+def p_llamada_funcion_parametros(p):
+    'llamada_funcion_struct_instr : ID PARENTESISA parametros_llamada PARENTESISC'
+    p[0] = LlamadaFuncion(p[1], p[3], p.lineno(1), find_column(input, p.slice[1]))
     
 #///////////////////////////////////////////////////////////PARAMETOS LLAMADA FUNCION
-#def p_parametros_llamada_funcion(p):
-#    'parametros_llamada : parametros_llamada COMA expresion '
-#    p[1].append(p[3])
-#    p[0] = p[1]
+def p_parametros_llamada_funcion(p):
+    'parametros_llamada : parametros_llamada COMA expresion '
+    p[1].append(p[3])
+    p[0] = p[1]
 
-#def p_parametros_llamada_expresion(p):
-#    'parametros_llamada : expresion'
-#    p[0] = [p[1]]
+def p_parametros_llamada_expresion(p):
+    'parametros_llamada : expresion'
+    p[0] = [p[1]]
 
 #///////////////////////////////////////////////////////////WHILE
 def p_While(p):
@@ -604,19 +607,19 @@ def p_for_rango(p): #Lo hace con rango
 #///////////////////////////////////////////////////////////SENTENCIAS DE TRANSFERENCIA
 def p_sentencia_transferencia_return_expresion(p):
     'return_instr : RETURN expresion'
-    p[0] = ''
+    p[0] = Return(p[2], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_return(p):
     'return_instr : RETURN'
-    p[0] = ''
+    p[0] = Return(None, p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_break(p):
     'break_instr : BREAK'
-    p[0] = ''
+    p[0] = Break(p.lineno(1), find_column(input, p.slice[1]))
 
 def p_sentencia_transferencia_continue(p):
     'continue_instr : CONTINUE'
-    p[0] = ''
+    p[0] = Continue(p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////SENTENCIAS DE CONTROL
 def p_if(p):
@@ -711,7 +714,7 @@ def crearNativas(ast): #Creacion y declaracion de funciones nativas
     identificador = 'Print_String_armc'
     parametros = [{'tipo': Tipo.CADENA, 'dimensiones': None, 'identificador': 'Print_String_armc'}]
     instrucciones = []
-    printstring = PrintString(identificador, instrucciones, -1, -1)
+    printstring = PrintString(identificador, parametros, instrucciones, -1, -1)
     ast.addFuncion(printstring)
 
     
@@ -764,16 +767,14 @@ for error in errores: #Captura de errores lexicos y sintacticos
 for instruccion in ast.getInstrucciones():
     if isinstance(instruccion, Funcion):
         ast.addFuncion(instruccion)
-    elif isinstance(instruccion, LlamadaFuncion):
         valor = instruccion.interpretar(ast, TSGlobal, generatorFunction)
     else:
         valor = instruccion.interpretar(ast, TSGlobal, generator)
     if isinstance(valor, Excepcion):
         ast.getExcepciones().append(valor)
-        #ast.updateConsolaln(valor.toString())
         ast.setConsola('')
     else:
-        if isinstance(instruccion, LlamadaFuncion):
+        if isinstance(instruccion, Funcion):
             generatorFunction.addInstruction(ast.getConsola())
             ast.setConsola('')
         else:

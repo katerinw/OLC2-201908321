@@ -1,2 +1,13 @@
-a = "Hola"::String;
-println(a);
+a = 9::Int64;
+function suma(num1::Int64, num2::Int64)
+    println(num1 + num2);
+    h = 8::Int64;
+    b = 'c'::Char;
+    d = 9.9::Float64;
+    return 9;
+end;
+
+suma(a,5);
+suma(10,13);
+
+

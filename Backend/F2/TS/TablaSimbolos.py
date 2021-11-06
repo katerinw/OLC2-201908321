@@ -4,6 +4,7 @@ class TablaSimbolos:
         self.owner = owner
         self.anterior = anterior
         self.size = 0
+        self.ownSize = 0
 
         if anterior != None:
             self.size = anterior.size
@@ -14,7 +15,11 @@ class TablaSimbolos:
         else:
             self.tabla[simbolo.identificador] = simbolo
             self.size += 1
+            self.ownSize += 1
             return None
+
+    def changeOwnSize(self, tam):
+        self.ownSize += tam
 
     def getTabla(self, identificador):
         tablaActual = self
