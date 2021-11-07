@@ -20,6 +20,7 @@ class Funcion(Instruccion):
         self.tipo = Tipo.NULO
 
     def interpretar(self, tree, table, generator):
+
         nuevaTabla = TablaSimbolos('function', table)
 
         tamanoTabla = nuevaTabla.size  #Guardando el valor del tamano de todos los entornos
@@ -37,7 +38,7 @@ class Funcion(Instruccion):
             if isinstance(resultTable, Excepcion):
                 return resultTable
 
-        
+        existeReturn = False
         for instruccion in self.instrucciones:
             value = instruccion.interpretar(tree, nuevaTabla, generator) #Devuelve el nodo del resultado de la funcion si es un return
             if isinstance(value, Excepcion):
@@ -52,12 +53,13 @@ class Funcion(Instruccion):
                 tree.getExcepciones().append(err)
                 tree.updateConsolaln(err.toString())
             if isinstance(value, Return):
-                self.tipo = Tipo.ENTERO
+                self.tipo = value.tipo
+                existeReturn = True
                 nuevaTabla.changeOwnSize(1) #Aumenta el tamano del entorno con el return
-                #self.tipo = value.tipo
-                #return value.result
-        
-        self.tipo = Tipo.NULO
+
+        if not(existeReturn):
+            tree.updateConsola(generator.newReturn())
+
         tree.updateConsolaln("}")
 
         nuevaTabla.size = tamanoTabla #Regresando el valor de la tabla a su valor actual

@@ -26,13 +26,10 @@ class StringValue(Instruccion):
     def getNode(self):
         return super().getNode()
 
-    def addCadena(self, value, newTemp, tamTable, tree, generator):
-        newTempH = generator.createTemp()
+    def addCadena(self, value, newTempH, tamTable, tree, generator):
         tree.updateConsola(generator.newAsigTemp(newTempH, 'H'))
         for char in value.getValor():
             tree.updateConsola(generator.newSetHeap('H', str(ord(char))))
             tree.updateConsola(generator.newNextHeap())
         tree.updateConsola(generator.newSetHeap('H', str(-1)))
         tree.updateConsola(generator.newNextHeap())
-        tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
-        tree.updateConsola(generator.newSetStack(newTemp, newTempH))

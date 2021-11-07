@@ -67,8 +67,8 @@ class AsignacionVar(Instruccion):
             if self.tipo == Tipo.BANDERA:
                 self.addBoolean(newTemp, tamTable, tree, generator)
             elif self.tipo == Tipo.CADENA:
-                pass
-                #self.addCadena(value, newTemp, tamTable, tree, generator)
+                valor = self.correctValue(value)
+                self.addCadena(valor, newTemp, tamTable, tree, generator)
             else:
                 valor = self.correctValue(value)
                 tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
@@ -81,14 +81,8 @@ class AsignacionVar(Instruccion):
 
 
     def addCadena(self, value, newTemp, tamTable, tree, generator):
-        newTempH = generator.createTemp()
-        tree.updateConsola(generator.newAsigTemp(newTempH, 'H'))
-        for char in value.getValor():
-            tree.updateConsola(generator.newSetHeap('H', str(ord(char))))
-            tree.updateConsola(generator.newNextHeap())
-        tree.updateConsola(generator.newSetHeap('H', str(-1)))
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
-        tree.updateConsola(generator.newSetStack(newTemp, newTempH))
+        tree.updateConsola(generator.newSetStack(newTemp, str(value)))
 
     def addBoolean(self, newTemp, tamTable, tree, generator):
         newLabel = generator.createLabel()

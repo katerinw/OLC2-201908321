@@ -44,6 +44,12 @@ class Generador:
     def newCallFunc(self, nombre):
         return nombre+"();\n"
 
+    def addReturn(self):
+        self.codigo.append("return;\n")
+
+    def newReturn(self):
+        return "return;\n"
+
 #---------------------------------------------------------ANY---------------------------------------------------------
     def addInstruction(self, instruction):
         self.codigo.append(instruction)

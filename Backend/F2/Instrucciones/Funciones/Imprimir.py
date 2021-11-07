@@ -13,7 +13,9 @@ class Imprimir(Instruccion):
     def interpretar(self, tree, table, generator):
         if isinstance(self.expresiones, list): 
             for expresion in self.expresiones:
-                self.print(expresion, tree, table, generator)
+                result = self.print(expresion, tree, table, generator)
+                if isinstance(result, Excepcion):
+                    return result
 
         else:
             tree.updateConsola(generator.newPrint("c", '00'))
@@ -33,42 +35,37 @@ class Imprimir(Instruccion):
 
         valor = self.correctValue(tempValor)
 
-        if tempValor.tipo == Tipo.ENTERO:     
+        if tempValor.getTipo() == Tipo.ENTERO:  #Imprime enteros
             tree.updateConsola(generator.newPrint("d", "int(" + str(valor) + ")"))
             
         elif tempValor.tipo == Tipo.DOBLE:
             tree.updateConsola(generator.newPrint("f", str(valor)))
 
-        elif tempValor.tipo == Tipo.CARACTER:
+        elif tempValor.tipo == Tipo.CARACTER:                   #Imprime caracteres
             tree.updateConsola(generator.newPrint("c", str(valor)))
         
-        elif tempValor.tipo == Tipo.CADENA:
-            newTempUno = generator.createTemp()
-            tree.updateConsola(generator.newSimulateNextStack(newTempUno, str(table.size)))
+        elif tempValor.tipo == Tipo.CADENA:                     #Imprime strings 
+            self.printString(valor, tree, table, generator)
 
-            newTempDos = generator.createTemp()
-            tree.updateConsola(generator.newExpresion(newTempDos, newTempUno, '1', '+'))
-
-            tree.updateConsola(generator.newSetStack(newTempDos, str(valor)))
-
-            tree.updateConsola(generator.newNextStack(str(table.size)))
-            tree.updateConsola(generator.newCallFunc('Print_String_armc'))
-
-            newTempTres = generator.createTemp()
-            tree.updateConsola(generator.newGetStack(newTempTres, 'P'))
-
-            tree.updateConsola(generator.newBackStack(str(table.size)))
-
-        elif tempValor.tipo == Tipo.BANDERA:
+        elif tempValor.tipo == Tipo.BANDERA:                    #Imprime booleans
             trueIns = generator.newCallFunc('print_true_armc')
             falseIns = generator.newCallFunc('print_false_armc')
             tree.updateConsola(generator.newOpRelacional(tempValor, trueIns, falseIns))
-        elif tempValor.tipo == Tipo.CADENA:
-            tree.updateConsola(generator.newPrint("c", str(valor)))
             
         else:
-            print("ERROR")
+            return Excepcion("Semántico", "No se puede imprimir una variable " + str(tempValor.getTipo()), self.fila, self.columna)
 
+    def printString(self, valor, tree, table, generator):
+        newTempCambioSimulado = generator.createTemp()                                             
+        tree.updateConsola(generator.newSimulateNextStack(newTempCambioSimulado, str(table.size))) #Cambio simulado de entorno
+        newTempGuardarParam = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempGuardarParam, newTempCambioSimulado, '1', '+'))
+        tree.updateConsola(generator.newSetStack(newTempGuardarParam, str(valor)))
+        tree.updateConsola(generator.newNextStack(str(table.size))) #Cambio de entorno real
+        tree.updateConsola(generator.newCallFunc('Print_String_armc')) #Llamada de funcion
+        tree.updateConsola(generator.newBackStack(str(table.size))) #Regreso de ambito
+
+    
     def correctValue(self, valor):
         if valor.isTemp:
             return valor.getTemporal()

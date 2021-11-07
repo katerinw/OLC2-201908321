@@ -1,0 +1,125 @@
+package main
+import ("fmt")
+var stack[30101999]float64;
+var heap[30101999]float64;
+var P, H float64;
+var t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24,t25,t26,t27,t28,t29,t30,t31,t32,t33,t34 float64; 
+
+func print_true_armc(){
+fmt.Printf("%c",116);
+fmt.Printf("%c",114);
+fmt.Printf("%c",117);
+fmt.Printf("%c",101);
+}
+
+func print_false_armc(){
+fmt.Printf("%c",102);
+fmt.Printf("%c",97);
+fmt.Printf("%c",108);
+fmt.Printf("%c",115);
+fmt.Printf("%c",101);
+}
+
+func print_math_error_armc(){
+fmt.Printf("%c",77);
+fmt.Printf("%c",97);
+fmt.Printf("%c",116);
+fmt.Printf("%c",104);
+fmt.Printf("%c",69);
+fmt.Printf("%c",114);
+fmt.Printf("%c",114);
+fmt.Printf("%c",111);
+fmt.Printf("%c",114);
+fmt.Printf("%c",10);
+}
+
+func print_bounds_error_armc(){
+fmt.Printf("%c",66);
+fmt.Printf("%c",111);
+fmt.Printf("%c",117);
+fmt.Printf("%c",110);
+fmt.Printf("%c",100);
+fmt.Printf("%c",115);
+fmt.Printf("%c",69);
+fmt.Printf("%c",114);
+fmt.Printf("%c",114);
+fmt.Printf("%c",111);
+fmt.Printf("%c",114);
+fmt.Printf("%c",10);
+}
+
+func Print_String_armc(){
+t0 = P + 1;
+t1 = stack[int(t0)];
+L0:
+t2 = heap[int(t1)];
+if(t2 != -1) {goto L1;}
+goto L2;
+L1:
+fmt.Printf("%c",int(t2));
+t1 = t1 + 1;
+goto L0;
+L2:
+return;
+}
+
+func Potencia_armc(){
+t3 = P + 3;
+stack[int(t3)] = 0;
+t4 = P + 4;
+stack[int(t4)] = 1;
+L3:
+t5 = P + 3;
+t6 = stack[int(t5)];
+t7 = P + 2;
+t8 = stack[int(t7)];
+if(t6 < t8) {goto L4;}
+goto L5;
+L4:
+t9 = P + 4;
+t10 = stack[int(t9)];
+t11 = P + 1;
+t12 = stack[int(t11)];
+t13 = t10 * t12;
+t14 = P + 4;
+stack[int(t14)] = t13;
+t15 = P + 3;
+t16 = stack[int(t15)];
+t17 = t16 + 1;
+t18 = P + 3;
+stack[int(t18)] = t17;
+goto L3;
+L5:
+t19 = P + 4;
+t20 = stack[int(t19)];
+t21 = P + 0;
+stack[int(t21)] = t20;
+return;
+}
+
+func main(){
+t22 = P + 0;
+stack[int(t22)] = 5;
+
+t23 = P + 0;
+t24 = stack[int(t23)];
+t25 = P + 0;
+t26 = stack[int(t25)];
+t28 = P + 1;
+t29 = t28 + 1;
+stack[int(t29)] = t24;
+t30 = t28 + 2;
+stack[int(t30)] = t26;
+P = P + 1;
+Potencia_armc();
+t31 = P + 0;
+t27 = stack[int(t31)];
+P = P - 1;
+t32 = P + 1;
+stack[int(t32)] = t27;
+
+t33 = P + 1;
+t34 = stack[int(t33)];
+fmt.Printf("%d",int(t34));
+fmt.Printf("%c",10);
+}

@@ -23,25 +23,62 @@ class Potencia(Instruccion):
 
         newTemp = generator.createTemp()
 
-        self.potenciar(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+        return self.potenciar(opIzq, opDer, newTemp, tree, table, generator)
     
     def getNode(self):
         return super().getNode()
 
-    def potenciar(self, opIzq, opDer, newTemp, generator):
+    def potenciar(self, opIzq, opDer, newTemp, tree, table, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.ENTERO
+            return self.C3DPotencia(opIzq, opDer, newTemp, table, tree, generator)
 
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
             self.tipo = Tipo.DOBLE
+            return self.C3DPotencia(opIzq, opDer, newTemp, table, tree, generator)
 
         elif self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE or self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.DOBLE
+            return self.C3DPotencia(opIzq, opDer, newTemp, table, tree, generator)
 
         #STRING
         elif self.opIzq.tipo == Tipo.CADENA and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.CADENA
+            #ESTA ES CONCATENACION JEJE
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"^\" no pueden ser operados", self.fila, self.columna)
+
+    def C3DPotencia(self, opIzq, opDer, newTemp, table, tree, generator):
+        newTempAmbitoSimulado = generator.createTemp()
+        tree.updateConsola(generator.newSimulateNextStack(newTempAmbitoSimulado, str(table.size)))
+
+        newTempIndiceBase = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempIndiceBase, newTempAmbitoSimulado, '1', '+'))
+        base = self.correctValue(opIzq)
+        tree.updateConsola(generator.newSetStack(newTempIndiceBase, str(base)))
+
+        newTempIndiceExponente = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempIndiceExponente, newTempAmbitoSimulado, '2', '+'))
+        exponente = self.correctValue(opDer)
+        tree.updateConsola(generator.newSetStack(newTempIndiceExponente, str(exponente)))
+
+        tree.updateConsola(generator.newNextStack(str(table.size)))
+        tree.updateConsola(generator.newCallFunc('Potencia_armc'))
+
+        newTempIndiceReturn = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempIndiceReturn, 'P', '0', '+'))
+
+        tree.updateConsola(generator.newGetStack(newTemp, newTempIndiceReturn))
+
+        tree.updateConsola(generator.newBackStack(str(table.size)))
+
+        valor = Value(1, newTemp, self.tipo, True)
+        return valor
+    
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()

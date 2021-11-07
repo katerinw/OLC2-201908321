@@ -1,5 +1,6 @@
 ''' Segundo semestre 2021 FASE 2 '''
 
+from os import write
 import re
 import sys
 sys.setrecursionlimit(3000)
@@ -211,12 +212,14 @@ from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
 from Expresiones.Aritmeticas.Suma import Suma
+from Nativas.FuncPotencia import FuncPotencia
 from Nativas.PrintString import PrintString
 from Expresiones.Logicas.And import And
 from Expresiones.Logicas.Not import Not
 from Expresiones.Logicas.Or import Or
 from TS.Excepcion import Excepcion
 from TS.Tipo import Tipo
+
 
 
 #Definir precedencia
@@ -382,9 +385,9 @@ def p_expresion_llamada_funcion(p):
     'expresion : llamada_funcion_instr'
     p[0] = p[1]
 
-#def p_expresion_llamada_funcion_struct(p):
-#    'expresion : llamada_funcion_struct_instr'
-#    p[0] = p[1]
+def p_expresion_llamada_funcion_struct(p):
+    'expresion : llamada_funcion_struct_instr'
+    p[0] = p[1]
 
 def p_lista_expresiones(p):
     'expresion : CORCHETEA expresiones_coma CORCHETEC'
@@ -717,6 +720,12 @@ def crearNativas(ast): #Creacion y declaracion de funciones nativas
     printstring = PrintString(identificador, parametros, instrucciones, -1, -1)
     ast.addFuncion(printstring)
 
+    identificador = 'Potencia_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Potencia_armc'}]
+    instrucciones = []
+    potencia = FuncPotencia(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(potencia)
+
     
 
 def parse(inp):
@@ -782,7 +791,11 @@ for instruccion in ast.getInstrucciones():
             ast.setConsola('')
 
 
-print(generator.getCode(generatorFunction))
+file = open("./Salida.txt", "w")
+file.write(generator.getCode(generatorFunction))
+file.close()
+
+#print(generator.getCode(generatorFunction))
 #print(ast.getConsola())
 
 

@@ -4,7 +4,9 @@ from TS.TablaSimbolos import TablaSimbolos
 #from Abstract.NodeCst import NodeCst
 from TS.Excepcion import Excepcion
 from TS.Simbolo import Simbolo
+from TS.Value import Value
 from TS.Tipo import Tipo
+
 
 class LlamadaFuncion(Instruccion):
     def __init__(self, identificador, parametros, fila, columna):
@@ -51,12 +53,21 @@ class LlamadaFuncion(Instruccion):
                 contador += 1
 
 
-            tree.updateConsola(generator.newNextStack(str(tamTabla)))
-            tree.updateConsola(generator.newCallFunc(self.identificador))
-            tree.updateConsola(generator.newBackStack(str(tamTabla)))
+            tree.updateConsola(generator.newNextStack(str(tamTabla)))  #Cambia de ambito
+            tree.updateConsola(generator.newCallFunc(self.identificador)) #Llama a la funcion
+
+            newTempIndiceReturn = generator.createTemp()
+            tree.updateConsola(generator.newExpresion(newTempIndiceReturn, 'P', '0', '+'))
+            
+            newTempValorReturn = generator.createTemp()    #Tiene el valor de return 
+            tree.updateConsola(generator.newGetStack(newTempValorReturn, newTempIndiceReturn))
+
+            tree.updateConsola(generator.newBackStack(str(tamTabla)))  #Regresa en el ambito
 
             self.tipo = funcion.tipo
-            return None
+
+            valor = Value('', newTempValorReturn, self.tipo, True) #Retornando temporal
+            return valor
 
         elif struct != None: #Para las structs
             pass
