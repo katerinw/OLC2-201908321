@@ -8,6 +8,7 @@ class Generador:
         self.label = 0 
         self.codigo = []
         self.listaTemporales = []
+        self.modulo = False
 
     def createTemp(self): #Generar un nuevo temporal
         self.temporal = self.indices['temporal']
@@ -178,9 +179,17 @@ class Generador:
     def addSimulateNextStack(self,target, index:str): #Se mueve hacia la posicion siguiente del stack de forma simulada
         self.codigo.append(target +" = P + " + index + ";\n")
 
+#---------------------------------------------------------MODULO---------------------------------------------------------
+    def newModulo(self, dividendo, divisor):
+        return "math.Mod(" + str(dividendo) + ", " + str(divisor) + ")"  
+
 #---------------------------------------------------------GENERAR CODIGO---------------------------------------------------------
     def getCode(self, functionsCode):
         tempCode = 'package main\n'
+
+        if self.modulo == True or functionsCode.modulo == True:
+            tempCode += 'import ("math")\n'    
+
         tempCode += 'import ("fmt")\n'
         tempCode += 'var stack[30101999]float64;\n'
         tempCode += 'var heap[30101999]float64;\n'

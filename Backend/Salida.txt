@@ -1,9 +1,10 @@
 package main
+import ("math")
 import ("fmt")
 var stack[30101999]float64;
 var heap[30101999]float64;
 var P, H float64;
-var t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24,t25,t26,t27,t28,t29,t30,t31,t32,t33,t34 float64; 
+var t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22 float64; 
 
 func print_true_armc(){
 fmt.Printf("%c",116);
@@ -98,28 +99,7 @@ return;
 }
 
 func main(){
-t22 = P + 0;
-stack[int(t22)] = 5;
-
-t23 = P + 0;
-t24 = stack[int(t23)];
-t25 = P + 0;
-t26 = stack[int(t25)];
-t28 = P + 1;
-t29 = t28 + 1;
-stack[int(t29)] = t24;
-t30 = t28 + 2;
-stack[int(t30)] = t26;
-P = P + 1;
-Potencia_armc();
-t31 = P + 0;
-t27 = stack[int(t31)];
-P = P - 1;
-t32 = P + 1;
-stack[int(t32)] = t27;
-
-t33 = P + 1;
-t34 = stack[int(t33)];
-fmt.Printf("%d",int(t34));
+t22 = math.Mod(4, 2);
+fmt.Printf("%d",int(t22));
 fmt.Printf("%c",10);
 }

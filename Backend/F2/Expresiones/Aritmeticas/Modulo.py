@@ -19,23 +19,44 @@ class Modulo(Instruccion):
         opDer = self.opDer.interpretar(tree, table, generator)
         if isinstance(opDer, Excepcion):
             return opDer
-
+        
+        generator.modulo = True
         newTemp = generator.createTemp()
-        self.modulo(opIzq.getValor(), opDer.getValor(), newTemp, generator)
+        return self.modulo(opIzq, opDer, newTemp, tree, generator)
 
     def getNode(self):
         return super().getNode()
 
-    def modulo(self, opIzq, opDer, newTemp, generator):
+    def modulo(self, opIzq, opDer, newTemp, tree, generator):
         #INT
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.ENTERO
+            return self.c3dModulo(opIzq, opDer, newTemp, tree, generator)
 
         #DOUBLE
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
             self.tipo = Tipo.DOBLE
+            return self.c3dModulo(opIzq, opDer, newTemp, tree, generator)
 
         elif self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE or self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.DOBLE
+            return self.c3dModulo(opIzq, opDer, newTemp, tree, generator)
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"%\" no pueden ser operados", self.fila, self.columna)
+
+
+    def c3dModulo(self, opIzq, opDer, newTemp, tree, generator):
+        dividendo = self.correctValue(opIzq)
+        divisor = self.correctValue(opDer)
+        modulo = generator.newModulo(dividendo, divisor)
+
+        tree.updateConsola(generator.newAsigTemp(newTemp, modulo))
+
+        valor = Value('', newTemp, self.tipo, True)
+        return valor
+
+    def correctValue(self, valor):
+        if valor.isTemp:
+            return valor.getTemporal()
+        else:
+            return valor.getValor()
