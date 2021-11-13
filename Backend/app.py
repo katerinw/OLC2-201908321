@@ -1,10 +1,10 @@
-from Instrucciones.Funciones.Funcion import Funcion
-from grammar import parse, crearNativas, errores
-from Instrucciones.Structs.Struct import Struct
-from TS.TablaSimbolos import TablaSimbolos
+from F1.Instrucciones.Funciones.Funcion import Funcion
+from F1.grammar import parse, crearNativas, errores
+from F1.Instrucciones.Structs.Struct import Struct
+from F1.TS.TablaSimbolos import TablaSimbolos
 from flask import Flask, jsonify, request
-from TS.Excepcion import Excepcion
-from TS.Arbol import Arbol
+from F1.TS.Excepcion import Excepcion
+from F1.TS.Arbol import Arbol
 from flask_cors import CORS
 
 #======================================================================================================#

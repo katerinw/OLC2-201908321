@@ -30,10 +30,10 @@ class Identificador(Instruccion):
             return Value(simbolo.getValor().getValor(), newTemp, simbolo.getTipo(), True)
         else:
             value = Value(simbolo.getValor().getValor(), simbolo.getValor().getTemporal(), Tipo.BANDERA, False)
-            self.agregarLabel()
+            self.agregarLabel(generator)
 
-            generator.addIf(newTemp, '1', '==', self.trueLabel)
-            generator.addGoto(self.falseLabel)
+            tree.updateConsola(generator.newIf(newTemp, '1', '==', self.trueLabel))
+            tree.updateConsola(generator.newGoto(self.falseLabel))
 
             value.trueLabel = self.trueLabel
             value.falseLabel = self.falseLabel
@@ -48,7 +48,7 @@ class Identificador(Instruccion):
 
     def agregarLabel(self, generator):
         if self.trueLabel == None:
-            self.trueLabel = generator.newLabel()
+            self.trueLabel = generator.createLabel()
 
         if self.falseLabel == None:
-            self.falseLabel = generator.newLabel()
+            self.falseLabel = generator.createLabel()

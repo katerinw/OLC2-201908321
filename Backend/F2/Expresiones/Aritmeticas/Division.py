@@ -63,7 +63,7 @@ class Division(Instruccion):
 
         valor = 'NULL'
         if opDer.getValor() != 0:
-            valor = opIzq.getValor()/opDer.getValor()
+            valor = 1
 
         tree.updateConsola(generator.newOpRelacional(diferente, trueIns, falseIns))
         newValue = Value(valor, newTemp, self.tipo, True)

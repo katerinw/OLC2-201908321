@@ -16,15 +16,17 @@ class BooleanValue(Instruccion):
         if self.tipo != Tipo.BANDERA:
             return Excepcion("Semántico", "El valor no es tipo BOOLEAN", self.fila, self.columna)
         
-        newValue = Value(self.valor, "", self.tipo, False)
-
+        if str(self.valor).lower() == 'true':
+            newValue = Value(1, "", self.tipo, False)
+        else:
+            newValue = Value(0, "", self.tipo, False)
         if self.trueLabel == None:
             self.trueLabel = generator.createLabel()
 
         if self.falseLabel == None:
             self.falseLabel = generator.createLabel()
 
-        tree.updateConsola(generator.newIf(str(self.valor).lower(), 'true', '==', self.trueLabel))
+        tree.updateConsola(generator.newIf(str(newValue.getValor()), '1', '==', self.trueLabel))
         tree.updateConsola(generator.newGoto(self.falseLabel))
 
         newValue.trueLabel = self.trueLabel

@@ -10,19 +10,22 @@ from TS.Value import Value
 from TS.Tipo import Tipo
 
 class Funcion(Instruccion):
-    def __init__(self, identificador, parametros, instrucciones, fila, columna):
+    def __init__(self, identificador, parametros, tipo, instrucciones, fila, columna):
         self.identificador = identificador
         self.parametros = parametros
         self.instrucciones = instrucciones
         self.fila = fila
         self.columna = columna
         self.size = 0
-        self.tipo = Tipo.NULO
+        self.tipo = tipo
+        self.primerTemp = 0
+        self.Temporales = {}
 
     def interpretar(self, tree, table, generator):
-
+        print(generator.temporal)
         nuevaTabla = TablaSimbolos('function', table)
-
+        self.primerTemp = generator.temporal
+        
         tamanoTabla = nuevaTabla.size  #Guardando el valor del tamano de todos los entornos
         nuevaTabla.changeOwnSize(1)    #Sumandole 1 del return 
         nuevaTabla.size = nuevaTabla.ownSize  #Asignandole cero a la nueva tabla pq asi la funcion empieza de cero  
@@ -38,7 +41,6 @@ class Funcion(Instruccion):
             if isinstance(resultTable, Excepcion):
                 return resultTable
 
-        existeReturn = False
         for instruccion in self.instrucciones:
             value = instruccion.interpretar(tree, nuevaTabla, generator) #Devuelve el nodo del resultado de la funcion si es un return
             if isinstance(value, Excepcion):
@@ -53,18 +55,21 @@ class Funcion(Instruccion):
                 tree.getExcepciones().append(err)
                 tree.updateConsolaln(err.toString())
             if isinstance(value, Return):
+                if generator.LabelReturn == '':
+                    generator.LabelReturn = generator.createLabel()
+                
+                tree.updateConsola(generator.newGoto(generator.LabelReturn))
                 self.tipo = value.tipo
-                existeReturn = True
-                nuevaTabla.changeOwnSize(1) #Aumenta el tamano del entorno con el return
 
-        if not(existeReturn):
-            tree.updateConsola(generator.newReturn())
-
+        if generator.LabelReturn != '':
+            tree.updateConsola(generator.newLabel(generator.LabelReturn))
+            
+        tree.updateConsola(generator.newReturn())
         tree.updateConsolaln("}")
 
         nuevaTabla.size = tamanoTabla #Regresando el valor de la tabla a su valor actual
-        
-        return "Nothing"
+        print(generator.temporal-1)
+        return None
 
     def getNode(self):
         return super().getNode()

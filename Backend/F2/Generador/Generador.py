@@ -8,7 +8,9 @@ class Generador:
         self.label = 0 
         self.codigo = []
         self.listaTemporales = []
-        self.modulo = False
+        self.modulo = False 
+        self.LabelReturn = ''
+        self.funcion = False
 
     def createTemp(self): #Generar un nuevo temporal
         self.temporal = self.indices['temporal']
@@ -36,7 +38,13 @@ class Generador:
         self.codigo.append(str(label) + ":")
 
     def newLabel(self, label):
-        return str(label) + ":\n"
+        if isinstance(label, list):
+            labels = ''
+            for l in label:
+                labels += str(l)+":\n"
+            return labels
+        else:
+            return str(label) + ":\n"
 
 #---------------------------------------------------------FUNCIONES---------------------------------------------------------
     def addCallFunc(self, nombre):

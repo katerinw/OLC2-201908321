@@ -50,9 +50,10 @@ class AsignacionVar(Instruccion):
 
             #Creacion de C3D
             if self.tipo == Tipo.BANDERA:
-                self.addBoolean(newTemp, simboloVar.posicion, tree, generator)
+                self.addBoolean(value, newTemp, simboloVar.posicion, tree, generator)
             elif self.tipo == Tipo.CADENA:
-                self.addCadena(value, newTemp, simboloVar.posicion, tree, generator)
+                valor = self.correctValue(value)
+                self.addCadena(valor, newTemp, simboloVar.posicion, tree, generator)
 
             else:
                 valor = self.correctValue(value)
@@ -65,7 +66,7 @@ class AsignacionVar(Instruccion):
 
             #Creacion de C3D
             if self.tipo == Tipo.BANDERA:
-                self.addBoolean(newTemp, tamTable, tree, generator)
+                self.addBoolean(value, newTemp, tamTable, tree, generator)
             elif self.tipo == Tipo.CADENA:
                 valor = self.correctValue(value)
                 self.addCadena(valor, newTemp, tamTable, tree, generator)
@@ -84,13 +85,13 @@ class AsignacionVar(Instruccion):
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, str(value)))
 
-    def addBoolean(self, newTemp, tamTable, tree, generator):
+    def addBoolean(self, value, newTemp, tamTable, tree, generator):
         newLabel = generator.createLabel()
-        tree.updateConsola(generator.newLabel(newLabel.trueLabel))
+        tree.updateConsola(generator.newLabel(value.trueLabel))
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '1'))
         tree.updateConsola(generator.newGoto(newLabel))
-        tree.updateConsola(generator.newLabel(newLabel.falseLabel))
+        tree.updateConsola(generator.newLabel(value.falseLabel))
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '0'))
         tree.updateConsola(generator.newLabel(newLabel))

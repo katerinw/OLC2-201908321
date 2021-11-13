@@ -7,6 +7,7 @@ from TS.TablaSimbolos import TablaSimbolos
 from TS.Excepcion import Excepcion
 from TS.Value import Value
 from TS.Tipo import Tipo
+from Instrucciones.Sentencias_Control.If import If
 
 class While(Instruccion):
     def __init__(self, condicion, instrucciones, fila, columna):
@@ -30,19 +31,22 @@ class While(Instruccion):
         nuevaTabla = TablaSimbolos('while', table)
 
         for instruccion in self.instrucciones:
+            if isinstance(instruccion, If):
+                instruccion.BREAK = condicion.falseLabel
+                instruccion.CONTINUE = newLabel
+                instruccion.RETURN = condicion.falseLabel
+
+            if isinstance(instruccion, Break):
+                instruccion.label = condicion.falseLabel
+            if isinstance(instruccion, Continue):
+                instruccion.label = newLabel
+            if isinstance(instruccion, Return):
+                instruccion.label = condicion.falseLabel
+            
             result = instruccion.interpretar(tree, nuevaTabla, generator)
             if isinstance(result, Excepcion):
                 tree.getExcepciones().append(result)
                 tree.updateConsolaln(result.toString())
-                        
-            if isinstance(result, Return): #Sentencia Return  
-                return result
-                        
-            if isinstance(result, Break): #Sentencia Break
-                return None
-
-            if isinstance(result, Continue):
-                break
 
         tree.updateConsola(generator.newGoto(newLabel))
         tree.updateConsola(generator.newLabel(condicion.falseLabel))

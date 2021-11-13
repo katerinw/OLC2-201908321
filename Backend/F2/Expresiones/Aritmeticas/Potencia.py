@@ -46,7 +46,9 @@ class Potencia(Instruccion):
         #STRING
         elif self.opIzq.tipo == Tipo.CADENA and self.opDer.tipo == Tipo.ENTERO:
             self.tipo = Tipo.CADENA
-            #ESTA ES CONCATENACION JEJE
+            valIzq = self.correctValue(opIzq)
+            valDer = self.correctValue(opDer)
+            return self.elevarString(valIzq, valDer, newTemp, tree, table, generator)
 
         return Excepcion("Semántico", "Los tipos de datos para el signo \"^\" no pueden ser operados", self.fila, self.columna)
 
@@ -76,7 +78,33 @@ class Potencia(Instruccion):
 
         valor = Value(1, newTemp, self.tipo, True)
         return valor
-    
+
+
+    def elevarString(self, opIzq, opDer, newTemp, tree, table, generator):
+        newTempAmbitoSimulado = generator.createTemp()
+        tree.updateConsola(generator.newSimulateNextStack(newTempAmbitoSimulado, str(table.size))) #Cambio simulado de ambito
+
+        newTempParam1Indice = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempParam1Indice, newTempAmbitoSimulado, '1', '+'))
+        tree.updateConsola(generator.newSetStack(newTempParam1Indice, str(opIzq)))
+
+        newTempParam2Indice = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempParam2Indice, newTempAmbitoSimulado, '2', '+'))
+        tree.updateConsola(generator.newSetStack(newTempParam2Indice, str(opDer)))    
+
+        tree.updateConsola(generator.newNextStack(str(table.size)))
+
+        tree.updateConsola(generator.newCallFunc('Elevar_String_armc'))
+
+        newTempReturn = generator.createTemp()
+        tree.updateConsola(generator.newExpresion(newTempReturn, 'P', '0', '+'))
+        tree.updateConsola(generator.newGetStack(newTemp, newTempReturn))
+
+        tree.updateConsola(generator.newBackStack(str(table.size)))
+
+        newValue = Value('', newTemp, self.tipo, True)
+        return newValue
+
     def correctValue(self, valor):
         if valor.isTemp:
             return valor.getTemporal()

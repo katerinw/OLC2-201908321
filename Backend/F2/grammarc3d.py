@@ -192,6 +192,7 @@ from Expresiones.Primitivos.Identificador import Identificador
 from Instrucciones.Sentencias_Transferencia.Break import Break
 from Expresiones.Primitivos.BooleanValue import BooleanValue
 from Expresiones.Primitivos.NothingValue import NothingValue
+from Nativas.ConcatenacionString import ConcatenacionString
 from Expresiones.Relacionales.IgualIgual import IgualIgual
 from Expresiones.Primitivos.DoubleValue import DoubleValue
 from Expresiones.Primitivos.StringValue import StringValue
@@ -204,16 +205,23 @@ from Expresiones.Aritmeticas.Potencia import Potencia
 from Instrucciones.Funciones.Imprimir import Imprimir
 from Expresiones.Aritmeticas.Division import Division
 from Instrucciones.Sentencias_Ciclicas.For import For
+from Nativas.StringMayorIgual import StringMayorIgual
+from Nativas.StringMenorIgual import StringMenorIgual
 from Expresiones.Primitivos.IntValue import IntValue
 from Instrucciones.Funciones.Funcion import Funcion
+from Nativas.StringDiferente import StringDiferente
 from Instrucciones.Sentencias_Control.If import If
 from Expresiones.Aritmeticas.Modulo import Modulo
 from Expresiones.Relacionales.Mayor import Mayor
 from Expresiones.Relacionales.Menor import Menor
 from Expresiones.Aritmeticas.Resta import Resta
+from Nativas.ElevarString import ElevarString
 from Expresiones.Aritmeticas.Suma import Suma
 from Nativas.FuncPotencia import FuncPotencia
 from Nativas.PrintString import PrintString
+from Nativas.StringIgual import StringIgual
+from Nativas.StringMayor import StringMayor
+from Nativas.StringMenor import StringMenor
 from Expresiones.Logicas.And import And
 from Expresiones.Logicas.Not import Not
 from Expresiones.Logicas.Or import Or
@@ -548,11 +556,19 @@ def p_imprimirln_expresiones_coma(p):
 #///////////////////////////////////////////////////////////FUNCIONES
 def p_funciones(p):
     'funciones_instr : FUNCTION ID PARENTESISA PARENTESISC instrucciones END'
-    p[0] = Funcion(p[2], [], p[5], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = Funcion(p[2], [], Tipo.NULO, p[5], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_funciones_tipo(p):
+    'funciones_instr : FUNCTION ID PARENTESISA PARENTESISC DOSPUNTOS DOSPUNTOS tipo instrucciones END'
+    p[0] = Funcion(p[2], [], p[7], p[8], p.lineno(1), find_column(input, p.slice[1]))
 
 def p_funciones_parametros(p):
     'funciones_instr : FUNCTION ID PARENTESISA parametros PARENTESISC instrucciones END'
-    p[0] = Funcion(p[2], p[4], p[6], p.lineno(1), find_column(input, p.slice[1]))
+    p[0] = Funcion(p[2], p[4], Tipo.NULO, p[6], p.lineno(1), find_column(input, p.slice[1]))
+
+def p_funciones_parametros_tipo(p):
+    'funciones_instr : FUNCTION ID PARENTESISA parametros PARENTESISC DOSPUNTOS DOSPUNTOS tipo instrucciones END'
+    p[0] = Funcion(p[2], p[4], p[8], p[9], p.lineno(1), find_column(input, p.slice[1]))
 
 #///////////////////////////////////////////////////////////PARAMETROS DE FUNCION
 def p_parametros_funcion(p):
@@ -726,7 +742,56 @@ def crearNativas(ast): #Creacion y declaracion de funciones nativas
     potencia = FuncPotencia(identificador, parametros, instrucciones, -1, -1)
     ast.addFuncion(potencia)
 
+    identificador = 'Concatenar_String_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Concatenar_String_armc'}]
+    instrucciones = []
+    concatenacion = ConcatenacionString(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(concatenacion)
+
+    identificador = 'Elevar_String_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'Elevar_String_armc'}]
+    instrucciones = []
+    elevacion = ElevarString(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(elevacion)
+
+    identificador = 'String_Diferente_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Diferente_armc'}]
+    instrucciones = []
+    diferente = StringDiferente(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(diferente)
+
+    identificador = 'String_Igual_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Igual_armc'}]
+    instrucciones = []
+    igual = StringIgual(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(igual)
+
+    identificador = 'String_Mayor_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Mayor_armc'}]
+    instrucciones = []
+    mayor = StringMayor(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(mayor)
+
+    identificador = 'String_Mayor_Igual_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Mayor_Igual_armc'}]
+    instrucciones = []
+    mayorIgual = StringMayorIgual(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(mayorIgual)
+
+    identificador = 'String_Menor_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Menor_armc'}]
+    instrucciones = []
+    menor = StringMenor(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(menor)
+
+    identificador = 'String_Menor_Igual_armc'
+    parametros = [{'tipo': Tipo.ENTERO, 'dimensiones': None, 'identificador': 'String_Menor_Igual_armc'}]
+    instrucciones = []
+    menorIgual = StringMenorIgual(identificador, parametros, instrucciones, -1, -1)
+    ast.addFuncion(menorIgual)
     
+
+
 
 def parse(inp):
     global errores 
@@ -755,7 +820,9 @@ label = 0
 temporal = 0
 indices = {'temporal' : 0, 'label' : 0}
 generator = Generador(indices)
+
 generatorFunction = Generador(indices)
+generatorFunction.funcion = True
 crearNativas(ast)
 
 for func in ast.getFunciones():
@@ -777,8 +844,10 @@ for instruccion in ast.getInstrucciones():
     if isinstance(instruccion, Funcion):
         ast.addFuncion(instruccion)
         valor = instruccion.interpretar(ast, TSGlobal, generatorFunction)
+        generatorFunction.LabelReturn = ''
     else:
         valor = instruccion.interpretar(ast, TSGlobal, generator)
+        
     if isinstance(valor, Excepcion):
         ast.getExcepciones().append(valor)
         ast.setConsola('')
@@ -795,6 +864,8 @@ file = open("./Salida.txt", "w")
 file.write(generator.getCode(generatorFunction))
 file.close()
 
+for error in ast.getExcepciones():
+    print(error.toString())
 #print(generator.getCode(generatorFunction))
 #print(ast.getConsola())
 

@@ -1,3 +1,4 @@
+from Instrucciones.Funciones.LlamadaFuncion import LlamadaFuncion
 from Instrucciones.Sentencias_Transferencia.Continue import Continue
 from Instrucciones.Sentencias_Transferencia.Return import Return
 from Instrucciones.Sentencias_Transferencia.Break import Break
@@ -13,6 +14,9 @@ class If(Instruccion):
         self.ElseIf = ElseIf
         self.fila = fila
         self.columna = columna
+        self.BREAK = ''
+        self.CONTINUE = ''
+        self.RETURN = ''
 
 
     def interpretar(self, tree, table, generator, etiqueta=None):
@@ -30,16 +34,24 @@ class If(Instruccion):
             return Excepcion("Semántico", "Tipo de dato no bool en sentencia de control If", self.fila, self.columna)
 
         tree.updateConsola(generator.newLabel(condicion.trueLabel))
+
         for instruccion in self.instruccionesIf:
+            if isinstance(instruccion, Continue):
+                instruccion.label = self.CONTINUE
+            if isinstance(instruccion, Break):
+                instruccion.label = self.BREAK
+            if isinstance(instruccion, Return):
+                instruccion.label = self.RETURN
+            
             resultIf = instruccion.interpretar(tree, table, generator)
             if isinstance(resultIf, Excepcion):
                 return resultIf
-            if isinstance(resultIf, Continue):
-                return resultIf
             if isinstance(resultIf, Return):
-                return resultIf
-            if isinstance(resultIf, Break):
-                return resultIf
+                if generator.LabelReturn == '':
+                    generator.LabelReturn = generator.createLabel()
+                
+                tree.updateConsola(generator.newGoto(generator.LabelReturn))
+
 
         tree.updateConsola(generator.newGoto(etiqueta))
         tree.updateConsola(generator.newLabel(condicion.falseLabel))
@@ -52,7 +64,10 @@ class If(Instruccion):
                 if isinstance(resultElseIf, Continue):
                     return resultElseIf
                 if isinstance(resultElseIf, Return):
-                    return resultElseIf
+                    if generator.LabelReturn == '':
+                        generator.LabelReturn = generator.createLabel()
+                
+                    tree.updateConsola(generator.newGoto(generator.LabelReturn))
                 if isinstance(resultElseIf, Break):
                     return resultElseIf 
 
@@ -64,25 +79,16 @@ class If(Instruccion):
                 if isinstance(resultElse, Continue):
                     return resultElse
                 if isinstance(resultElse, Return):
-                    return resultElse
+                    if generator.LabelReturn == '':
+                        generator.LabelReturn = generator.createLabel()
+                
+                        tree.updateConsola(generator.newGoto(generator.LabelReturn))
                 if isinstance(resultElse, Break):
                     return resultElse
             tree.updateConsola(generator.newGoto(etiqueta))
 
         if ifOriginal:
             tree.updateConsola(generator.newLabel(etiqueta))
-
-         
-
-
-
-        
-
-
-        
-        
-        
-
 
 
     def getNode(self):

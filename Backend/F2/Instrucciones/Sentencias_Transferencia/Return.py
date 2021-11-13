@@ -9,11 +9,14 @@ class Return(Instruccion):
         self.columna = columna
         self.tipo = Tipo.NULO
         self.result = None
+        self.label = ''
 
     def interpretar(self, tree, table, generator):
         if self.expresion == None:
+            tree.updateConsola(generator.newGoto(str(self.label)))
+            tree.updateConsola(generator.newPrint('c', '13'))
             self.tipo = Tipo.NULO
-            return self
+            return 
 
         resultExpresion = self.expresion.interpretar(tree, table, generator)
         if isinstance(resultExpresion, Excepcion):
@@ -24,9 +27,6 @@ class Return(Instruccion):
         newTemp = generator.createTemp()
         tree.updateConsola(generator.newExpresion(newTemp, 'P', '0', '+'))
         tree.updateConsola(generator.newSetStack(newTemp, str(value)))
-
-        tree.updateConsola(generator.newReturn())
-
         self.tipo = resultExpresion.getTipo()
         return self
 

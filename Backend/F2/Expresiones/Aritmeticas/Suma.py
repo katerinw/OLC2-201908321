@@ -34,7 +34,7 @@ class Suma(Instruccion):
         if self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.ENTERO:
             tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "+"))
             self.tipo = Tipo.ENTERO
-            valor = opIzq.getValor()+opDer.getValor()
+            valor = 1
             newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 
@@ -42,14 +42,14 @@ class Suma(Instruccion):
         elif self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.DOBLE:
             tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "+"))
             self.tipo = Tipo.DOBLE
-            valor = opIzq.getValor()+opDer.getValor()
+            valor = 1.0
             newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 
         elif (self.opIzq.tipo == Tipo.DOBLE and self.opDer.tipo == Tipo.ENTERO) or (self.opIzq.tipo == Tipo.ENTERO and self.opDer.tipo == Tipo.DOBLE):
             tree.updateConsola(generator.newExpresion(newTemp, str(valIzq), str(valDer), "+"))
             self.tipo = Tipo.DOBLE
-            valor = opIzq.getValor()+opDer.getValor()
+            valor = 1.0
             newValue = Value(valor, newTemp, self.tipo, True)
             return newValue
 

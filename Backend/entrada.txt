@@ -1,3 +1,4 @@
-println(4%2);
-
-
+println("Hey you">"Hola");
+println("Hola">="Hola");
+println("Hey"<"Hola");
+println("Hey"<="Hola");

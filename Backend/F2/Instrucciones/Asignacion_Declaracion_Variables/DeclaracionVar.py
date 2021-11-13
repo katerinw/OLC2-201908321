@@ -61,7 +61,7 @@ class DeclaracionVar(Instruccion):
 
         #Creacion de C3D
         if self.tipo == Tipo.BANDERA:
-            self.addBoolean(newTemp, simbolo.posicion, tree, generator)
+            self.addBoolean(value, newTemp, simbolo.posicion, tree, generator)
         elif self.tipo == Tipo.CADENA:
             valor = self.correctValue(value)
             self.addCadena(valor, newTemp, simbolo.posicion, tree, generator)
@@ -82,13 +82,13 @@ class DeclaracionVar(Instruccion):
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, str(value)))
 
-    def addBoolean(self, newTemp, tamTable, tree, generator):
+    def addBoolean(self, value, newTemp, tamTable, tree, generator):
         newLabel = generator.createLabel()
-        tree.updateConsola(generator.newLabel(newLabel.trueLabel))
+        tree.updateConsola(generator.newLabel(value.trueLabel))
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '1'))
         tree.updateConsola(generator.newGoto(newLabel))
-        tree.updateConsola(generator.newLabel(newLabel.falseLabel))
+        tree.updateConsola(generator.newLabel(value.falseLabel))
         tree.updateConsola(generator.newExpresion(newTemp, 'P', str(tamTable), '+'))
         tree.updateConsola(generator.newSetStack(newTemp, '0'))
         tree.updateConsola(generator.newLabel(newLabel))

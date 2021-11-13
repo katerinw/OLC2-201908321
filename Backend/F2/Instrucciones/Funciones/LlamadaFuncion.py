@@ -21,12 +21,14 @@ class LlamadaFuncion(Instruccion):
         struct = 'tree.getStruct(str(self.identificador))'
 
         if funcion != None: #Para las funciones
-            nuevaTabla = TablaSimbolos('functioncall',tree.getTSGlobal()) #cambiar
-
+            if generator.funcion == True:
+                ultimoTemp = generator.temporal-1
+                self.agregarRecursion(tree, table, generator, tree.getConsola(), funcion.Temporales, funcion.primerTemp, ultimoTemp)
+            
             if len(funcion.parametros) != len(self.parametros):
                 return Excepcion("Semántico", "Cantidad de parámetros incorrecta en función \""+self.identificador+"\"", self.fila, self.columna)
 
-            tamTabla = nuevaTabla.size
+            tamTabla = table.size
             newTemp = generator.createTemp()                                #Temp cambio simulado de ambito
             tree.updateConsola(generator.newSimulateNextStack(newTemp, str(tamTabla))) #Cambio simulado de ambito           
 
@@ -36,7 +38,7 @@ class LlamadaFuncion(Instruccion):
                 tree.updateConsola(generator.newExpresion(newTempIndice, newTemp, str(contador+1), '+')) #Cambio simulado de ambito           
 
 
-                resultExpresion = expresion.interpretar(tree, nuevaTabla, generator) #cambio
+                resultExpresion = expresion.interpretar(tree, table, generator) #cambio
                 if isinstance(resultExpresion, Excepcion):
                     return resultExpresion
 
@@ -63,9 +65,11 @@ class LlamadaFuncion(Instruccion):
             tree.updateConsola(generator.newGetStack(newTempValorReturn, newTempIndiceReturn))
 
             tree.updateConsola(generator.newBackStack(str(tamTabla)))  #Regresa en el ambito
-
+            
+            if generator.funcion == True:
+                self.devolverRecursion(tree, generator, funcion.Temporales)
+            
             self.tipo = funcion.tipo
-
             valor = Value('', newTempValorReturn, self.tipo, True) #Retornando temporal
             return valor
 
@@ -78,6 +82,43 @@ class LlamadaFuncion(Instruccion):
 
     def getNode(self):
         return super().getNode()
+
+    def agregarRecursion(self, tree, table, generator, funcion, temporales, primerTemp, ultimoTemp):
+        print("-------------------------------------------------")
+        print(primerTemp)
+        print(ultimoTemp)
+        print("-------------------------------------------------")
+        print(funcion)
+        print("-------------------------------------------------")
+        for iterador in range(primerTemp,ultimoTemp+1):
+            apariciones = funcion.count('t'+str(iterador))
+            if apariciones == 1:
+                print('t'+str(iterador), apariciones)
+                temp = 't'+str(iterador)
+                if temp in temporales:
+                    tempOfTemp = generator.createTemp()
+                    tree.updateConsola(generator.newExpresion(tempOfTemp, 'P', str(temporales[temp]), '+'))
+                    tree.updateConsola(generator.newSetStack(tempOfTemp, temp))
+                else:
+                    temporales[temp] = table.size
+                    table.size += 1
+                    
+                    tempOfTemp = generator.createTemp()
+                    tree.updateConsola(generator.newExpresion(tempOfTemp, 'P', str(temporales[temp]), '+'))
+                    tree.updateConsola(generator.newSetStack(tempOfTemp, temp))
+
+                
+
+        print("-------------------------------------------------")
+        print(temporales)
+
+    def devolverRecursion(self, tree, generator, temporales):
+        print("-------------------------------------------------")
+        for clave in temporales:
+            tempOfTemp = generator.createTemp()
+            tree.updateConsola(generator.newExpresion(tempOfTemp, 'P', str(temporales[clave]), '+'))
+            tree.updateConsola(generator.newGetStack(str(clave), tempOfTemp))
+        print("-------------------------------------------------")
 
     def correctValue(self, valor):
         if valor.isTemp:
